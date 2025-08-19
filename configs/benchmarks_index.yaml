@@ -1,0 +1,24 @@
+benchmarks:
+  - name: numpy_benchmark
+    path: src/languages/python/numpy_benchmark/metadata.yaml
+    num: 3
+
+  - name: requests_benchmark
+    path: src/languages/python/requests_benchmark/metadata.yaml
+    num: 1
+
+  - name: tuf_benchmark
+    path: src/languages/python/tuf_benchmark/metadata.yaml
+    num: 1
+
+  - name: opencv_benchmark
+    path: src/languages/cpp/opencv_benchmark/metadata.yaml
+    num: 10
+
+  - name: guava_benchmark
+    path: src/languages/java/guava_benchmark/metadata.yaml
+    num: 3
+
+  - name: redis_benchmark
+    path: src/languages/c/redis_benchmark/metadata.yaml
+    num: 1
