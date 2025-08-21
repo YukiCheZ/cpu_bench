@@ -1,0 +1,82 @@
+# metadata.yaml for NumPy Benchmark
+name: numpy_benchmark
+type: microbenchmark
+language: Python
+domain:
+  - scientific_computing
+  - linear_algebra
+  - signal_processing
+
+workloads:
+  - name: matmul
+    description: Dense matrix multiplication benchmark using NumPy's @ operator.
+    command: python3 -m scripts.run_benchmark --dataset matrix
+    parameters:
+      size:
+        description: Matrix dimension (size x size)
+        unit: elements
+        default: 8192
+      iterations:
+        description: Number of measured iterations
+        default: 5
+      warmup:
+        description: Number of warmup iterations
+        default: 3
+      copies:
+        description: Number of parallel benchmark copies (multiprocessing)
+        default: 1
+
+  - name: svd
+    description: Singular Value Decomposition benchmark using NumPy's linalg.svd.
+    command: python3 -m scripts.run_benchmark --dataset svd
+    parameters:
+      size:
+        description: Matrix dimension (size x size)
+        unit: elements
+        default: 4096
+      iterations:
+        description: Number of measured iterations
+        default: 5
+      warmup:
+        description: Number of warmup iterations
+        default: 3
+      copies:
+        description: Number of parallel benchmark copies (multiprocessing)
+        default: 1
+
+  - name: fft
+    description: Fast Fourier Transform benchmark using NumPy's fft.
+    command: python3 -m scripts.run_benchmark --dataset fft
+    parameters:
+      size:
+        description: Signal length
+        unit: elements
+        default: 134217728
+      iterations:
+        description: Number of measured iterations
+        default: 5
+      warmup:
+        description: Number of warmup iterations
+        default: 3
+      copies:
+        description: Number of parallel benchmark copies (multiprocessing)
+        default: 1
+
+# Benchmark characteristics
+characteristics:
+  single_machine: true
+  memory_bound: true
+  uses_blas: true
+  IO_effects: false
+
+# Optional tags
+tags:
+  - cpu
+  - numpy
+  - linear-algebra
+  - scientific-computing
+
+# Dependencies
+dependencies:
+  python: ">=3.8"
+  numpy: ">=1.20"

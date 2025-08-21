@@ -1,0 +1,257 @@
+# metadata.yaml for OpenCV CPU Benchmark
+name: opencv_cpu_benchmark
+type: microbenchmark
+language: C++
+domain:
+  - computer_vision
+  - image_processing
+
+workloads:
+  - name: canny
+    description: Grayscale conversion + Gaussian blur + Canny edge detection
+    command: ./opencv_benchmark --workload canny
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: blur
+    description: Large-kernel Gaussian blur (21x21)
+    command: ./opencv_benchmark --workload blur
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: resize
+    description: Downscale then upscale image (bilinear interpolation)
+    command: ./opencv_benchmark --workload resize
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: sobel
+    description: Grayscale conversion + Sobel operator gradient computation
+    command: ./opencv_benchmark --workload sobel
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: hist_eq
+    description: Grayscale conversion + histogram equalization
+    command: ./opencv_benchmark --workload hist_eq
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: matmul
+    description: Matrix multiplied with its transpose (GEMM)
+    command: ./opencv_benchmark --workload matmul
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 1024
+      images:
+        description: Number of images to process per iteration
+        default: 50
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: color_hist
+    description: Convert BGR → HSV + color histogram computation
+    command: ./opencv_benchmark --workload color_hist
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: conv_custom
+    description: Custom 5x5 convolution kernel processing
+    command: ./opencv_benchmark --workload conv_custom
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: pyramid
+    description: Image pyramid downsampling and upsampling
+    command: ./opencv_benchmark --workload pyramid
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+
+  - name: threshold_bitwise
+    description: Thresholding + bitwise NOT operation
+    command: ./opencv_benchmark --workload threshold_bitwise
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 2048
+      images:
+        description: Number of images to process per iteration
+        default: 500
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+  - name: noise
+    description: Add random Gaussian noise to image
+    command: ./opencv_benchmark --workload noise
+    parameters:
+      size:
+        description: Width/Height of square images
+        unit: pixels
+        default: 1024
+      images:
+        description: Number of images to process per iteration
+        default: 300
+      iterations:
+        description: Number of timing iterations
+        default: 5
+      copies:
+        description: Number of parallel threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations to run before timing
+        default: 2
+
+characteristics:
+  IO_effects: minimal
+  single_machine: true
+  network_effects: false
+  memory_bound: true
+  cpu_bound: true
+
+tags:
+  - filtering
+  - convolution
+  - linear_algebra
+  - histogram
+
+dependencies:
+  opencv: ">=4.0"
+  c++: ">=17"

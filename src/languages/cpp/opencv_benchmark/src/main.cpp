@@ -15,8 +15,8 @@ int main(int argc, char* argv[]) {
     int copies = 1;
     int iterations = 5;
     int warmup = 2;
-    int imgSize = 1024;
-    int numImages = 100;
+    int imgSize = -1;    
+    int numImages = -1;
     std::string workload = "canny";
 
     const std::map<std::string, std::string> workloadDescriptions = {
@@ -33,6 +33,19 @@ int main(int argc, char* argv[]) {
         {"noise",              "Add random Gaussian noise"}
     };
 
+    const std::map<std::string, std::pair<int,int>> workloadDefaults = {
+        {"canny",             {2048, 500}},
+        {"blur",              {2048, 500}},
+        {"resize",            {2048, 500}},
+        {"sobel",             {2048, 500}},
+        {"hist_eq",           {2048, 500}},
+        {"matmul",            {1024, 50}},   
+        {"color_hist",        {2048, 500}},
+        {"conv_custom",       {2048, 500}},
+        {"pyramid",           {2048, 500}},
+        {"threshold_bitwise", {2048, 500}},
+        {"noise",             {1024, 300}}
+    };
 
     std::set<std::string> availableWorkloads;
     for (auto& kv : workloadDescriptions) availableWorkloads.insert(kv.first);
@@ -59,6 +72,10 @@ int main(int argc, char* argv[]) {
         std::cerr << "Use --list-workloads to see all options.\n";
         return 1;
     }
+
+    auto def = workloadDefaults.at(workload);
+    if (imgSize   == -1) imgSize   = def.first;
+    if (numImages == -1) numImages = def.second;
 
     std::cout << "[Info] Copies: " << copies
               << ", Iterations: " << iterations

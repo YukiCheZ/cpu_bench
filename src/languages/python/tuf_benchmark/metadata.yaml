@@ -1,0 +1,52 @@
+# metadata.yaml for TUF CPU Benchmark
+name: tuf_benchmark
+type: microbenchmark
+language: Python
+domain:
+  - security
+  - metadata
+  - hashing
+  - integrity
+
+workloads:
+  - name: tuf-metadata
+    description: Benchmark TUF metadata parsing and file hashing (SHA256) performance
+    exec: python3 run_tuf_benchmark.py
+    parameters:
+      copies:
+        description: Number of parallel worker processes
+        default: 1
+      iterations:
+        description: Iterations per worker
+        default: 10
+      warmup:
+        description: Warmup iterations per worker
+        default: 2
+      datasize:
+        description: Total target data size per worker
+        unit: bytes
+        default: 4294967296   
+      repo:
+        description: Path to test repository (not used in memory mode)
+        default: repo
+
+characteristics:
+  IO_effects: minimal          # Metadata and target files are generated in memory
+  single_machine: true         
+  network_effects: none        # No network access
+  cpu_bound: true              # JSON parsing + SHA256 hashing
+  memory_bound: true           # Handling multi-GB target files in memory
+
+tags:
+  - cpu
+  - hashing
+  - json
+  - parsing
+  - integrity
+  - tuf
+  - security
+
+dependencies:
+  python: ">=3.8"
+  securesystemslib: ">=0.30"   # indirect dependency of TUF
+  tuf: ">=2.0"

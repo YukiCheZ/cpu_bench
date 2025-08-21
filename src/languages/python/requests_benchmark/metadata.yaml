@@ -1,0 +1,49 @@
+# metadata.yaml for Requests JSON Parsing Benchmark
+name: requests_benchmark
+type: microbenchmark      
+language: Python
+domain:                     
+  - parsing
+  - json
+  - memory
+
+workloads:
+  - name: requests-json
+    description: Benchmark JSON parsing performance using Python requests library on local file datasets
+    command: python3 run_requests_benchmark.py
+    parameters:
+      copies:
+        description: Number of parallel worker processes
+        default: 1
+      iterations:
+        description: Iterations per worker process
+        default: 5
+      warmup:
+        description: Warmup iterations per worker
+        default: 3
+      size:
+        description: Dataset size, affects generated JSON file
+        unit: records
+        default: 8388608
+      force:
+        description: Force regenerate dataset even if it exists
+        default: false
+
+characteristics:
+  IO_effects: minimal          # File I/O exists but cached in memory after warmup
+  single_machine: true         
+  network_effects: none        # Using local file adapter, no network latency
+  memory_bound: true           # JSON parsing and object materialization is memory-intensive
+  cpu_bound: true              # Parsing large JSON also consumes CPU
+
+tags:
+  - cpu
+  - memory
+  - json
+  - parsing
+  - requests
+  - concurrency
+
+dependencies:
+  python: ">=3.8"
+  requests: ">=2.28"

@@ -65,23 +65,6 @@ add_executable(cpu_benchmark
 target_link_libraries(cpu_benchmark ${OpenCV_LIBS})
 
 # -----------------------------
-# 编译器版本宏定义（安全）
-# -----------------------------
-execute_process(
-    COMMAND ${CMAKE_CXX_COMPILER} --version
-    OUTPUT_VARIABLE DETECTED_COMPILER_VERSION
-    ERROR_VARIABLE _unused
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-# 去掉换行
-string(REPLACE "\n" " " DETECTED_COMPILER_VERSION "${DETECTED_COMPILER_VERSION}")
-# 替换内部双引号为单引号
-string(REPLACE "\"" "'" DETECTED_COMPILER_VERSION "${DETECTED_COMPILER_VERSION}")
-# 外层用合法双引号包裹
-set(QUOTE "\"")
-target_compile_definitions(cpu_benchmark PRIVATE COMPILER_VERSION_STR=${QUOTE}${DETECTED_COMPILER_VERSION}${QUOTE})
-
-# -----------------------------
 # 信息输出
 # -----------------------------
 message(STATUS "Selected compiler: ${CMAKE_CXX_COMPILER}")

@@ -1,27 +1,40 @@
 #!/bin/bash
 set -e
 
-# 加载默认配置文件
 CONFIG_FILE="$(dirname "$0")/config.sh"
 if [ -f "$CONFIG_FILE" ]; then
   source "$CONFIG_FILE"
 fi
 
-# 初始化参数为默认值
 MODE=$DEFAULT_MODE
-DATASIZE=$DEFAULT_DATASIZE
 COPIES=$DEFAULT_COPIES
 ITERATIONS=$DEFAULT_ITERATIONS
 
-# 参数解析
+# 定义不同模式对应的配置变量名
+declare -A MODE_CONFIG_VARS=(
+    ["collection"]="COLLECTION_DATASIZE"
+    ["immutable"]="IMMUTABLE_DATASIZE"
+    ["cache"]="CACHE_DATASIZE"
+)
+
+# 设置默认数据大小（基于默认模式）
+CONFIG_VAR="${MODE_CONFIG_VARS[$MODE]}"
+DATASIZE="${!CONFIG_VAR}"
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode)
       MODE="$2"
+      # 如果用户指定了模式但没有指定dataSize，则使用该模式的默认值
+      if [[ -z "$DATASIZE_SET" && -n "${MODE_CONFIG_VARS[$MODE]}" ]]; then
+        CONFIG_VAR="${MODE_CONFIG_VARS[$MODE]}"
+        DATASIZE="${!CONFIG_VAR}"
+      fi
       shift 2
       ;;
     --dataSize)
       DATASIZE="$2"
+      DATASIZE_SET=true  # 标记用户已显式设置dataSize
       shift 2
       ;;
     --copies)
@@ -35,6 +48,10 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: $0 [--mode <collection|immutable|cache>] [--dataSize <int>] [--copies <int>] [--iterations <int>]"
       echo "Defaults are loaded from $CONFIG_FILE"
+      echo "Mode-specific default data sizes:"
+      echo "  collection: $COLLECTION_DATASIZE"
+      echo "  immutable: $IMMUTABLE_DATASIZE"
+      echo "  cache: $CACHE_DATASIZE"
       exit 0
       ;;
     *)
@@ -59,5 +76,12 @@ rm sources.txt
 echo "[Run] Starting benchmark"
 echo "Mode: $MODE, Data size: $DATASIZE, Copies: $COPIES, Iterations per copy: $ITERATIONS"
 
+# JVM 启动参数（控制 GC、JIT、内存等）
+JVM_OPTS="
+  -Xms8g -Xmx8g \
+  -XX:+TieredCompilation -XX:TieredStopAtLevel=1 \
+  -XX:-UseBiasedLocking
+"
+
 # Run benchmark
-java -cp "$BIN_DIR:$GUAVA_JAR" benchmarks.GuavaCPUBenchmark "$MODE" "$DATASIZE" "$COPIES" "$ITERATIONS"
+java $JVM_OPTS -cp "$BIN_DIR:$GUAVA_JAR" benchmarks.GuavaCPUBenchmark "$MODE" "$DATASIZE" "$COPIES" "$ITERATIONS"

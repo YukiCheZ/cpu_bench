@@ -1,0 +1,77 @@
+# metadata.yaml for Guava CPU Benchmark
+name: guava_benchmark
+type: microbenchmark
+language: Java
+domain:
+  - software_development
+
+workloads:
+  - name: guava-collection
+    description: Benchmark filtering, hashing, sorting, and frequency counting using Guava collections
+    command: ./scripts/run_benchmark.sh --mode collection
+    parameters:
+      mode:
+        description: Execution mode (collection|immutable|cache)
+        default: collection
+      dataSize:
+        description: Size of dataset (number of integers)
+        default: 200000
+      copies:
+        description: Number of parallel worker threads
+        default: 1
+      iterations:
+        description: Iterations per worker
+        default: 10
+
+  - name: guava-immutable
+    description: Benchmark immutable collections and BiMap inversion lookups
+    command: ./scripts/run_benchmark.sh --mode immutable
+    parameters:
+      mode:
+        description: Execution mode (collection|immutable|cache)
+        default: immutable
+      dataSize:
+        description: Size of dataset (number of integers)
+        default: 5000000
+      copies:
+        description: Number of parallel worker threads
+        default: 1
+      iterations:
+        description: Iterations per worker
+        default: 10
+
+  - name: guava-cache
+    description: Benchmark cache-like workload with random lookups and hash computations
+    command: ./scripts/run_benchmark.sh --mode cache
+    parameters:
+      mode:
+        description: Execution mode (collection|immutable|cache)
+        default: cache
+      dataSize:
+        description: Size of dataset (number of integers)
+        default: 1000000
+      copies:
+        description: Number of parallel worker threads
+        default: 1
+      iterations:
+        description: Iterations per worker
+        default: 10
+
+characteristics:
+  IO_effects: false        # Purely in-memory computations
+  single_machine: true
+  network_effects: false
+  cpu_bound: true            # Filtering, hashing, sorting, cache lookups
+  memory_bound: true         # Large datasets stored in memory for cache and immutable tasks
+
+tags:
+  - java
+  - guava
+  - collections
+  - hashing
+  - cache
+  - microbenchmark
+
+dependencies:
+  java: ">=11"
+  guava: "33.4.8-jre"

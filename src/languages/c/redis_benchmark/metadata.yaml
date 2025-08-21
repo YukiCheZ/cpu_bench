@@ -1,54 +1,47 @@
 # metadata.yaml for Redis CPU Benchmark
 name: redis_benchmark
-type: macrobenchmark      # Indicates this is a macrobenchmark
-language: C               # Programming language of the benchmark
-domain:                     # Related fields or areas
+type: macrobenchmark      
+language: C               
+domain:                     
   - database
   - memory
 
-exec: run_benchmark.py
-# Configurable parameters in the benchmark script
-parameters:
-  clients:
-    description: Number of concurrent clients sending requests
-    default: 50
-    configurable: true
-  threads:
-    description: Number of threads used by redis-benchmark
-    default: 1
-    configurable: true
-  requests:
-    description: Total number of requests per iteration
-    default: 100000
-    configurable: true
-  datasize:
-    description: Size of each value
-    unit: bytes
-    default: 3
-    configurable: true
-  pipeline:
-    description: Number of requests to pipeline
-    default: 1
-    configurable: true
-  iterations:
-    description: Number of timing iterations
-    default: 1
-    configurable: true
+workloads:
+  - name: redis-benchmark
+    description: Benchmark Redis performance using redis-benchmark tool
+    command: python3 run_benchmark.py
+    parameters:
+      clients:
+        description: Number of concurrent clients sending requests
+        default: 50
+      threads:
+        description: Number of threads used by redis-benchmark
+        default: 1
+      requests:
+        description: Total number of requests per iteration
+        default: 100000
+      datasize:
+        description: Size of each value
+        unit: bytes
+        default: 3
+      pipeline:
+        description: Number of requests to pipeline
+        default: 1
+      iterations:
+        description: Number of timing iterations
+        default: 1
 
-# Benchmark characteristics
 characteristics:
-  IO_effects: minimal          # Redis is started with persistence disabled
-  single_machine: true         # Server and clients run on the same machine
-  network_effects: minimal     # Some local TCP overhead may exist
+  IO_effects: minimal          
+  single_machine: true         
+  network_effects: minimal     
 
-# Optional tags for filtering or reporting
 tags:
   - cpu
   - concurrency
   - pipeline
   - memory
 
-# Optional dependencies or environment requirements
 dependencies:
   redis-server: ">=7.0"
   redis-benchmark: ">=7.0"

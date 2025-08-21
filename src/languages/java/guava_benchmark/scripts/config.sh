@@ -3,8 +3,10 @@
 # 工作负载模式: collection | immutable | cache
 DEFAULT_MODE="collection"
 
-# 数据规模
-DEFAULT_DATASIZE=1000000
+# 不同模式下的数据规模
+COLLECTION_DATASIZE=2000000
+IMMUTABLE_DATASIZE=5000000
+CACHE_DATASIZE=1000000
 
 # 副本数 (即并行线程数)
 DEFAULT_COPIES=1

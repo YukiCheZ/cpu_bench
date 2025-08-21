@@ -15,7 +15,6 @@ def worker(args):
     meta_count = 10
     target_count = 5
 
-    # 固定合法 TUF Root 元数据
     metadata_dict = {
         "signed": {
             "_type": "root",
@@ -35,10 +34,8 @@ def worker(args):
     }
     metadata_bytes = json.dumps(metadata_dict).encode("utf-8")
 
-    # 构造 metadata 文件（固定大小合法 JSON）
     metadata_files = [{"path": f"meta{i}", "data": metadata_bytes} for i in range(meta_count)]
 
-    # 构造 target 文件，按用户指定总大小均分
     target_size = max(data_size // target_count, 1)
     target_files = [{"path": f"file{i}", "data": b"x"*target_size} for i in range(target_count)]
 
@@ -71,14 +68,14 @@ def main():
     parser.add_argument("--copies", type=int, default=1, help="Number of parallel worker processes")
     parser.add_argument("--iterations", type=int, default=10, help="Iterations per worker")
     parser.add_argument("--warmup", type=int, default=2, help="Warmup iterations per worker")
-    parser.add_argument("--data-size", type=int, default=10*1024*1024,
+    parser.add_argument("--datasize", type=int, default=4*1024*1024*1024,
                         help="Total target data size per worker (bytes)")
     parser.add_argument("--repo", type=str, default="repo", help="Path to test repository (not used in memory mode)")
     args = parser.parse_args()
 
-    print(f"[Benchmark] Running {args.copies} copies, {args.iterations} iterations, warmup {args.warmup}, data-size {args.data_size} bytes per worker")
+    print(f"[Benchmark] Running {args.copies} copies, {args.iterations} iterations, warmup {args.warmup}, data-size {args.datasize} bytes per worker")
 
-    worker_args = [(args.repo, args.iterations, args.warmup, args.data_size) for _ in range(args.copies)]
+    worker_args = [(args.repo, args.iterations, args.warmup, args.datasize) for _ in range(args.copies)]
 
     start = time.perf_counter()
     with Pool(processes=args.copies) as pool:

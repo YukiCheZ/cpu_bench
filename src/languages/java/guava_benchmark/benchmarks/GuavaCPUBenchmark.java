@@ -19,9 +19,6 @@ public class GuavaCPUBenchmark {
         int copies = Integer.parseInt(args[2]);
         int iterations = args.length >= 4 ? Integer.parseInt(args[3]) : 10;
 
-        System.out.printf("Mode: %s, Data size: %d, Copies: %d, Iterations per copy: %d%n",
-                mode, dataSize, copies, iterations);
-
         ExecutorService pool = Executors.newFixedThreadPool(copies);
         DataGenerator generator = new DataGenerator(42);
 
