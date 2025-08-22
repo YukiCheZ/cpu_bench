@@ -23,6 +23,10 @@ benchmarks:
     path: src/languages/c/redis_benchmark/metadata.yaml
     num: 1
   
-  - name: go_benchmark
-    path: src/languages/go/go_benchmark/metadata.yaml
+  - name: go_compiler_benchmark
+    path: src/languages/go/go_compiler_benchmark/metadata.yaml
     num: 1
+
+  - name: golang_benchmark
+    path: src/languages/go/golang_benchmark/metadata.yaml
+    num: x
