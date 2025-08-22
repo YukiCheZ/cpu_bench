@@ -1,0 +1,44 @@
+# metadata.yaml for Go Compiler Benchmark
+name: go_compiler_benchmark
+type: macrobenchmark
+language: Go
+domain:
+  - compilation
+  - performance
+  - build_system
+
+workloads:
+  - name: go-benchmark
+    description: Benchmark for measuring Go compiler and toolchain build performance.
+    command: python3 run_benchmark.py
+    parameters:
+      scale: 
+        description: compiler scale <small, std, all>, <small, std> for cmd/compile and standard library, <all> for full compilation
+        default: std
+      iterations:
+        description: Number of times to repeat the benchmark
+        default: 1
+      threads:
+        description: Number of parallel build threads (GOMAXPROCS)
+        default: 1
+      no_clean:
+        description: Skip cleaning build cache before each run
+        type: boolean
+        default: false
+
+characteristics:
+  IO_effects: moderate
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+
+tags:
+  - cpu
+  - compiler
+  - build
+  - parallel
+  - go
+
+dependencies:
+  python: ">=3.7"
+  go: ">=1.24.5"
