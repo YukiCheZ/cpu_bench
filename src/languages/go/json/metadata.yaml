@@ -1,0 +1,48 @@
+# metadata.yaml for JSON Marshal/Unmarshal Benchmark
+name: go_json_benchmark
+type: macrobenchmark
+language: Go
+domain:
+  - serialization
+  - data_processing
+  - cpu_bound
+
+workloads:
+  - name: json-marshal-unmarshal
+    description: >
+      Benchmark that repeatedly marshals and unmarshals a JSON object hierarchy in Go.
+      Measures the execution time of JSON serialization and deserialization of a tree-like
+      object structure. 
+    data:
+      command: python3 scripts/generate_data.py
+      parameters:
+        size: 50
+        seed: 42
+        output: ./data/input_<size>MB.json
+    command: go run src/json.go
+    parameters:
+      input:
+        description: Path to input JSON file
+        default: ./data/input_50MB.json
+      threads:
+        description: Number of threads (GOMAXPROCS)
+        default: 4
+      iterations:
+        description: Number of iterations per thread
+        default: 10
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+
+tags:
+  - cpu
+  - serialization
+  - json
+  - go
+  - macrobenchmark
+
+dependencies:
+  go: "1.24.5"

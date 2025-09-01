@@ -1,0 +1,48 @@
+# metadata.yaml for tile38-sim benchmark
+name: tile38-sim
+type: macrobenchmark
+language: Go
+domain:
+  - geospatial
+  - query_processing
+  - cpu_bound
+
+workloads:
+  - name: kdtree-simulation
+    description: >
+      A benchmark that simulates geospatial queries using a KD-Tree dataset.
+      It generates a random set of latitude/longitude points, builds a KDTree
+      index, and executes a mix of spatial queries including within-circle,
+      intersects-circle, and nearby-KNN lookups. 
+    command: go run src/main.go
+    parameters:
+      threads:
+        description: Number of worker threads (goroutines / GOMAXPROCS)
+        default: 0
+      points:
+        description: Number of points in the randomly generated dataset
+        default: 10000
+      iters:
+        description: Number of query iterations to run across all workers
+        default: 1000
+      seed:
+        description: Random seed for dataset generation
+        default: 42
+
+characteristics:
+  IO_effects: none       # purely in-memory synthetic dataset
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: medium   # large KDTree datasets may consume significant RAM
+
+tags:
+  - geospatial
+  - kd-tree
+  - tile38
+  - simulation
+  - go
+
+dependencies:
+  go: ">=1.24.5"
+  module: "github.com/kyroy/kdtree"

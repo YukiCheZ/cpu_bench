@@ -1,0 +1,63 @@
+# metadata.yaml for CockroachDB benchmark
+name: cockroachdb_benchmark
+type: macrobenchmark
+language: Go
+setup: source setup.sh
+domain:
+  - database
+  - transactions
+  - performance
+  - distributed_systems
+
+workloads:
+  - name: cockroachdb
+    description: >
+      Benchmark for CockroachDB using the built-in "workload kv" runner.
+      This workload launches a single-node CockroachDB cluster locally,
+      initializes the key-value dataset, and runs transactional read/write
+      operations with configurable read percentages and concurrency.
+    command: go run src/main.go
+    parameters:
+      cockroachdb-bin:
+        description: Path to CockroachDB binary (or set COCKROACH_BIN env var)
+        default: ./bin/cockroach
+      host:
+        description: Hostname of the CockroachDB server
+        default: localhost
+      tmp:
+        description: Temporary directory for cluster data
+        default: ""
+      max-ops:
+        description: Maximum number of operations to execute
+        default: 1000000
+      kv:
+        description: KV read percentage (must be 0, 50, or 95)
+        default: 0
+      threads:
+        description: Number of threads (sets GOMAXPROCS for CockroachDB process)
+        default: 1
+      short:
+        description: Run a short version of the benchmark
+        type: boolean
+        default: false
+
+characteristics:
+  IO_effects: high
+  single_machine: true
+  network_effects: low
+  cpu_bound: true
+  memory_intensive: high
+  storage_intensive: medium
+
+tags:
+  - cpu
+  - database
+  - transactions
+  - cockroachdb
+  - sql
+  - kv
+  - go
+
+dependencies:
+  go: "1.24.5"
+  

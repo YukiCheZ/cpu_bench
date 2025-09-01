@@ -27,6 +27,38 @@ benchmarks:
     path: src/languages/go/go_compiler_benchmark/metadata.yaml
     num: 1
 
-  - name: golang_benchmark
-    path: src/languages/go/golang_benchmark/metadata.yaml
-    num: x
+  - name: biogo-benchmark
+    path: src/languages/go/biogo/metadata.yaml
+    num: 2
+
+  - name: bleve-index
+    path: src/languages/go/bleve-index/metadata.yaml
+    num: 1
+
+  - name: cockroachdb
+    path: src/languages/go/cockroachdb/metadata.yaml
+    num: 1
+
+  - name: esbuild
+    path: src/languages/go/esbuild/metadata.yaml
+    num: 2
+  
+  - name: garbage
+    path: src/languages/go/garbage/metadata.yaml
+    num: 1
+
+  - name: gopher-lua
+    path: src/languages/go/gopher-lua/metadata.yaml
+    num: 1
+
+  - name: json
+    path: src/languages/go/json/metadata.yaml
+    num: 1
+
+  - name: markdown
+    path: src/languages/go/markdown/metadata.yaml
+    num: 1
+  
+  - name: tile38-sim
+    path: src/languages/go/tile38-sim/metadata.yaml
+    num: 1

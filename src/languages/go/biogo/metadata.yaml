@@ -1,0 +1,83 @@
+# metadata.yaml for biogo-igor benchmark
+name: biogo-benchmark
+type: macrobenchmark
+language: Go
+domain:
+  - bioinformatics
+  - performance
+  - clustering
+  - sequence
+
+workloads:
+  - name: biogo-igor
+    description: >
+      Benchmark for the igor package in biogo. This workload simulates genomic sequence
+      alignment hits in GFF format, performs piling, clustering, and grouping using igor.
+    command: go run src/igor.go
+    parameters:
+      seq:
+        description: Number of sequences (hits) to generate for the benchmark
+        default: 1000000
+      maxpos:
+        description: Maximum sequence position in the generated sequences
+        default: 1000000
+      hitlen:
+        description: Hit length for generated sequences
+        default: 100000
+      iterations:
+        description: Number of benchmark iterations
+        default: 1
+      threads:
+        description: Number of parallel threads (sets GOMAXPROCS)
+        default: 1
+      warmup:
+        description: Whether to run one warmup iteration before benchmark
+        type: boolean
+        default: true
+    
+  - name: biogo-krishna
+    description: >
+      Benchmark for the krishna package in biogo. This workload generates synthetic
+      DNA sequences in FASTA format with controlled repeat rates, runs the Krishna
+      sequence comparison and clustering pipeline.
+    command: go run src/krishna.go
+    parameters:
+      size:
+        description: Length of each generated DNA sequence
+        default: 10000
+      count:
+        description: Number of sequences to generate
+        default: 100
+      repeat:
+        description: Proportion of sequence bases copied from the first sequence to simulate repeats (0–1)
+        default: 0.8
+      tmp:
+        description: Directory for temporary files (if empty, runs in-memory)
+        default: ""
+      iterations:
+        description: Number of timed benchmark iterations
+        default: 1
+      warmup:
+        description: Number of warmup iterations before timing
+        default: 0
+      threads:
+        description: Number of threads (sets GOMAXPROCS)
+        default: 1
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: moderate
+
+tags:
+  - cpu
+  - bioinformatics
+  - genomics
+  - clustering
+  - parallel
+  - go
+
+dependencies:
+  go: "1.24.5"

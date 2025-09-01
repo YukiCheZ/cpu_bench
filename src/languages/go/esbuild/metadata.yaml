@@ -1,0 +1,78 @@
+# metadata.yaml for esbuild benchmark
+name: esbuild_benchmark
+type: macrobenchmark
+language: Go
+setup: source setup.go
+domain:
+  - compiler
+  - javascript
+  - bundler
+  - web_development
+  - rendering
+
+workloads:
+  - name: esbuild_ThreeJS
+    description: >
+      Benchmark the performance of Three.js, a 3D graphics library, by
+      rendering a complex JavaScript scene. Measures rendering time, 
+      and efficiency of the graphics pipeline.
+    data: 
+      command: ./generate_project.sh --lang js
+      parameters:
+        size: 1000
+        complexity: 1000
+        out: ./data/demo_js
+      parameters:
+    command: go run src/main.go --bench ThreeJS 
+    parameters:
+      bin:
+        description: Path to esbuild binary (or set ESBUILD_BIN env var)
+        default: ./bin/esbuild
+      src:
+        description: Path to JavaScript/TypeScript source to bundle
+        default: ./data/demo_js
+      threads:
+        description: Number of threads to use (sets GOMAXPROCS for esbuild process)
+        default: 0
+  
+  - name: esbuild_ThreeJS
+    description: >
+      Benchmark RomeTS, a TypeScript/JavaScript bundler and compiler, by
+      compiling a full TypeScript project.
+    data: 
+      command: ./generate_project.sh --lang ts
+      parameters:
+        size: 1000
+        complexity: 1000
+        out: ./data/demo_js
+    command: go run src/main.go --bench RomeTS
+    parameters:
+      bin:
+        description: Path to esbuild binary (or set ESBUILD_BIN env var)
+        default: ./bin/esbuild
+      src:
+        description: Path to JavaScript/TypeScript source to bundle
+        default: ./data/demo_js
+      threads:
+        description: Number of threads to use (sets GOMAXPROCS for esbuild process)
+        default: 0
+    
+characteristics:
+  IO_effects: medium
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: medium
+  storage_intensive: low
+
+tags:
+  - cpu
+  - compiler
+  - javascript
+  - bundler
+  - esbuild
+  - minify
+  - sourcemap
+
+dependencies:
+  go: "1.24.5"

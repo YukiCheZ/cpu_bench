@@ -6,7 +6,6 @@ import os
 import sys
 
 def run_command(cmd, env=None, measure_time=True):
-    """运行命令，可选是否计时"""
     start = time.time() if measure_time else None
     result = subprocess.run(cmd, shell=True, env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)

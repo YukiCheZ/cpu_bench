@@ -1,0 +1,47 @@
+# metadata.yaml for Gopher-Lua KNucleotide Benchmark
+name: gopher_lua_knucleotide
+type: macrobenchmark
+language: Go
+domain:
+  - scripting
+  - interpreter
+  - bioinformatics
+
+workloads:
+  - name: gopher-lua-knucleotide
+    description: >
+      Benchmark that executes a Lua script using the Gopher-Lua interpreter.
+      It loads a DNA sequence input file and runs the `run_knucleotide` function
+      defined in the Lua script.
+    data: 
+      command: python3 scripts/generate_data.py
+      parameters:
+        size: 1000000
+        output: dna_input.fasta
+    command: go run src/main.go
+    parameters:
+      lua:
+        description: Path to the Lua script file
+        default: ./knucleotide.lua
+      data:
+        description: Path to the input DNA file
+        default: ./data/dna_input.fasta
+      threads:
+        description: Number of threads to use (GOMAXPROCS)
+        default: 1
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+
+tags:
+  - cpu
+  - lua
+  - interpreter
+  - scripting
+  - bioinformatics
+
+dependencies:
+  go: "1.24.5"
