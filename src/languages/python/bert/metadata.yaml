@@ -1,0 +1,43 @@
+# metadata.yaml for BERT CPU benchmark
+name: bert_cpu
+type: macrobenchmark
+language: Python
+domain:
+  - natural_language_processing
+  - transformer_models
+  - deep_learning
+
+workloads:
+  - name: bert_training
+    description: >
+      Execute BERT CPU training using pre-generated input batches.
+      Measures the performance of forward and backward pass on CPU.
+    command: python3 benchmark_bert_cpu_train.py
+    parameters:
+      data_dir:
+        description: Directory containing pre-generated input batches
+        default: ./data
+      threads:
+        description: Number of CPU threads to use for training
+        default: 1
+      lr:
+        description: Learning rate for optimizer
+        default: 0.001
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - transformer
+  - NLP
+  - deep_learning
+  - training
+
+dependencies:
+  python: ">=3.8"
+  torch: ">=2.0"
+  transformers: ">=4.30"

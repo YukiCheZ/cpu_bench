@@ -11,6 +11,38 @@ benchmarks:
     path: src/languages/python/tuf_benchmark/metadata.yaml
     num: 1
 
+  - name: raytrace
+    path: src/languages/python/raytrace/metadata.yaml
+    num: 1
+
+  - name: go_board_game
+    path: src/languages/python/go_board_game/metadata.yaml
+    num: 1
+
+  - name: chaos_fractal
+    path: src/languages/python/chaos_fractal/metadata.yaml
+    num: 1
+  
+  - name: deltablue
+    path: src/languages/python/deltablue/metadata.yaml
+    num: 1
+
+  - name: pyflate
+    path: src/languages/python/pyflate/metadata.yaml
+    num: 1
+
+  - name: resnet50_cpu
+    path: src/languages/python/resnet50/metadata.yaml
+    num: 2
+
+  - name: bert_cpu
+    path: src/languages/python/bert/metadata.yaml
+    num: 1
+
+  - name: dlrm_cpu
+    path: src/languages/python/dlrm/metadata.yaml
+    num: 1
+
   - name: opencv_benchmark
     path: src/languages/cpp/opencv_benchmark/metadata.yaml
     num: 11

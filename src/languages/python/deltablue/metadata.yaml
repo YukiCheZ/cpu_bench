@@ -1,0 +1,42 @@
+# metadata.yaml for Python DeltaBlue benchmark
+name: deltablue
+type: macrobenchmark
+language: Python
+domain:
+  - constraint_solving
+  - user_interfaces
+  - programming_languages
+
+workloads:
+  - name: deltablue
+    description: >
+      Execute the DeltaBlue constraint solver benchmark. This workload
+      measures the performance of incremental constraint satisfaction,
+      variable dependency maintenance, and propagation algorithms.
+    command: python3 run_benchmark.py
+    parameters:
+      n:
+        description: Size of the DeltaBlue problem instance (number of variables/constraints)
+        default: 100000
+      iters:
+        description: Number of times to run the full DeltaBlue workload
+        default: 3
+      threads:
+        description: Number of parallel worker processes (each runs a full workload instance)
+        default: 1
+
+characteristics:
+  IO_effects: none
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - constraint_solver
+  - optimization
+  - ai
+  - runtime
+
+dependencies:
+  python: ">=3.8"

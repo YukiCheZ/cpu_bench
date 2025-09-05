@@ -1,0 +1,66 @@
+# metadata.yaml for DLRM CPU Inference benchmark
+name: dlrm
+type: macrobenchmark
+language: Python
+domain:
+  - recommendation_systems
+  - deep_learning
+  - cpu_performance
+
+workloads:
+  - name: dlrm_inference
+    description: >
+      Execute the DLRM model CPU inference benchmark. This workload
+      measures the performance of sparse embedding lookups and dense
+      feature computations for recommendation systems.
+    data: 
+      command: python3 generate_data.py
+      parameters:
+        output_dir:
+          description: Directory to save generated batches
+          default: ./data
+        num_batches:
+          description: Number of batches to generate
+          default: 3
+        batch_size:
+          description: Number of samples in each batch
+          default: 256
+        dense_dim:
+          description: Dimension of dense features
+          default: 256
+        sparse_dim:
+          description: Dimension of sparse features
+          default: 256
+        num_embeddings:
+          description: Number of embeddings per sparse feature
+          default: 10000
+    command: python3 run_benchmark.py
+    parameters:
+      data_dir:
+        description: Directory containing pre-generated batches and metadata.json
+        default: ./data
+      iterations:
+        description: Number of iterations to run inference
+        default: 50
+      threads:
+        description: Number of CPU threads to use
+        default: 1
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: high
+
+tags:
+  - recommendation
+  - deep_learning
+  - embeddings
+  - sparse_dense
+  - cpu
+
+dependencies:
+  python: ">=3.8"
+  torch: ">=2.0"
+  torchrec: ">=2.0"

@@ -1,0 +1,49 @@
+# metadata.yaml for Python raytracer benchmark
+name: raytrace
+type: macrobenchmark
+language: Python
+domain:
+  - computer_vision
+  - graphics
+  - rendering
+  - simulation
+  - compute
+
+workloads:
+  - name: python_raytrace
+    description: >
+      Render a 3D scene using a simple Python raytracer. This workload performs
+      floating-point computations for ray-object intersections, shading, and
+      lighting.
+    command: python3 run_benchmark.py
+    parameters:
+      width:
+        description: Image width in pixels
+        default: 500
+      height:
+        description: Image height in pixels
+        default: 500
+      iterations:
+        description: Number of outer benchmark repetitions (full scene renders)
+        default: 1
+      threads:
+        description: Number of parallel worker processes (each runs a full workload)
+        default: 1
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - cpu
+  - raytracer
+  - rendering
+  - 3d
+  - simulation
+  - floating_point
+
+dependencies:
+  python: ">=3.8"

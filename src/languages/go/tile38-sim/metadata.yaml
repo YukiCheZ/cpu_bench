@@ -44,5 +44,4 @@ tags:
   - go
 
 dependencies:
-  go: ">=1.24.5"
-  module: "github.com/kyroy/kdtree"
+  go: "1.24.5"

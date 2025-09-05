@@ -1,0 +1,51 @@
+# metadata.yaml for Python Pyflate benchmark
+name: pyflate
+type: macrobenchmark
+language: Python
+domain:
+  - compression
+  - data_processing
+
+workloads:
+  - name: pyflate
+    description: >
+      Execute the Pyflate benchmark, which decompresses a gzip or Bzip2
+      compressed file using a pure-Python implementation. This workload
+      measures CPU performance on Huffman decoding, BWT reversal, move-to-front
+      transformation, and general decompression routines.
+    data: 
+      command: python3 generate_data
+      parameters:
+        size:
+          description: Size of uncompressed random data in bytes
+          default: 1000000
+        output:
+          description: Output compressed file path
+          default: data/interpreter.tar.bz2
+    command: python3 run_benchmark.py
+    parameters:
+      file:
+        description: Path to the input compressed file (gzip or Bzip2)
+        default: data/interpreter.tar.bz2
+      iters:
+        description: Number of times to run the full decompression workload
+        default: 3
+      threads:
+        description: Number of parallel worker processes (each runs a full workload instance)
+        default: 1
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - compression
+  - decompression
+  - huffman
+  - bwt
+
+dependencies:
+  python: ">=3.8"

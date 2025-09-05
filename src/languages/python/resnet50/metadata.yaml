@@ -1,0 +1,77 @@
+# metadata.yaml for ResNet50 CPU benchmark
+name: resnet50_cpu
+type: macrobenchmark
+language: Python
+domain:
+  - deep_learning
+  - computer_vision
+  - neural_networks
+
+workloads:
+  - name: resnet50_inference
+    description: >
+      Execute ResNet50 CPU inference using pre-generated input data.
+      Measures the forward pass computation performance on CPU.
+    data:
+      command: python3 generate_data.py
+      parameters:
+        batch_size:
+          default: 16
+        img_size:
+          default: 512
+        num_batches:
+          default: 3
+        output_dir:
+          default: "./data"
+    command: python3 resnet_eval.py
+    parameters:
+      data_dir:
+        description: Directory containing pre-generated input data batches
+        default: "./data"
+      threads:
+        description: Number of CPU threads to use for inference
+        default: 1
+
+  - name: resnet50_training
+    description: >
+      Execute ResNet50 CPU training using pre-generated input data.
+      Measures the forward + backward pass and optimization performance on CPU.
+    data:
+      command: python3 generate_data.py
+      parameters:
+        batch_size:
+          default: 16
+        img_size:
+          default: 512
+        num_batches:
+          default: 3
+        output_dir:
+          default: "./data"
+    command: python3 resnet_train.py
+    parameters:
+      data_dir:
+        description: Directory containing pre-generated training data batches
+        default: "./data"
+      threads:
+        description: Number of CPU threads to use for training
+        default: 1
+      lr:
+        description: Learning rate for SGD optimizer
+        default: 0.001
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: medium
+
+tags:
+  - deep_learning
+  - computer_vision
+  - neural_networks
+
+dependencies:
+  python: ">=3.8"
+  torch: ">=2.0"
+  torchvision: ">=0.15"

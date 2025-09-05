@@ -1,0 +1,49 @@
+# metadata.yaml for Go board game benchmark
+name: go_board_game
+type: macrobenchmark
+language: Python
+domain:
+  - game
+  - Artificial_Intelligence
+  - Monte_Carlo
+
+workloads:
+  - name: go-board-game
+    description: >
+      Benchmark for a Go board game AI using Monte Carlo Tree Search (MCTS). 
+      This workload simulates games on configurable board sizes, with a configurable 
+      number of simulation games per move. 
+    command: python3 go_benchmark.py --size {size} --games {games} --iterations {iterations} --threads {threads}
+    parameters:
+      size:
+        description: Board size (e.g., 9, 19, 50)
+        default: 99
+      games:
+        description: Number of simulation games per move
+        default: 100
+      iterations:
+        description: Number of timed benchmark iterations
+        default: 1
+      threads:
+        description: Number of parallel threads/processes
+        default: 1
+      warmup:
+        description: Run one warmup iteration before timing
+        type: boolean
+        default: true
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - cpu
+  - game
+  - Artificial_Intelligence
+  - MCTS
+
+dependencies:
+  python: ">=3.8"
