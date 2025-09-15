@@ -1,0 +1,52 @@
+# metadata.yaml for Java KMeans CPU Benchmark
+name: java_kmeans_cpu_benchmark
+type: macrobenchmark
+language: Java
+domain:
+  - machine_learning
+  - clustering
+  
+workloads:
+  - name: kmeans-benchmark
+    description: >
+      Run a KMeans clustering CPU benchmark in Java using the Smile library.
+      The benchmark generates random data in memory and performs KMeans clustering
+      on multiple copies (parallel threads), to evaluate CPU performance under
+      compute-intensive machine learning workloads.
+
+    setup:
+      command: mvn clean compile
+
+    run:
+      command: mvn exec:java -Dexec.mainClass="org.example.KMeansBenchmark"
+      parameters:
+        nSamples:
+          description: Number of samples per copy
+          default: 100000
+        nFeatures:
+          description: Number of features per sample
+          default: 50
+        nClusters:
+          description: Number of clusters for KMeans
+          default: 10
+        nCopies:
+          description: Number of parallel copies (threads) to run
+          default: 1
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - java
+  - machine_learning
+  - kmeans
+  - smile
+
+dependencies:
+  java: ">=11"
+  maven: ">=3.6"
+  smile: "3.0.1"
