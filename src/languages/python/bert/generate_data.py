@@ -3,7 +3,6 @@ import os
 import argparse
 
 def generate_data(batch_size, seq_len, num_batches, output_dir):
-    # 删除已有数据目录，重新生成
     if os.path.exists(output_dir):
         for f in os.listdir(output_dir):
             os.remove(os.path.join(output_dir, f))

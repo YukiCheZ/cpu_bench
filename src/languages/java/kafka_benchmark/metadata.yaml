@@ -1,0 +1,54 @@
+# metadata.yaml for Kafka CPU Benchmark
+name: kafka_cpu_benchmark
+type: macrobenchmark
+language: Java
+domain:
+  - messaging
+  - streaming
+
+workloads:
+  - name: kafka-producer-perf
+    description: >
+      Run Kafka producer performance benchmark to evaluate CPU under
+      high-throughput message publishing workloads. It uses the official
+      Kafka performance test tool (`kafka-producer-perf-test.sh`) launched
+      in parallel via Python process pool.
+
+    setup:
+      command: ./setup.sh
+
+    run:
+      command: python3 run_benchmark.py
+      parameters:
+        num-records:
+          description: Total number of records to produce across all threads
+          default: 50000000
+        record-size:
+          description: Size of each record in bytes
+          default: 100
+        threads:
+          description: Number of producer threads (parallel producers)
+          default: 1
+        iters:
+          description: Number of benchmark iterations
+          default: 3
+        warmup:
+          description: Run a warmup iteration before benchmarking
+          default: false
+
+characteristics:
+  IO_effects: medium
+  single_machine: true
+  network_effects: loopback_only
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - kafka
+  - streaming
+  - messaging
+
+dependencies:
+  python: ">=3.8"
+  java: ">=11"
+  kafka: "3.8.0"

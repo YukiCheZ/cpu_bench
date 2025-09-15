@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # -----------------------------
-# 用户选择编译器
+# compiler
 # -----------------------------
 set(ALLOWED_COMPILERS gcc clang)
 set(COMPILER "gcc" CACHE STRING "Choose compiler: gcc or clang")
@@ -29,7 +29,7 @@ elseif(COMPILER STREQUAL "clang")
 endif()
 
 # -----------------------------
-# 用户选择优化等级
+# optimization level
 # -----------------------------
 set(ALLOWED_OPT O1 O2 O3)
 set(BUILD_OPT O2 CACHE STRING "Build optimization: O1, O2, O3")

@@ -1,0 +1,65 @@
+# metadata.yaml for FFmpeg CPU Multi-operation Benchmark
+name: ffmpeg_benchmark
+type: macrobenchmark
+language: C
+domain:
+  - multimedia
+  - video_processing
+
+workloads:
+  - name: ffmpeg
+    description: >
+      Execute a CPU-intensive FFmpeg workload that performs multiple operations
+      on an input video: decoding, scaling, Gaussian blur, frame rate conversion,
+      and re-encoding to H.265.
+    setup:
+      command: ./setup.sh
+    data:
+      command: python3 generate_data.py
+      parameters:
+        output_dir: data/test.mp4
+        resolution: 1920x1080
+        duration: 60
+        framerate: 60
+        codec: libx264
+        noise: false
+        ffmpeg_bin: ./bin/bin/ffmpeg
+    run:
+      command: python3 run_benchmark.py
+      parameters:
+        input:
+          description: Path to the input video file
+          default: data/test.mp4
+        threads:
+          description: Number of threads used for CPU processing
+          default: 4
+        scale:
+          description: Output video resolution (width:height)
+          default: 1280:720
+        blur_sigma:
+          description: Sigma value for Gaussian blur filter
+          default: 5.0
+        fps:
+          description: Output frame rate
+          default: 30
+        ffmpeg_bin:
+          description: Path to ffmpeg executable (default: ./bin/bin/ffmpeg)
+          default: ./bin/bin/ffmpeg
+
+characteristics:
+  IO_effects: medium
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - video
+  - multimedia
+  - encoding
+  - decoding
+  - filter
+
+dependencies:
+  python: ">=3.8"
+  ffmpeg: ">=6.1"

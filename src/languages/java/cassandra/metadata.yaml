@@ -1,0 +1,57 @@
+# metadata.yaml for Cassandra CPU Benchmark
+name: cassandra_cpu_benchmark
+type: macrobenchmark
+language: Java
+domain:
+  - database
+  - storage
+
+workloads:
+  - name: cassandra-stress-read
+    description: >
+      Run Cassandra read performance benchmark to evaluate CPU usage under
+      read-heavy workloads. It uses the official `cassandra-stress` tool
+      executed via Python, supporting configurable total operations, threads,
+      CPU core affinity, and multiple iterations.
+
+    setup:
+      command: ./setup.sh
+
+    run:
+      command: python3 run_benchmark.py
+      parameters:
+        write-n:
+          description: Total number of write operations for pre-loading data
+          default: 1000000
+        write-threads:
+          description: Number of threads for write pre-load
+          default: 50
+        read-n:
+          description: Total number of read operations per iteration
+          default: 500000
+        read-threads:
+          description: Number of threads for read operations
+          default: 20
+        cpu-count:
+          description: Limit the number of CPU cores to use
+          default: null
+        iters:
+          description: Number of iterations to run the read benchmark
+          default: 3
+
+characteristics:
+  IO_effects: medium
+  single_machine: true
+  network_effects: loopback_only
+  cpu_bound: true
+  memory_intensive: medium
+
+tags:
+  - cassandra
+  - database
+  - storage
+
+dependencies:
+  python: ">=3.8"
+  java: ">=11"
+  cassandra: "4.0.18"

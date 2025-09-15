@@ -1,0 +1,52 @@
+# metadata.yaml for Zstd CPU Benchmark
+name: zstd_benchmark
+type: macrobenchmark
+language: C
+domain:
+  - compression
+  - decompression
+
+workloads:
+  - name: zstd
+    description: >
+      Execute Zstandard (zstd) compression and decompression in memory.
+    data:
+      command: python3 generate_data.py
+      parameters:
+        size: 100
+    command: python3 run_benchmark.py
+    parameters:
+      input:
+        description: Input file for benchmark
+        default: ./data/zstd_input.bin
+      level:
+        description: Compression level (1-19)
+        default: 19
+      threads:
+        description: Number of threads to use
+        default: 1
+      warmup:
+        description: Number of warmup iterations before timing
+        default: 1
+      iters:
+        description: Number of timed iterations
+        default: 3
+      zstd-bin:
+        description: Path to zstd executable
+        default: ./bin/zstd
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - compression
+  - decompression
+  - zstd
+
+dependencies:
+  python: ">=3.8"
+  zstd: ">=1.5"

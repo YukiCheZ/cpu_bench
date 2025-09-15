@@ -1,0 +1,74 @@
+# metadata.yaml for C Compilation CPU Benchmark
+name: c_compile_benchmark
+type: macrobenchmark
+language: C
+domain:
+  - compilation
+
+workloads:
+  - name: gcc_compile
+    description: >
+      Execute CPU-intensive compilation of generated C source files using gcc.
+    data:
+      command: python3 generate_data.py
+      parameters:
+        num_files:
+          description: Number of .c files to generate
+          default: 5
+        num_funcs:
+          description: Number of functions per file
+          default: 50
+        func_size:
+          description: Number of lines per function
+          default: 200
+    run:
+      command: python3 run_compile_benchmark.py --compiler gcc
+      parameters:
+        opt:
+          description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
+          default: -O3
+        threads:
+          description: Number of parallel compilation threads (independent compilations)
+          default: 1
+
+  - name: clang_compile
+    description: >
+      Execute CPU-intensive compilation of generated C source files using clang.
+    data:
+      command: python3 generate_data.py
+      parameters:
+        num_files:
+          description: Number of .c files to generate
+          default: 5
+        num_funcs:
+          description: Number of functions per file
+          default: 50
+        func_size:
+          description: Number of lines per function
+          default: 200
+    run:
+      command: python3 run_compile_benchmark.py --compiler clang
+      parameters:
+        opt:
+          description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
+          default: -O3
+        threads:
+          description: Number of parallel compilation threads (independent compilations)
+          default: 1
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - compilation
+  - gcc
+  - clang
+
+dependencies:
+  python: ">=3.8"
+  gcc: ">=9.0"
+  clang: ">=10.0"

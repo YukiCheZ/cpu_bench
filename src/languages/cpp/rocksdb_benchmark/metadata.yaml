@@ -1,0 +1,60 @@
+# metadata.yaml for RocksDB CPU Benchmark
+name: rocksdb_benchmark
+type: macrobenchmark
+language: C++
+domain:
+  - database
+  - key-value
+
+workloads:
+  - name: rocksdb
+    description: >
+      Execute CPU-bound key-value operations using RocksDB.
+    setup:
+      command: ./setup.sh
+      parameters:
+        compiler:
+          description: Compiler to use (gcc or clang)
+          default: gcc
+        opt:
+          description: Optimization level (O0, O1, O2, O3)
+          default: O2
+    run:
+      command: python3 run_benchmark.py
+      parameters:
+        num:
+          description: Number of key-value pairs to use in benchmark
+          default: 1000000
+        threads:
+          description: Number of concurrent threads
+          default: 1
+        benchmarks:
+          description: Comma-separated list of benchmarks to run (e.g., fillseq,readrandom)
+          default: fillseq,readrandom
+        compression:
+          description: Compression type (none, snappy, zlib, bzip2, lz4, zstd)
+          default: snappy
+        warmup:
+          description: Number of warmup iterations before timing
+          default: 1
+        iters:
+          description: Number of timed iterations
+          default: 3
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: low
+
+tags:
+  - database
+  - key-value
+  - rocksdb
+
+dependencies:
+  python: ">=3.8"
+  rocksdb: ">=10.0"
+  snappy: "libsnappy-dev"
+  gflags: "libgflags-dev"
