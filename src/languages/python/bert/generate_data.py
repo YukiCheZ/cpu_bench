@@ -20,7 +20,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate random data for BERT CPU inference")
     parser.add_argument("--batch_size", type=int, default=16, help="Batch size for each batch")
     parser.add_argument("--seq_len", type=int, default=1024, help="Sequence length of each input")
-    parser.add_argument("--num_batches", type=int, default=3, help="Number of batches to generate")
+    parser.add_argument("--num_batches", type=int, default=50, help="Number of batches to generate")
     parser.add_argument("--output_dir", type=str, default="./data", help="Directory to save generated data")
     args = parser.parse_args()
 

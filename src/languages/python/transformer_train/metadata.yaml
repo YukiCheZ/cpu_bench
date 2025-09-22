@@ -1,0 +1,79 @@
+# metadata.yaml for Full Transformer CPU Inference Benchmark
+name: transformer_train
+type: macrobenchmark
+language: Python
+domain:
+  - deep_learning
+  - transformers
+  - natural_language_processing
+
+workloads:
+  - name: transformer_train
+    description: >
+      Execute the full Transformer (Encoder + Decoder) CPU training benchmark. 
+      This workload measures the performance of multi-head self-attention, 
+      feedforward networks, and sequence processing on CPU.
+    data: 
+      command: python3 generate_data.py
+      parameters:
+        output_dir:
+          description: Directory to save generated batches
+          default: ./data
+        num_batches:
+          description: Number of batches to generate
+          default: 200
+        batch_size:
+          description: Number of sequences per batch
+          default: 4
+        seq_len:
+          description: Sequence length
+          default: 128
+        vocab_size:
+          description: Vocabulary size for input tokens
+          default: 10000
+    command: python3 run_benchmark.py
+    parameters:
+      data_dir:
+        description: Directory containing pre-generated batches and metadata.json
+        default: ./data
+      iterations:
+        description: Number of iterations to run training
+        default: 1
+      threads:
+        description: Number of CPU threads to use
+        default: 1
+      num_encoder_layers:
+        description: Number of encoder layers in Transformer
+        default: 12
+      num_decoder_layers:
+        description: Number of decoder layers in Transformer
+        default: 12
+      d_model:
+        description: Transformer embedding dimension
+        default: 512
+      nhead:
+        description: Number of attention heads
+        default: 16
+      dim_feedforward:
+        description: Feedforward hidden size in each Transformer layer
+        default: 4096
+      lr:
+        description: Learning rate for optimizer
+        default: 1e-3
+
+characteristics:
+  IO_effects: low
+  single_machine: true
+  network_effects: none
+  cpu_bound: true
+  memory_intensive: medium
+
+tags:
+  - transformer
+  - deep_learning
+  - encoder_decoder
+  - attention
+
+dependencies:
+  python: ">=3.8"
+  torch: ">=2.0"

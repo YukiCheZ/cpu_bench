@@ -47,9 +47,9 @@ def generate_video(output, resolution, duration, framerate, codec, noise, ffmpeg
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate test video using FFmpeg")
     parser.add_argument("--output", type=str, default="data/test.mp4", help="Output file name")
-    parser.add_argument("--resolution", type=str, default="1920x1080", help="Video resolution, e.g., 1280x720, 1920x1080, 3840x2160")
-    parser.add_argument("--duration", type=int, default=60, help="Duration in seconds")
-    parser.add_argument("--framerate", type=int, default=60, help="Frame rate (fps)")
+    parser.add_argument("--resolution", type=str, default="3840x2160", help="Video resolution, e.g., 1280x720, 1920x1080, 3840x2160")
+    parser.add_argument("--duration", type=int, default=360, help="Duration in seconds")
+    parser.add_argument("--framerate", type=int, default=120, help="Frame rate (fps)")
     parser.add_argument("--codec", type=str, default="libx264", choices=["libx264", "libx265"], help="Video codec")
     parser.add_argument("--noise", action="store_true", help="Use random noise instead of test pattern (higher CPU load)")
     parser.add_argument("--ffmpeg-bin", type=str, default=None, help="Path to ffmpeg executable (default: ./bin/bin/ffmpeg)")

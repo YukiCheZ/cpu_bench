@@ -14,13 +14,13 @@ workloads:
       parameters:
         num_files:
           description: Number of .c files to generate
-          default: 5
+          default: 30
         num_funcs:
           description: Number of functions per file
-          default: 50
+          default: 300
         func_size:
           description: Number of lines per function
-          default: 200
+          default: 500
     run:
       command: python3 run_compile_benchmark.py --compiler gcc
       parameters:
@@ -39,13 +39,13 @@ workloads:
       parameters:
         num_files:
           description: Number of .c files to generate
-          default: 5
+          default: 30
         num_funcs:
           description: Number of functions per file
-          default: 50
+          default: 300
         func_size:
           description: Number of lines per function
-          default: 200
+          default: 500
     run:
       command: python3 run_compile_benchmark.py --compiler clang
       parameters:

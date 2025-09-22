@@ -17,14 +17,14 @@ workloads:
         default: 1
       iterations:
         description: Iterations per worker process
-        default: 5
+        default: 1000
       warmup:
         description: Warmup iterations per worker
         default: 3
       size:
         description: Dataset size, affects generated JSON file
         unit: records
-        default: 8388608
+        default: 1048576
       force:
         description: Force regenerate dataset even if it exists
         default: false
@@ -35,6 +35,7 @@ characteristics:
   network_effects: none        # Using local file adapter, no network latency
   memory_bound: true           # JSON parsing and object materialization is memory-intensive
   cpu_bound: true              # Parsing large JSON also consumes CPU
+  memory_effects: low         # Large datasets lead to high memory usage
 
 tags:
   - cpu

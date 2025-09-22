@@ -662,7 +662,7 @@ if __name__ == "__main__":
     parser.add_argument("--file", type=str,
                         default=os.path.join("data", "interpreter.tar.bz2"),
                         help="Input compressed file path")
-    parser.add_argument("--iters", type=int, default=3,
+    parser.add_argument("--iters", type=int, default=1,
                         help="Number of benchmark iterations")
     parser.add_argument("--threads", type=int, default=1,
                         help="Number of parallel worker processes")

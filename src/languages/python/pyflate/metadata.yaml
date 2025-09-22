@@ -14,11 +14,11 @@ workloads:
       measures CPU performance on Huffman decoding, BWT reversal, move-to-front
       transformation, and general decompression routines.
     data: 
-      command: python3 generate_data
+      command: python3 generate_data.py
       parameters:
         size:
           description: Size of uncompressed random data in bytes
-          default: 1000000
+          default: 100000000
         output:
           description: Output compressed file path
           default: data/interpreter.tar.bz2
@@ -29,7 +29,7 @@ workloads:
         default: data/interpreter.tar.bz2
       iters:
         description: Number of times to run the full decompression workload
-        default: 3
+        default: 1
       threads:
         description: Number of parallel worker processes (each runs a full workload instance)
         default: 1

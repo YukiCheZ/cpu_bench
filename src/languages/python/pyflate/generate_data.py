@@ -18,8 +18,8 @@ def generate_data(size, output_file):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate input data for pyflate benchmark")
-    parser.add_argument("--size", type=int, default=1000000,
-                        help="Size of uncompressed random data in bytes (default: 5MB)")
+    parser.add_argument("--size", type=int, default=100000000,
+                        help="Size of uncompressed random data in bytes")
     parser.add_argument("--output", type=str, default="data/interpreter.tar.bz2",
                         help="Output compressed file path (default: data/interpreter.tar.bz2)")
     args = parser.parse_args()

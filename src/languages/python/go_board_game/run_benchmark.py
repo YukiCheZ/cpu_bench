@@ -366,8 +366,8 @@ def run_single_game(size, games, seed):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--size", type=int, default=99, help="Board size (e.g., 9, 19, 50)")
-    parser.add_argument("--games", type=int, default=100, help="Number of simulation games per move")
+    parser.add_argument("--size", type=int, default=300, help="Board size (e.g., 9, 19, 50)")
+    parser.add_argument("--games", type=int, default=1000, help="Number of simulation games per move")
     parser.add_argument("--iterations", type=int, default=1, help="Number of iterations to run")
     parser.add_argument("--threads", type=int, default=1, help="Maximum parallel threads/processes")
     args = parser.parse_args()

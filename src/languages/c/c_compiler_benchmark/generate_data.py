@@ -46,9 +46,9 @@ if __name__ == "__main__":
     import glob
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--num_files", type=int, default=5, help="Number of .c files to generate")
-    parser.add_argument("--num_funcs", type=int, default=50, help="Number of functions per file")
-    parser.add_argument("--func_size", type=int, default=200, help="Number of lines per function")
+    parser.add_argument("--num_files", type=int, default=30, help="Number of .c files to generate")
+    parser.add_argument("--num_funcs", type=int, default=300, help="Number of functions per file")
+    parser.add_argument("--func_size", type=int, default=500, help="Number of lines per function")
     args = parser.parse_args()
 
     src_dir = "./data/src"

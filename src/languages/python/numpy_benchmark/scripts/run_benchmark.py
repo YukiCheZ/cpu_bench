@@ -29,22 +29,30 @@ def main():
     temp_args, _ = parser.parse_known_args()
 
     default_sizes = {
-        "matrix": 8192,
+        "matrix": 4096,
         "svd": 4096,
-        "fft": 1024*1024*128
+        "fft": 1024*1024*16
     }
+
+    default_iters = {
+        "matrix": 1000,
+        "svd": 100,
+        "fft": 1000
+    }
+
     size_default = default_sizes.get(temp_args.dataset, 2048)
+    iter_default = default_iters.get(temp_args.dataset, 10)
 
     parser.add_argument("--size", type=int, default=size_default, help="Dataset size")
-    parser.add_argument("--iterations", type=int, default=5, help="Iterations per copy")
+    parser.add_argument("--iterations", type=int, default=iter_default, help="Iterations per copy")
     parser.add_argument("--copies", type=int, default=1, help="Number of parallel copies")
     parser.add_argument("--warmup", type=int, default=3, help="Warmup iterations per copy")
 
     args = parser.parse_args()
 
-    print(f"[Config] dataset={args.dataset}, size={args.size}, iterations={args.iterations}, "
+    print(f"[INFO] dataset={args.dataset}, size={args.size}, iterations={args.iterations}, "
           f"copies={args.copies}, warmup={args.warmup}")
-    print(f"[Config] OMP_NUM_THREADS={os.environ['OMP_NUM_THREADS']}, "
+    print(f"[INFO] OMP_NUM_THREADS={os.environ['OMP_NUM_THREADS']}, "
           f"MKL_NUM_THREADS={os.environ['MKL_NUM_THREADS']}, "
           f"OPENBLAS_NUM_THREADS={os.environ['OPENBLAS_NUM_THREADS']}")
 
@@ -57,7 +65,7 @@ def main():
     workload = workload_map[args.dataset]
     dataset = dm.generate_dataset(args.size, args.dataset)
 
-    print(f"[Benchmark] Running {args.copies} copies of {workload} with size {args.size} x {args.size}")
+    print(f"[INFO] Running {args.copies} copies of {workload} with size {args.size} x {args.size}")
 
     with Pool(args.copies) as p:
         results = p.map(

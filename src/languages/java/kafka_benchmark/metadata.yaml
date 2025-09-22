@@ -22,16 +22,16 @@ workloads:
       parameters:
         num-records:
           description: Total number of records to produce across all threads
-          default: 50000000
+          default: 5000000000
         record-size:
           description: Size of each record in bytes
-          default: 100
+          default: 10
         threads:
           description: Number of producer threads (parallel producers)
           default: 1
         iters:
           description: Number of benchmark iterations
-          default: 3
+          default: 1
         warmup:
           description: Run a warmup iteration before benchmarking
           default: false

@@ -16,8 +16,8 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Optional
 
 
-DEFAULT_WIDTH = 500
-DEFAULT_HEIGHT = 500
+DEFAULT_WIDTH = 5000
+DEFAULT_HEIGHT = 5000
 EPSILON = 0.00001
 
 

@@ -15,6 +15,7 @@ CONSUMER_GROUP = "perf-consumer"
 
 RAMDISK_DIR = Path("/tmp/kafka_ramdisk")
 TMP_DIR = Path("/tmp/kafka_tmp")
+KAFKA_LOG_DIR = Path(KAFKA_HOME + "/logs")
 
 RAMDISK_DIR.mkdir(parents=True, exist_ok=True)
 TMP_DIR.mkdir(parents=True, exist_ok=True)
@@ -58,7 +59,7 @@ def stop_kafka():
     run_cmd(f"{KAFKA_HOME}/bin/zookeeper-server-stop.sh")
     time.sleep(2)
 
-    for d in [RAMDISK_DIR, TMP_DIR]:
+    for d in [RAMDISK_DIR, TMP_DIR, KAFKA_LOG_DIR]:
         for item in d.iterdir():
             if item.is_file():
                 item.unlink()
@@ -109,35 +110,38 @@ def benchmark(num_records, record_size, num_threads, iters, warmup):
     if warmup:
         print("[INFO] Running warmup...")
         start_time = time.perf_counter()
-        run_producer_test(num_records, record_size, num_threads)
+        run_producer_test(1000000, record_size, num_threads)
         end_time = time.perf_counter()
     total_time = 0
     for i in range(1, iters + 1):
-        print(f"[INFO] Iteration {i}/{iters}...")
         start_time = time.perf_counter()
         run_producer_test(num_records, record_size, num_threads)
         end_time = time.perf_counter()
-        print(f"[RESULT] Iteration {i} finished in {end_time - start_time:.3f}s\n")
         total_time += end_time - start_time
-    print(f"[RESULT] Average runtime: {total_time / iters:.3f}s\n")
+    print(f"[RESULT] Total runtime: {total_time:.3f}s\n")
 
 # ================= Main Function =================
 def main():
     parser = argparse.ArgumentParser(description="Kafka CPU Benchmark Script")
-    parser.add_argument("--num-records", type=int, default=50000000, help="Number of records to produce")
-    parser.add_argument("--record-size", type=int, default=100, help="Size of each record in bytes")
+    parser.add_argument("--num-records", type=int, default=5000000000, help="Number of records to produce")
+    parser.add_argument("--record-size", type=int, default=10, help="Size of each record in bytes")
     parser.add_argument("--threads", type=int, default=1, help="Number of producer threads")
-    parser.add_argument("--iters", type=int, default=3, help="Number of benchmark iterations")
+    parser.add_argument("--iters", type=int, default=1, help="Number of benchmark iterations")
     parser.add_argument("--warmup", action="store_true", help="Run a warmup iteration before benchmarking")
 
     args = parser.parse_args()
 
     print("=== Kafka CPU Benchmark Start ===")
     start_kafka()
-    create_topic()
-    benchmark(args.num_records, args.record_size, args.threads, args.iters, args.warmup)
-    stop_kafka()
-    print("=== Kafka CPU Benchmark Finished ===")
+    try:
+        create_topic()
+        benchmark(args.num_records, args.record_size, args.threads, args.iters, args.warmup)
+    except Exception as e:
+        print(f"[FATAL] Benchmark aborted due to error: {e}")
+        raise   
+    finally:
+        stop_kafka()
+        print("=== Kafka CPU Benchmark Finished ===")
 
 if __name__ == "__main__":
     main()

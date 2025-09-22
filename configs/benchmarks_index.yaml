@@ -39,8 +39,12 @@ benchmarks:
     path: src/languages/python/bert/metadata.yaml
     num: 1
 
-  - name: dlrm_cpu
-    path: src/languages/python/dlrm/metadata.yaml
+  - name: transformer_inference
+    path: src/languages/python/transformer_inference/metadata.yaml
+    num: 1
+  
+  - name: transformer_train
+    path: src/languages/python/transformer_train/metadata.yaml
     num: 1
 
   - name: opencv_benchmark
@@ -61,6 +65,10 @@ benchmarks:
 
   - name: cassandra_benchmark
     path: src/languages/java/cassandra/metadata.yaml
+    num: 1
+
+  - name: smile_benchmark
+    path: src/languages/java/smile_benchmark/metadata.yaml
     num: 1
 
   - name: redis_benchmark

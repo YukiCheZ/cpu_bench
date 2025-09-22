@@ -16,13 +16,14 @@ workloads:
       command: python3 generate_data.py
       parameters:
         batch_size:
-          default: 16
+          default: 4
         img_size:
           default: 512
         num_batches:
-          default: 3
+          default: 10
         output_dir:
           default: "./data"
+
     command: python3 resnet_eval.py
     parameters:
       data_dir:
@@ -31,22 +32,27 @@ workloads:
       threads:
         description: Number of CPU threads to use for inference
         default: 1
+      iters:
+        description: Number of benchmark iterations
+        default: 50
 
   - name: resnet50_training
     description: >
       Execute ResNet50 CPU training using pre-generated input data.
       Measures the forward + backward pass and optimization performance on CPU.
+
     data:
       command: python3 generate_data.py
       parameters:
         batch_size:
-          default: 16
+          default: 4
         img_size:
           default: 512
         num_batches:
-          default: 3
+          default: 10
         output_dir:
           default: "./data"
+
     command: python3 resnet_train.py
     parameters:
       data_dir:
@@ -58,6 +64,9 @@ workloads:
       lr:
         description: Learning rate for SGD optimizer
         default: 0.001
+      iters:
+        description: Number of benchmark iterations 
+        default: 20
 
 characteristics:
   IO_effects: low

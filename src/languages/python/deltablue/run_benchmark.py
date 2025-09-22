@@ -105,7 +105,7 @@ class Constraint(object):
 
         if not self.is_satisfied():
             if self.strength == Strength.REQUIRED:
-                print('Could not satisfy a required constraint!')
+                print('[ERROR] Could not satisfy a required constraint!')
 
             return None
 
@@ -119,7 +119,7 @@ class Constraint(object):
         out.determined_by = self
 
         if not planner.add_propagate(self, mark):
-            print('Cycle encountered')
+            print('[ERROR] Cycle encountered')
 
         out.mark = mark
         return overridden
@@ -556,7 +556,7 @@ def chain_test(n):
         plan.execute()
 
         if last.value != i:
-            print("Chain test failed.")
+            print("[ERROR] Chain test failed.")
 
 
 def projection_test(n):
@@ -584,24 +584,24 @@ def projection_test(n):
     change(src, 17)
 
     if dst.value != 1170:
-        print("Projection 1 failed")
+        print("[ERROR] Projection 1 failed")
 
     change(dst, 1050)
 
     if src.value != 5:
-        print("Projection 2 failed")
+        print("[ERROR] Projection 2 failed")
 
     change(scale, 5)
 
     for i in range(n - 1):
         if dests[i].value != (i * 5 + 1000):
-            print("Projection 3 failed")
+            print("[ERROR] Projection 3 failed")
 
     change(offset, 2000)
 
     for i in range(n - 1):
         if dests[i].value != (i * 5 + 2000):
-            print("Projection 4 failed")
+            print("[ERROR] Projection 4 failed")
 
 
 def change(v, new_value):
@@ -635,17 +635,19 @@ def worker(n):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="DeltaBlue benchmark")
-    parser.add_argument("--n", type=int, default=100000,
+    parser.add_argument("--n", type=int, default=1000000,
                         help="problem size (default=100000)")
-    parser.add_argument("--iters", type=int, default=3,
+    parser.add_argument("--iters", type=int, default=1,
                         help="number of benchmark iterations")
     parser.add_argument("--threads", type=int, default=1,
                         help="number of parallel worker processes")
+    
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
+    print(f"[INFO] DeltaBlue: n={args.n}, iters={args.iters}, threads={args.threads}")
     times = []
 
     for it in range(args.iters):
@@ -659,7 +661,5 @@ if __name__ == "__main__":
         end = time.perf_counter()
         elapsed = end - start
         times.append(elapsed)
-        print(f"Iter {it+1}: {elapsed:.6f} sec")
 
-    avg = sum(times) / len(times)
-    print(f"Average: {avg:.6f} sec")
+    print(f"[RESULT] DeltaBlue elapsed time: {sum(times):.6f} sec")

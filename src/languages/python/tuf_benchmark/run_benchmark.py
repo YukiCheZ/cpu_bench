@@ -5,44 +5,36 @@ import hashlib
 import json
 from multiprocessing import Pool
 from tuf.api.metadata import Metadata
+import os
 
-# ---------------------------
-# Worker process
-# ---------------------------
+def expand_target(seed_data, size):
+    repeats = size // len(seed_data) + 1
+    return (seed_data * repeats)[:size]
+
 def worker(args):
-    repo_path, iterations, warmup_count, data_size = args
+    repo_path, iterations, warmup_count = args
 
-    meta_count = 10
-    target_count = 5
+    metadata_files = []
+    target_files = []
 
-    metadata_dict = {
-        "signed": {
-            "_type": "root",
-            "spec_version": "1.0.0",
-            "version": 1,
-            "expires": "2030-01-01T00:00:00Z",
-            "keys": {},
-            "roles": {
-                "root": {"keyids": [], "threshold": 1},
-                "targets": {"keyids": [], "threshold": 1},
-                "snapshot": {"keyids": [], "threshold": 1},
-                "timestamp": {"keyids": [], "threshold": 1},
-            },
-            "consistent_snapshot": False
-        },
-        "signatures": []
-    }
-    metadata_bytes = json.dumps(metadata_dict).encode("utf-8")
-
-    metadata_files = [{"path": f"meta{i}", "data": metadata_bytes} for i in range(meta_count)]
-
-    target_size = max(data_size // target_count, 1)
-    target_files = [{"path": f"file{i}", "data": b"x"*target_size} for i in range(target_count)]
+    for fname in os.listdir(repo_path):
+        fpath = os.path.join(repo_path, fname)
+        if fname.startswith("meta") and fname.endswith(".json"):
+            with open(fpath, "rb") as f:
+                metadata_files.append({"path": fname, "data": f.read()})
+        elif fname.startswith("file") and fname.endswith(".bin"):
+            base = fname.replace(".bin", "")
+            with open(fpath, "rb") as f:
+                seed = f.read()
+            with open(os.path.join(repo_path, f"{base}.meta.json"), "r") as f:
+                meta = json.load(f)
+            expanded = expand_target(seed, meta["target_size"])
+            target_files.append({"path": fname, "data": expanded})
 
     # Warmup
     for _ in range(warmup_count):
         for meta in metadata_files:
-            m = Metadata.from_bytes(meta["data"])
+            Metadata.from_bytes(meta["data"])
         for target in target_files:
             hashlib.sha256(target["data"]).hexdigest()
 
@@ -50,7 +42,7 @@ def worker(args):
     start_time = time.perf_counter()
     for _ in range(iterations):
         for meta in metadata_files:
-            m = Metadata.from_bytes(meta["data"])
+            Metadata.from_bytes(meta["data"])
         for target in target_files:
             hashlib.sha256(target["data"]).hexdigest()
     elapsed = time.perf_counter() - start_time
@@ -60,22 +52,17 @@ def worker(args):
     return {"elapsed": elapsed, "bytes": total_bytes, "ops": total_ops}
 
 
-# ---------------------------
-# Main
-# ---------------------------
 def main():
-    parser = argparse.ArgumentParser(description="TUF CPU Benchmark")
+    parser = argparse.ArgumentParser(description="TUF CPU Benchmark (load from data files)")
     parser.add_argument("--copies", type=int, default=1, help="Number of parallel worker processes")
-    parser.add_argument("--iterations", type=int, default=10, help="Iterations per worker")
-    parser.add_argument("--warmup", type=int, default=2, help="Warmup iterations per worker")
-    parser.add_argument("--datasize", type=int, default=4*1024*1024*1024,
-                        help="Total target data size per worker (bytes)")
-    parser.add_argument("--repo", type=str, default="repo", help="Path to test repository (not used in memory mode)")
+    parser.add_argument("--iterations", type=int, default=1000, help="Iterations per worker")
+    parser.add_argument("--warmup", type=int, default=3, help="Warmup iterations per worker")
+    parser.add_argument("--repo", type=str, default="./data", help="Path to data directory")
     args = parser.parse_args()
 
-    print(f"[Benchmark] Running {args.copies} copies, {args.iterations} iterations, warmup {args.warmup}, data-size {args.datasize} bytes per worker")
+    print(f"[INFO] Running {args.copies} copies, {args.iterations} iterations, warmup {args.warmup}, data-dir {args.repo}")
 
-    worker_args = [(args.repo, args.iterations, args.warmup, args.datasize) for _ in range(args.copies)]
+    worker_args = [(args.repo, args.iterations, args.warmup) for _ in range(args.copies)]
 
     start = time.perf_counter()
     with Pool(processes=args.copies) as pool:
@@ -87,15 +74,9 @@ def main():
     total_ops = sum(r["ops"] for r in results) * args.iterations
 
     avg_time_per_copy = total_elapsed / len(results)
-    throughput_mb_s = total_bytes / total_elapsed / (1024*1024)
-    ops_per_sec = total_ops / total_elapsed
 
     print(f"[Result] Avg time per copy: {avg_time_per_copy:.6f} sec")
     print(f"[Result] Wall-clock time: {total_wall_time:.6f} sec")
-    print(f"[Result] Total operations: {total_ops}")
-    print(f"[Result] Ops/sec: {ops_per_sec:.2f}")
-    print(f"[Result] Throughput: {throughput_mb_s:.2f} MB/s")
-
 
 if __name__ == "__main__":
     main()

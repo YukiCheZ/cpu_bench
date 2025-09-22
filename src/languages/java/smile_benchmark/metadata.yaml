@@ -1,5 +1,5 @@
 # metadata.yaml for Java KMeans CPU Benchmark
-name: java_kmeans_cpu_benchmark
+name: smile_benchmark
 type: macrobenchmark
 language: Java
 domain:
@@ -14,24 +14,34 @@ workloads:
       on multiple copies (parallel threads), to evaluate CPU performance under
       compute-intensive machine learning workloads.
 
-    setup:
-      command: mvn clean compile
+    data: 
+      command: python3 generate_data.py
+      parameters:
+        samples:
+          description: Number of samples to generate
+          default: 100000
+        features:
+          description: Number of features per sample
+          default: 100
+        output:
+          description: Output directory for generated data
+          default: ./data
 
     run:
-      command: mvn exec:java -Dexec.mainClass="org.example.KMeansBenchmark"
+      command: python3 run_benchmark.py
       parameters:
-        nSamples:
-          description: Number of samples per copy
-          default: 100000
-        nFeatures:
-          description: Number of features per sample
-          default: 50
-        nClusters:
+        data:
+          description: Path to input CSV data
+          default: ./data/kmeans.csv
+        clusters:
           description: Number of clusters for KMeans
-          default: 10
-        nCopies:
-          description: Number of parallel copies (threads) to run
+          default: 1000
+        copies:
+          description: Number of copies (threads) to run in parallel
           default: 1
+        maven_goal:
+          description: Maven goal for compilation
+          default: clean compile
 
 characteristics:
   IO_effects: low
@@ -50,3 +60,5 @@ dependencies:
   java: ">=11"
   maven: ">=3.6"
   smile: "3.0.1"
+  python: ">=3.6"
+  numpy: ">=1.18"

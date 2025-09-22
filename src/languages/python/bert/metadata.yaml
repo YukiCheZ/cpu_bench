@@ -13,13 +13,13 @@ workloads:
       Execute BERT CPU training using pre-generated input batches.
       Measures the performance of forward and backward pass on CPU.
     data:
-      command: python generate_data.py
+      command: python3 generate_data.py
       parameters:
         batch_size: 16
         seq_len: 1024
-        num_batches: 3
+        num_batches: 50
         output_dir: ./data
-    command: python3 benchmark_bert_cpu_train.py
+    command: python3 bert_eval.py
     parameters:
       data_dir:
         description: Directory containing pre-generated input batches

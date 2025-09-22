@@ -17,10 +17,10 @@ workloads:
     parameters:
       size:
         description: Board size (e.g., 9, 19, 50)
-        default: 99
+        default: 300
       games:
         description: Number of simulation games per move
-        default: 100
+        default: 1000
       iterations:
         description: Number of timed benchmark iterations
         default: 1

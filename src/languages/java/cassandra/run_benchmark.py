@@ -70,12 +70,12 @@ def clean_data_logs():
 
 def main():
     parser = argparse.ArgumentParser(description="Cassandra CPU Benchmark")
-    parser.add_argument("--write-n", type=int, default=1000000, help="Total operations for write test")
+    parser.add_argument("--write-n", type=int, default=10000000, help="Total operations for write test")
     parser.add_argument("--write-threads", type=int, default=50, help="Number of threads for write test")
-    parser.add_argument("--read-n", type=int, default=500000, help="Total operations for read test")
-    parser.add_argument("--read-threads", type=int, default=20, help="Number of threads for read test")
+    parser.add_argument("--read-n", type=int, default=10000000, help="Total operations for read test")
+    parser.add_argument("--read-threads", type=int, default=50, help="Number of threads for read test")
     parser.add_argument("--cpu-count", type=int, default=None, help="Limit number of CPU cores to use")
-    parser.add_argument("--iters", type=int, default=3, help="Number of iterations for read test")
+    parser.add_argument("--iters", type=int, default=100, help="Number of iterations for read test")
     args = parser.parse_args()
 
     # Automatically select CPU cores if cpu-count is specified
@@ -91,7 +91,7 @@ def main():
 
         # Run write test (not timed, output ignored)
         print("[INFO] Starting write test...")
-        write_cmd = f"{taskset_prefix}{STRESS_BIN} write n={args.write_n} -rate threads={args.write_threads}"
+        write_cmd = f"{STRESS_BIN} write n={args.write_n} -rate threads={args.write_threads}"
         run_cassandra_stress(write_cmd, n_ops=args.write_n)
 
         # Run read test (timed, multiple iterations)
@@ -101,8 +101,7 @@ def main():
             read_cmd = f"{taskset_prefix}{STRESS_BIN} read n={args.read_n} -rate threads={args.read_threads}"
             elapsed = run_cassandra_stress(read_cmd, n_ops=args.read_n)
             total_elapsed += elapsed
-        avg_elapsed = total_elapsed / args.iters
-        print(f"[RESULT] Average read test time: {avg_elapsed:.2f} seconds")
+        print(f"[RESULT] Total read test time: {total_elapsed:.2f} seconds")
 
     except RuntimeError as e:
         print(f"[FATAL] Benchmark failed: {e}")

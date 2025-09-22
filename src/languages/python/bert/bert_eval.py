@@ -11,14 +11,14 @@ def get_data_files(data_dir):
 def main(data_dir, num_threads):
     # Set CPU threads
     torch.set_num_threads(num_threads)
-    print(f"Using CPU threads: {torch.get_num_threads()}")
+    print(f"[INFO] Using CPU threads: {torch.get_num_threads()}")
 
     # Find data files
     file_list = get_data_files(data_dir)
-    print(f"Found {len(file_list)} batches in {data_dir}")
+    print(f"[INFO] Found {len(file_list)} batches in {data_dir}")
 
     if len(file_list) == 0:
-        print("No data found in data_dir.")
+        print("[ERROR] No data found in data_dir.")
         return
 
     # Load first batch to get sequence length and batch size
@@ -43,17 +43,15 @@ def main(data_dir, num_threads):
         end_time = time.time()
         iter_time = end_time - start_time
         iteration_times.append(iter_time)
-        print(f"Iteration {i+1}/{len(file_list)} - Time: {iter_time:.4f} s")
         del input_ids, attention_mask  # free memory
 
     total_time = sum(iteration_times)
     avg_time = total_time / len(file_list)
 
     print("="*50)
-    print("BERT CPU Inference Benchmark Completed")
-    print(f"Total iterations: {len(file_list)}")
-    print(f"Total time: {total_time:.4f} seconds")
-    print(f"Average time per iteration: {avg_time:.4f} seconds")
+    print("[INFO] BERT CPU Inference Benchmark Completed")
+    print(f"[INFO] Total batches: {len(file_list)}")
+    print(f"[RESULT] Total time: {total_time:.4f} seconds")
     print("="*50)
 
 if __name__ == "__main__":

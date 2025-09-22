@@ -22,22 +22,22 @@ workloads:
       parameters:
         write-n:
           description: Total number of write operations for pre-loading data
-          default: 1000000
+          default: 10000000
         write-threads:
           description: Number of threads for write pre-load
           default: 50
         read-n:
           description: Total number of read operations per iteration
-          default: 500000
+          default: 10000000
         read-threads:
           description: Number of threads for read operations
-          default: 20
+          default: 50
         cpu-count:
           description: Limit the number of CPU cores to use
           default: null
         iters:
           description: Number of iterations to run the read benchmark
-          default: 3
+          default: 100
 
 characteristics:
   IO_effects: medium

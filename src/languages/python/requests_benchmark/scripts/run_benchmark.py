@@ -15,9 +15,9 @@ def worker(args):
 def main():
     parser = argparse.ArgumentParser(description="Requests JSON Parsing CPU Benchmark")
     parser.add_argument("--copies", type=int, default=1, help="Number of parallel worker processes")
-    parser.add_argument("--iterations", type=int, default=5, help="Iterations per worker")
+    parser.add_argument("--iterations", type=int, default=1000, help="Iterations per worker")
     parser.add_argument("--warmup", type=int, default=3, help="Warmup iterations per worker")
-    parser.add_argument("--size", type=int, default=8*1024*1024, help="Dataset size, affects filename")
+    parser.add_argument("--size", type=int, default=1024*1024, help="Dataset size, affects filename")
     parser.add_argument("--force", action="store_true", help="Force regenerate dataset even if it exists")
     
     args = parser.parse_args()
