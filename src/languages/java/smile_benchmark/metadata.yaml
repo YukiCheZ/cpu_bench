@@ -7,7 +7,7 @@ domain:
   - clustering
   
 workloads:
-  - name: kmeans-benchmark
+  - name: smile-kmeans
     description: >
       Run a KMeans clustering CPU benchmark in Java using the Smile library.
       The benchmark generates random data in memory and performs KMeans clustering

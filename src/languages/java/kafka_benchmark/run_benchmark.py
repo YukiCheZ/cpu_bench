@@ -123,8 +123,8 @@ def benchmark(num_records, record_size, num_threads, iters, warmup):
 # ================= Main Function =================
 def main():
     parser = argparse.ArgumentParser(description="Kafka CPU Benchmark Script")
-    parser.add_argument("--num-records", type=int, default=5000000000, help="Number of records to produce")
-    parser.add_argument("--record-size", type=int, default=10, help="Size of each record in bytes")
+    parser.add_argument("--num-records", type=int, default=4000000000, help="Number of records to produce")
+    parser.add_argument("--record-size", type=int, default=1, help="Size of each record in bytes")
     parser.add_argument("--threads", type=int, default=1, help="Number of producer threads")
     parser.add_argument("--iters", type=int, default=1, help="Number of benchmark iterations")
     parser.add_argument("--warmup", action="store_true", help="Run a warmup iteration before benchmarking")

@@ -34,10 +34,10 @@ var (
 func init() {
 	flag.StringVar(&tmpDir, "tmp", "", "directory to store temporary files (may still use morass)")
 	flag.IntVar(&seqSize, "size", 10000, "length of each random DNA sequence")
-	flag.IntVar(&seqCount, "count", 100, "number of sequences to generate")
+	flag.IntVar(&seqCount, "count", 1000, "number of sequences to generate")
 	flag.Float64Var(&repeatRate, "repeat", 0.8, "proportion of sequence to copy from first sequence to others (0~1)")
 	flag.IntVar(&threads, "threads", 1, "number of threads (GOMAXPROCS) to use, 0 = auto")
-	flag.IntVar(&iterations, "iterations", 1, "number of timed iterations to run")
+	flag.IntVar(&iterations, "iterations", 5, "number of timed iterations to run")
 	flag.IntVar(&warmup, "warmup", 0, "number of warmup iterations before timing")
 }
 
@@ -120,11 +120,8 @@ func main() {
 			panic(err)
 		}
 		elapsed := time.Since(start)
-		fmt.Printf("Iteration %d elapsed time: %v\n", i+1, elapsed)
 		total += elapsed
 	}
 
-	if iterations > 1 {
-		fmt.Printf("Average elapsed time: %v\n", total/time.Duration(iterations))
-	}
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", total.Seconds())
 }

@@ -10,13 +10,13 @@ domain:
   - distributed_systems
 
 workloads:
-  - name: cockroachdb
+  - name: cockroachdb_kv
     description: >
       Benchmark for CockroachDB using the built-in "workload kv" runner.
       This workload launches a single-node CockroachDB cluster locally,
       initializes the key-value dataset, and runs transactional read/write
       operations with configurable read percentages and concurrency.
-    command: go run src/main.go
+    command: go run src/kv.go
     parameters:
       cockroachdb-bin:
         description: Path to CockroachDB binary (or set COCKROACH_BIN env var)
@@ -28,18 +28,44 @@ workloads:
         description: Temporary directory for cluster data
         default: ""
       max-ops:
-        description: Maximum number of operations to execute
-        default: 1000000
+        description: Maximum number of operations to run PER CORE
+        default: 2000000
       kv:
         description: KV read percentage (must be 0, 50, or 95)
-        default: 0
+        default: 50
       threads:
         description: Number of threads (sets GOMAXPROCS for CockroachDB process)
+        default: 0
+
+  - name: cockroachdb_tpcc
+    description: >
+      Benchmark for CockroachDB using the built-in "workload tpcc" runner.
+      This workload launches a single-node CockroachDB cluster locally,
+      initializes the TPCC dataset, and runs transactional read/write
+      operations with configurable parameters.
+    command: go run src/tpcc.go
+    parameters:
+      cockroachdb-bin:
+        description: Path to CockroachDB binary (or set COCKROACH_BIN env var)
+        default: ./bin/cockroach
+      host:
+        description: Hostname of the CockroachDB server
+        default: localhost
+      tmp:
+        description: Temporary directory for cluster data
+        default: ""
+      max-ops:
+        description: Maximum number of operations to run per thread
+        default: 40000
+      warehouses:
+        description: Number of warehouses for TPCC data per thread (larger -> more data)
         default: 1
-      short:
-        description: Run a short version of the benchmark
-        type: boolean
-        default: false
+      concurrency:
+        description: Number of concurrent workers (concurrency param passed to tpcc)
+        default: 200
+      threads:
+        description: Number of threads (sets GOMAXPROCS for CockroachDB process)
+        default: 0
 
 characteristics:
   IO_effects: high
@@ -47,7 +73,6 @@ characteristics:
   network_effects: low
   cpu_bound: true
   memory_intensive: high
-  storage_intensive: medium
 
 tags:
   - cpu

@@ -23,7 +23,6 @@ workloads:
           default: 10
         output_dir:
           default: "./data"
-
     command: python3 resnet_eval.py
     parameters:
       data_dir:
@@ -40,7 +39,6 @@ workloads:
     description: >
       Execute ResNet50 CPU training using pre-generated input data.
       Measures the forward + backward pass and optimization performance on CPU.
-
     data:
       command: python3 generate_data.py
       parameters:
@@ -52,7 +50,6 @@ workloads:
           default: 10
         output_dir:
           default: "./data"
-
     command: python3 resnet_train.py
     parameters:
       data_dir:

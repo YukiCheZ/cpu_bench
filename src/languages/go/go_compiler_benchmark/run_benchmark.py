@@ -20,7 +20,9 @@ def run_command(cmd, env=None, measure_time=True):
 
 def main():
     parser = argparse.ArgumentParser(description="Go compiler benchmark runner")
-    parser.add_argument("--scale", choices=["small", "std", "all"], default="std",
+    parser.add_argument("--go-root", type=str, default="data/go",
+                        help="Path to Go root directory (if not provided, will attempt to download Go source)")
+    parser.add_argument("--scale", choices=["small", "std", "all"], default="all",
                         help="Benchmark scale: small=compile cmd/compile, std=compile standard lib, all=build full Go toolchain")
     parser.add_argument("--iterations", type=int, default=1,
                         help="Number of times to repeat the benchmark")
@@ -31,7 +33,8 @@ def main():
     args = parser.parse_args()
 
     project_root = os.path.dirname(__file__)
-    go_src_dir = os.path.join(project_root, "go", "src")
+
+    go_src_dir = os.path.join(project_root, args.go_root, "src")
 
     if not os.path.exists(go_src_dir):
         print(f"[WARN] Go source directory not found: {go_src_dir}")

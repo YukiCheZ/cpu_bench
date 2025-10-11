@@ -25,8 +25,8 @@ var (
 
 func init() {
 	flag.IntVar(&batchSize, "batch-size", 256, "number of index requests to batch together")
-	flag.IntVar(&documents, "documents", 10000, "number of documents to index")
-	flag.IntVar(&iterations, "iterations", 1, "number of benchmark iterations")
+	flag.IntVar(&documents, "documents", 50000, "number of documents to index")
+	flag.IntVar(&iterations, "iterations", 10, "number of benchmark iterations")
 	flag.BoolVar(&warmup, "warmup", true, "run one warmup iteration before benchmark")
 	flag.IntVar(&threads, "threads", 1, "number of threads (GOMAXPROCS), 0 = auto")
 }
@@ -111,13 +111,11 @@ func main() {
 	for iter := 1; iter <= iterations; iter++ {
 		start := time.Now()
 		if err := runIndexBenchmark(articles, batchSize); err != nil {
-			panic(fmt.Sprintf("iteration %d index error: %v", iter, err))
+			panic(fmt.Sprintf("[ERROR] iteration %d index error: %v", iter, err))
 		}
 		elapsed := time.Since(start)
 		total += elapsed
-		fmt.Printf("Iteration %d elapsed time: %v\n", iter, elapsed)
 	}
 
-	avg := total / time.Duration(iterations)
-	fmt.Printf("Average time over %d iterations: %v\n", iterations, avg)
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", total.Seconds())
 }

@@ -25,16 +25,16 @@ var (
 
 func main() {
 	var inputPath string
-	var iterations uint64
+	var iterations int
 	var threads int
 
 	flag.StringVar(&inputPath, "input", "./data/input.go", "path to input Go source file")
-	flag.Uint64Var(&iterations, "iterations", 200, "number of parse iterations to run")
-	flag.IntVar(&threads, "threads", runtime.NumCPU(), "number of threads (GOMAXPROCS)")
+	flag.IntVar(&iterations, "iterations", 1000, "number of parse iterations per thread to run")
+	flag.IntVar(&threads, "threads", 1, "number of threads (GOMAXPROCS)")
 	flag.Parse()
 
 	if inputPath == "" {
-		fmt.Fprintln(os.Stderr, "Error: --input is required")
+		fmt.Fprintln(os.Stderr, "[ERROR] input path not specified")
 		os.Exit(1)
 	}
 
@@ -43,6 +43,13 @@ func main() {
 		panic(err)
 	}
 	src = data
+
+	if threads < 1 {
+		threads = runtime.NumCPU()
+		if(threads < 1) {
+			threads = 1
+		}
+	}
 
 	runtime.GOMAXPROCS(threads)
 
@@ -63,13 +70,13 @@ func main() {
 	}
 
 	start := time.Now()
-	benchmarkN(iterations)
+	benchmarkN(iterations * threads)
 	elapsed := time.Since(start)
 
-	fmt.Printf("Total run time: %v\n", elapsed)
+	fmt.Printf("[RESULT] Total run time: %.4f s\n", elapsed.Seconds())
 }
 
-func benchmarkN(N uint64) {
+func benchmarkN(N int) {
 	P := runtime.GOMAXPROCS(0)
 	G := P
 	gate := make(chan bool, 2*P)
@@ -130,7 +137,7 @@ func parsePackage() ParsedPackage {
 	fset := token.NewFileSet()
 	pkgs, err := parser.ParseFile(fset, "input.go", src, parser.ParseComments)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Parse error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "[ERROR] Parse error: %v\n", err)
 		panic("fail")
 	}
 	return pkgs

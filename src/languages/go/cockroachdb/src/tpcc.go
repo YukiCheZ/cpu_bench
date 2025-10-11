@@ -1,9 +1,3 @@
-// Copyright 2024 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
-//go:build !wasm
-
 package main
 
 import (
@@ -12,7 +6,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -21,24 +14,23 @@ import (
 	"sync"
 	"syscall"
 	"time"
-
-	"golang.org/x/benchmarks/sweet/common/diagnostics"
 )
 
 const (
-	basePort      = 26257
-	cacheSize     = "0.25"
-	defaultMaxOps = 1000000
+	basePort  = 26257
+	cacheSize = "0.5"
+	seed      = 42
 )
 
 type config struct {
 	host           string
 	cockroachdbBin string
 	tmpDir         string
-	short          bool
 	procsPerInst   int
 	maxOps         int
-	readPercent    int
+	// tpcc specific
+	warehouses  int
+	concurrency int
 }
 
 var cliCfg config
@@ -47,9 +39,9 @@ func init() {
 	flag.StringVar(&cliCfg.host, "host", "localhost", "hostname of cockroachdb server")
 	flag.StringVar(&cliCfg.cockroachdbBin, "cockroachdb-bin", "./bin/cockroach", "path to cockroachdb binary")
 	flag.StringVar(&cliCfg.tmpDir, "tmp", "", "path to temporary directory")
-	flag.BoolVar(&cliCfg.short, "short", false, "whether to run a short version of this benchmark")
-	flag.IntVar(&cliCfg.maxOps, "max-ops", 0, "maximum number of operations to run (default 1000000)")
-	flag.IntVar(&cliCfg.readPercent, "kv", 0, "kv read percentage to run (0,50,95)")
+	flag.IntVar(&cliCfg.maxOps, "max-ops", 40000, "maximum number of operations to run per thread")
+	flag.IntVar(&cliCfg.warehouses, "warehouses", 1, "number of warehouses for TPCC data per thread (larger -> more data)")
+	flag.IntVar(&cliCfg.concurrency, "concurrency", 200, "Number of concurrent workers (concurrency param passed to tpcc)")
 	flag.IntVar(&cliCfg.procsPerInst, "threads", 0, "number of threads (GOMAXPROCS) for CockroachDB instance")
 }
 
@@ -98,7 +90,7 @@ func launchSingleNodeCluster(cfg *config) ([]*cockroachdbInstance, error) {
 	inst.cmd.Stdout = &inst.output
 	inst.cmd.Stderr = &inst.output
 	if err := inst.cmd.Start(); err != nil {
-		return nil, fmt.Errorf("failed to start instance %q: %v", inst.name, err)
+		return nil, fmt.Errorf("[ERROR] failed to start instance %q: %v", inst.name, err)
 	}
 	return []*cockroachdbInstance{inst}, nil
 }
@@ -145,7 +137,7 @@ func (i *cockroachdbInstance) ping() error {
 	if err := cmd.Run(); err != nil {
 		return err
 	}
-	endpoint := fmt.Sprintf("http://%s:%d/%s", cliCfg.host, i.httpPort, diagnostics.MemProfile.HTTPEndpoint())
+	endpoint := fmt.Sprintf("http://%s:%d/debug/pprof/heap", cliCfg.host, i.httpPort)
 	resp, err := http.Get(endpoint)
 	if err != nil {
 		return err
@@ -177,83 +169,101 @@ func (i *cockroachdbInstance) shutdown() (killed bool, err error) {
 	return killed, nil
 }
 
-func kvBenchmark(readPercent int) []string {
-	return []string{
-		"workload", "run", "kv",
-		fmt.Sprintf("--read-percent=%d", readPercent),
-		"--min-block-bytes=1024",
-		"--max-block-bytes=1024",
-		"--concurrency=5000",
+// build tpcc run args oriented for CPU benchmarking
+func tpccBenchmarkArgs(cfg *config, actualWarehouses int) []string {
+	args := []string{
+		"workload", "run", "tpcc",
+		fmt.Sprintf("--warehouses=%d", actualWarehouses), // Use the scaled value
+		fmt.Sprintf("--concurrency=%d", cfg.concurrency),
+		"--wait=0",
+		"--method=cache_statement",
+		"--ramp=10s",
+		"--split",
 		"--scatter",
-		"--splits=5",
+		fmt.Sprintf("--seed=%d", seed),
 	}
+
+	return args
 }
 
 func runBenchmarkStandalone(cfg *config, instances []*cockroachdbInstance) error {
-	if cfg.maxOps == 0 {
-		cfg.maxOps = defaultMaxOps
-	}
-
 	var pgurls []string
 	for _, inst := range instances {
 		pgurls = append(pgurls, fmt.Sprintf("postgres://root@%s?sslmode=disable", inst.sqlAddr()))
 	}
+	
+	// ===================== MODIFICATION START =====================
+	// Scale warehouses by the number of threads
+	actualWarehouses := cfg.warehouses * cfg.procsPerInst
+	// ===================== MODIFICATION END =======================
 
-	// Init workload
-	initArgs := append([]string{"workload", "init", "kv"}, pgurls...)
+	// Init workload: create TPCC data with scaled warehouses
+	initArgs := []string{"workload", "init", "tpcc", fmt.Sprintf("--warehouses=%d", actualWarehouses), fmt.Sprintf("--seed=%d", seed)}
+	initArgs = append(initArgs, pgurls...)
 	initCmd := exec.Command(cfg.cockroachdbBin, initArgs...)
+	initCmd.Env = append(os.Environ(), fmt.Sprintf("GOMAXPROCS=%d", runtime.NumCPU()))
+	var initErrBuf bytes.Buffer
+	initCmd.Stderr = &initErrBuf
+	fmt.Printf("[INFO] initializing tpcc with actual-warehouses=%d (base=%d * threads=%d)...\n",
+		actualWarehouses, cfg.warehouses, cfg.procsPerInst)
 	if err := initCmd.Run(); err != nil {
-		return err
+		return fmt.Errorf("[ERROR] tpcc init failed: %v, stderr: %s", err, initErrBuf.String())
 	}
 
 	// Run workload
-	args := kvBenchmark(cfg.readPercent)
-	args = append(args, fmt.Sprintf("--max-ops=%d", cfg.maxOps))
+	// ===================== MODIFICATION START =====================
+	actualMaxOps := cfg.maxOps * cfg.procsPerInst // Scale max-ops by the number of threads
+
+	// Pass the scaled warehouse count to the benchmark arguments as well
+	args := tpccBenchmarkArgs(cfg, actualWarehouses)
+	if actualMaxOps > 0 {
+		args = append(args, fmt.Sprintf("--max-ops=%d", actualMaxOps))
+	}
 	args = append(args, pgurls...)
 
-	cmd := exec.Command(cfg.cockroachdbBin, args...)
-	cmd.Env = append(os.Environ(), fmt.Sprintf("GOMAXPROCS=%d", cfg.procsPerInst))
+	fmt.Printf("[INFO] running tpcc workload (threads=%d concurrency=%d actual-warehouses=%d actual-max-ops=%d)\n",
+		cfg.procsPerInst, cfg.concurrency, actualWarehouses, actualMaxOps)
+	// ===================== MODIFICATION END =======================
 
+	cmd := exec.Command(cfg.cockroachdbBin, args...)
+	cmd.Env = append(os.Environ(), fmt.Sprintf("GOMAXPROCS=%d", runtime.NumCPU()))
+	var runErrBuf bytes.Buffer
+	cmd.Stderr = &runErrBuf
+	fmt.Println("[INFO] running benchmark")
 	start := time.Now()
 	if err := cmd.Run(); err != nil {
-		return err
+		return fmt.Errorf("[ERROR] tpcc run failed: %v, stderr: %s", err, runErrBuf.String())
 	}
 	elapsed := time.Since(start)
-
-	fmt.Printf("Benchmark kv%d finished in %s (max-ops=%d, threads=%d)\n", cfg.readPercent, elapsed, cfg.maxOps, cfg.procsPerInst)
+	fmt.Printf("[RESULT] total elapsed time: %.4f s\n", elapsed.Seconds())
 	return nil
 }
 
 func run(cfg *config) error {
-	log.Println("launching cluster")
+	fmt.Println("[INFO] launching cluster")
 	instances, err := launchSingleNodeCluster(cfg)
 	if err != nil {
 		return err
 	}
 	defer func() {
-		log.Println("shutting down cluster")
+		fmt.Println("[INFO] shutting down cluster")
 		for _, inst := range instances {
 			inst.shutdown()
 		}
 	}()
 
-	log.Println("waiting for cluster")
+	fmt.Println("[INFO] waiting for cluster")
 	if err = waitForCluster(instances); err != nil {
 		return err
 	}
 
-	log.Println("running benchmark")
 	return runBenchmarkStandalone(cfg, instances)
 }
 
 func runMain() error {
 	flag.Parse()
 	if flag.NArg() != 0 {
-		return fmt.Errorf("unexpected args")
-	}
-
-	if cliCfg.readPercent != 0 && cliCfg.readPercent != 50 && cliCfg.readPercent != 95 {
-		return fmt.Errorf("-kv must be 0, 50, or 95")
+		return fmt.Errorf("[ERROR] unexpected args")
 	}
 
 	if cliCfg.cockroachdbBin == "" {
@@ -261,24 +271,20 @@ func runMain() error {
 		if envBin != "" {
 			if fi, err := os.Stat(envBin); err == nil && fi.Mode().IsRegular() && (fi.Mode().Perm()&0111) != 0 {
 				cliCfg.cockroachdbBin = envBin
-				fmt.Printf("Using CockroachDB binary from COCKROACH_BIN: %s\n", envBin)
+				fmt.Printf("[INFO] Using CockroachDB binary from COCKROACH_BIN: %s\n", envBin)
 			} else {
-				return fmt.Errorf("COCKROACH_BIN is set but not executable: %s", envBin)
+				return fmt.Errorf("[ERROR] COCKROACH_BIN is set but not executable: %s", envBin)
 			}
 		}
 	}
 
 	if cliCfg.cockroachdbBin == "" {
-		return fmt.Errorf("CockroachDB binary not specified. Use --cockroachdb-bin or set COCKROACH_BIN")
+		return fmt.Errorf("[ERROR] CockroachDB binary not specified. Use --cockroachdb-bin or set COCKROACH_BIN")
 	}
-
-	if cliCfg.procsPerInst <= 0 {
-		cliCfg.procsPerInst = runtime.GOMAXPROCS(-1)
-		if cliCfg.procsPerInst == 0 {
-			cliCfg.procsPerInst = 1
-		}
-	}
-	runtime.GOMAXPROCS(cliCfg.procsPerInst)
+	
+	// No need to set GOMAXPROCS for the main test runner process itself,
+	// as it mainly just waits for subprocesses.
+	// The GOMAXPROCS for cockroachdb and the workload runner are set via cmd.Env.
 
 	return run(&cliCfg)
 }
@@ -286,5 +292,6 @@ func runMain() error {
 func main() {
 	if err := runMain(); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
 	}
 }

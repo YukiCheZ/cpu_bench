@@ -18,13 +18,13 @@ workloads:
     parameters:
       documents:
         description: Number of documents (articles) to generate and index
-        default: 10000
+        default: 50000
       batch-size:
         description: Number of index requests per batch
         default: 256
       iterations:
         description: Number of timed benchmark iterations
-        default: 1
+        default: 10
       warmup:
         description: Run one warmup iteration before timing
         type: boolean

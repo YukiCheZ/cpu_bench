@@ -23,16 +23,38 @@ def main():
         sys.exit(1)
 
     print("[INFO] Running KMeans benchmark")
-    run_cmd = [
+    run_mixed_cmd = [
         "mvn", "exec:java",
         "-Dexec.mainClass=benchmark.smile.KMeansBenchmark",
+        "-Dexec.jvmArgs=-Xms8g -Xmx8g -XX:+TieredCompilation -XX:-UseBiasedLocking",
         "-Dexec.args={data} {clusters} {copies}".format(
             data=args.data,
             clusters=args.clusters,
             copies=args.copies
         )
     ]
-    ret = subprocess.run(run_cmd)
+    run_int_cmd = [
+        "mvn", "exec:java",
+        "-Dexec.mainClass=benchmark.smile.KMeansBenchmark",
+        "-Dexec.jvmArgs=-Xint -Xms8g -Xmx8g -XX:-UseBiasedLocking",
+        "-Dexec.args={data} {clusters} {copies}".format(
+            data=args.data,
+            clusters=args.clusters,
+            copies=args.copies
+        )
+    ]
+
+    run_comp_cmd = [
+        "mvn", "exec:java",
+        "-Dexec.mainClass=benchmark.smile.KMeansBenchmark",
+        "-Dexec.jvmArgs=-Xcomp -Xms8g -Xmx8g -XX:+TieredCompilation -XX:-UseBiasedLocking",
+        "-Dexec.args={data} {clusters} {copies}".format(
+            data=args.data,
+            clusters=args.clusters,
+            copies=args.copies
+        )
+    ]
+    ret = subprocess.run(run_mixed_cmd)
     if ret.returncode != 0:
         print("[ERROR] Benchmark execution failed")
         sys.exit(1)

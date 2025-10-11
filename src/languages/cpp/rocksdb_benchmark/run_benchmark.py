@@ -6,7 +6,6 @@ import time
 import statistics
 
 def run_command(cmd):
-    """运行命令并仅统计耗时"""
     start = time.time()
     result = subprocess.run(
         cmd,

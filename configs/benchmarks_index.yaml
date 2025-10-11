@@ -107,9 +107,9 @@ benchmarks:
     path: src/languages/go/bleve-index/metadata.yaml
     num: 1
 
-  - name: cockroachdb
+  - name: cockroachdb_benchmark
     path: src/languages/go/cockroachdb/metadata.yaml
-    num: 1
+    num: 2
 
   - name: esbuild
     path: src/languages/go/esbuild/metadata.yaml

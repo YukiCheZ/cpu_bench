@@ -70,9 +70,9 @@ def clean_data_logs():
 
 def main():
     parser = argparse.ArgumentParser(description="Cassandra CPU Benchmark")
-    parser.add_argument("--write-n", type=int, default=10000000, help="Total operations for write test")
+    parser.add_argument("--write-n", type=int, default=2000000, help="Total operations for write test")
     parser.add_argument("--write-threads", type=int, default=50, help="Number of threads for write test")
-    parser.add_argument("--read-n", type=int, default=10000000, help="Total operations for read test")
+    parser.add_argument("--read-n", type=int, default=2000000, help="Total operations for read test")
     parser.add_argument("--read-threads", type=int, default=50, help="Number of threads for read test")
     parser.add_argument("--cpu-count", type=int, default=None, help="Limit number of CPU cores to use")
     parser.add_argument("--iters", type=int, default=100, help="Number of iterations for read test")

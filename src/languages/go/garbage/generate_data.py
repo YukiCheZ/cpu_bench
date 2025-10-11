@@ -35,6 +35,8 @@ def main():
 
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
 
+    random.seed(42)
+
     content = generate_file(args.size)
     with open(args.output, "w") as f:
         f.write(content)

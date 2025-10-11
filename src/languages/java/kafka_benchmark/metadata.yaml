@@ -22,10 +22,10 @@ workloads:
       parameters:
         num-records:
           description: Total number of records to produce across all threads
-          default: 5000000000
+          default: 4000000000
         record-size:
           description: Size of each record in bytes
-          default: 10
+          default: 1
         threads:
           description: Number of producer threads (parallel producers)
           default: 1
@@ -37,7 +37,7 @@ workloads:
           default: false
 
 characteristics:
-  IO_effects: medium
+  IO_effects: high
   single_machine: true
   network_effects: loopback_only
   cpu_bound: true

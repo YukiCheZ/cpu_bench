@@ -34,7 +34,7 @@ characteristics:
   IO_effects: low
   single_machine: true
   network_effects: none
-  cpu_bound: true
+  memory_bound: low
 
 tags:
   - markdown

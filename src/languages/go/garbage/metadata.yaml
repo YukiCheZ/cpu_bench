@@ -8,33 +8,37 @@ domain:
   - cpu_performance
 
 workloads:
-  - name: garbage
+  - name: go_garbage
     description: >
       Benchmark that stresses the Go garbage collector by repeatedly parsing Go source files
       in memory. Measures GC efficiency under concurrent parsing workloads.
     data: 
       command: python3 scripts/generate_data.py 
       parameters:
-        size: 100000
-        output: ./data/input.go
-    command: go run src/garbage.go
+        size:
+          description: Size of the generated Go source file in lines
+          default: 100000
+        output: 
+          description: Path to the output Go source file
+          default: ./data/input.go
+    command: go run garbage.go
     parameters:
       input:
         description: Path to the Go source file to parse
         default: ./data/input.go
       iterations:
         description: Number of parse iterations to run
-        default: 200
+        default: 1000
       threads:
         description: Number of threads (sets GOMAXPROCS)
-        default: 0
+        default: 1
 
 characteristics:
   IO_effects: low
   single_machine: true
   network_effects: none
   cpu_bound: true
-  memory_bound: moderate
+  memory_bound: high
 
 tags:
   - cpu

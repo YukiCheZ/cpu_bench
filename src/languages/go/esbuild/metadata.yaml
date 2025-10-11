@@ -17,13 +17,24 @@ workloads:
       rendering a complex JavaScript scene. Measures rendering time, 
       and efficiency of the graphics pipeline.
     data: 
-      command: ./generate_project.sh --lang js
+      command: python3 generate_data.py --lang js
       parameters:
-        size: 1000
-        complexity: 1000
-        out: ./data/demo_js
-      parameters:
-    command: go run src/main.go --bench ThreeJS 
+        size:
+          description: Number of files to generate
+          default: 500
+        complexity:
+          description: Complexity of each file
+          default: 2000
+        out:
+          description: Output directory for generated files
+          default: ./data/demo_js
+        repeat-imports:
+          description: Number of times to repeat imports in each file
+          default: 10
+        heavy-factor:
+          description: Additional heavy factor per file
+          default: 50
+    command: go run main.go --bench ThreeJS 
     parameters:
       bin:
         description: Path to esbuild binary (or set ESBUILD_BIN env var)
@@ -33,19 +44,34 @@ workloads:
         default: ./data/demo_js
       threads:
         description: Number of threads to use (sets GOMAXPROCS for esbuild process)
-        default: 0
+        default: 1
+      iters:
+        description: Number of iterations to run
+        default: 30
   
-  - name: esbuild_ThreeJS
+  - name: esbuild_RomeTS
     description: >
       Benchmark RomeTS, a TypeScript/JavaScript bundler and compiler, by
       compiling a full TypeScript project.
     data: 
-      command: ./generate_project.sh --lang ts
+      command: python3 generate_data.py --lang ts
       parameters:
-        size: 1000
-        complexity: 1000
-        out: ./data/demo_js
-    command: go run src/main.go --bench RomeTS
+        size:
+          description: Number of files to generate
+          default: 500
+        complexity:
+          description: Complexity of each file
+          default: 2000
+        out:
+          description: Output directory for generated files
+          default: ./data/demo_js
+        repeat-imports:
+          description: Number of times to repeat imports in each file
+          default: 10
+        heavy-factor:
+          description: Additional heavy factor per file
+          default: 50
+    command: go run main.go --bench RomeTS
     parameters:
       bin:
         description: Path to esbuild binary (or set ESBUILD_BIN env var)
@@ -55,7 +81,10 @@ workloads:
         default: ./data/demo_js
       threads:
         description: Number of threads to use (sets GOMAXPROCS for esbuild process)
-        default: 0
+        default: 1
+      iters:  
+        description: Number of iterations to run
+        default: 30
     
 characteristics:
   IO_effects: medium

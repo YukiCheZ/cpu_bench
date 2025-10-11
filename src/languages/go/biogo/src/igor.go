@@ -26,10 +26,10 @@ var (
 
 func init() {
 	flag.IntVar(&seqCount, "seq", 1000000, "number of sequences (hits) to generate")
-	flag.IntVar(&maxPos, "maxpos", 1000000, "maximum sequence position")
-	flag.IntVar(&hitLen, "hitlen", 100000, "hit length")
+	flag.IntVar(&maxPos, "maxpos", 100000, "maximum sequence position")
+	flag.IntVar(&hitLen, "hitlen", 1000, "hit length")
 	flag.IntVar(&threads, "threads", 1, "number of threads (GOMAXPROCS), 0 = auto")
-	flag.IntVar(&iterations, "iterations", 1, "number of benchmark iterations")
+	flag.IntVar(&iterations, "iterations", 50, "number of benchmark iterations")
 	flag.BoolVar(&warmup, "warmup", true, "run one warmup iteration before benchmark")
 }
 
@@ -74,7 +74,7 @@ func main() {
 			panic(fmt.Sprintf("warmup piling error: %v", err))
 		}
 		_, clusters := igor.Cluster(piles, igor.ClusterConfig{
-			BandWidth:         0.05,
+			BandWidth:         0.5,
 			RequiredCover:     0.95,
 			OverlapStrictness: 0,
 			OverlapThresh:     0.95,
@@ -96,10 +96,10 @@ func main() {
 		var pf pals.PairFilter
 		piles, err := igor.Piles(reader, 0, pf)
 		if err != nil {
-			panic(fmt.Sprintf("iteration %d piling error: %v", iter, err))
+			panic(fmt.Sprintf("[INFO] iteration %d piling error: %v", iter, err))
 		}
 		_, clusters := igor.Cluster(piles, igor.ClusterConfig{
-			BandWidth:         0.05,
+			BandWidth:         0.5,
 			RequiredCover:     0.95,
 			OverlapStrictness: 0,
 			OverlapThresh:     0.95,
@@ -113,12 +113,9 @@ func main() {
 
 		var out bytes.Buffer
 		_ = igor.WriteJSON(cc, &out)
-
 		elapsed := time.Since(start)
-		fmt.Printf("Iteration %d elapsed time: %v\n", iter, elapsed)
 		totalTime += elapsed
 	}
 
-	avg := totalTime / time.Duration(iterations)
-	fmt.Printf("Average elapsed time: %v\n", avg)
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", totalTime.Seconds())
 }

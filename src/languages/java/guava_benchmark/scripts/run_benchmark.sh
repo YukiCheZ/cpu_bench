@@ -73,10 +73,25 @@ rm sources.txt
 echo "[Run] Starting benchmark"
 echo "Mode: $MODE, Data size: $DATASIZE, Copies: $COPIES, Iterations per copy: $ITERATIONS"
 
-JVM_OPTS="
+JVM_MIXED_OPTS="
   -Xms8g -Xmx8g \
-  -XX:+TieredCompilation -XX:TieredStopAtLevel=1 \
+  -XX:+TieredCompilation \
   -XX:-UseBiasedLocking
 "
 
-java $JVM_OPTS -cp "$BIN_DIR:$GUAVA_JAR" benchmarks.GuavaCPUBenchmark "$MODE" "$DATASIZE" "$COPIES" "$ITERATIONS"
+JVM_INT_OPTS="
+  -Xint \
+  -Xms8g -Xmx8g \
+  -XX:-UseBiasedLocking
+"
+
+JVM_COMP_OPTS="
+  -Xcomp \
+  -Xms8g -Xmx8g \
+  -XX:+TieredCompilation \
+  -XX:-UseBiasedLocking
+"
+
+JVM_DEFAULT_OPTS=$JVM_INT_OPTS
+
+java $JVM_DEFAULT_OPTS -cp "$BIN_DIR:$GUAVA_JAR" benchmarks.GuavaCPUBenchmark "$MODE" "$DATASIZE" "$COPIES" "$ITERATIONS"
