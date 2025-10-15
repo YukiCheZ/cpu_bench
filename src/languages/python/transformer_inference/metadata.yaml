@@ -36,7 +36,7 @@ workloads:
       data_dir:
         description: Directory containing pre-generated batches and metadata.json
         default: ./data
-      iterations:
+      iters:
         description: Number of iterations to run inference
         default: 1
       threads:
@@ -57,6 +57,9 @@ workloads:
       dim_feedforward:
         description: Feedforward hidden size in each Transformer layer
         default: 4096
+      compile:
+        description: Use torch.compile (PyTorch 2.x only)
+        default: false
 
 characteristics:
   IO_effects: low

@@ -31,7 +31,7 @@ def generate_batches(output_dir, num_batches, batch_size, seq_len, vocab_size):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate Transformer CPU training batches")
     parser.add_argument("--output_dir", type=str, default="./data", help="Directory to save batches")
-    parser.add_argument("--num_batches", type=int, default=200, help="Number of batches to generate")
+    parser.add_argument("--num_batches", type=int, default=40, help="Number of batches to generate")
     parser.add_argument("--batch_size", type=int, default=4, help="Batch size")
     parser.add_argument("--seq_len", type=int, default=128, help="Sequence length")
     parser.add_argument("--vocab_size", type=int, default=10000, help="Vocabulary size for input tokens")

@@ -368,14 +368,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--size", type=int, default=300, help="Board size (e.g., 9, 19, 50)")
     parser.add_argument("--games", type=int, default=1000, help="Number of simulation games per move")
-    parser.add_argument("--iterations", type=int, default=1, help="Number of iterations to run")
+    parser.add_argument("--iters", type=int, default=1, help="Number of iters to run")
     parser.add_argument("--threads", type=int, default=1, help="Maximum parallel threads/processes")
     args = parser.parse_args()
 
     random.seed(42)
 
     times = []
-    for iter_idx in range(args.iterations):
+    for iter_idx in range(args.iters):
         start = time.perf_counter()
         seeds = [random.randint(1, 1_000_000) for _ in range(args.threads)]
 
@@ -387,7 +387,5 @@ if __name__ == "__main__":
         end = time.perf_counter()
         elapsed = end - start
         times.append(elapsed)
-        print(f"[ITER {iter_idx+1}] elapsed time: {elapsed:.6f} seconds")
 
-    avg_time = sum(times) / len(times)
-    print(f"\n[RESULT] Average elapsed time over {args.iterations} iterations: {avg_time:.6f} seconds")
+    print(f"[RESULT] Total elapsed time: {sum(times):.4f} s")

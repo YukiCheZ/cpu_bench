@@ -385,9 +385,9 @@ def raytrace_worker(width, height, filename, seed=None):
 # Coordinator: spawn multiple processes
 # ---------------------------------------------------------------------
 def bench_raytrace_mp(width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
-                      iterations=1, threads=1, filename: Optional[str] = None):
+                      iters=1, threads=1, filename: Optional[str] = None):
     """
-    Run the raytracer workload 'iterations' times in multiple processes.
+    Run the raytracer workload 'iters' times in multiple processes.
     Each process runs a full copy of the workload per iteration.
     Reports time for each iteration and average.
     """
@@ -400,7 +400,7 @@ def bench_raytrace_mp(width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
 
     times = []
 
-    for it in range(iterations):
+    for it in range(iters):
         tasks = []
         for i in range(threads):
             outname = f"{filename}.part{i}.iter{it}" if filename else None
@@ -413,11 +413,8 @@ def bench_raytrace_mp(width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
                 f.result()  # propagate exceptions
         elapsed = time.perf_counter() - start_time
         times.append(elapsed)
-        print(f"[ITER {it+1}] Raytrace workload with {threads} threads completed in {elapsed:.6f} seconds")
 
-    avg_time = sum(times) / len(times)
-    print(f"\n[RESULT] Average elapsed time over {iterations} iterations: {avg_time:.6f} seconds")
-    return avg_time
+    print(f"[RESULT] Total elapsed time: {sum(times):.4f} s")
 
 
 # ---------------------------------------------------------------------
@@ -429,12 +426,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Raytracer benchmark (multiprocess)")
     parser.add_argument("--width", type=int, default=DEFAULT_WIDTH, help="Image width in pixels")
     parser.add_argument("--height", type=int, default=DEFAULT_HEIGHT, help="Image height in pixels")
-    parser.add_argument("--iterations", type=int, default=1, help="Number of repetitions of the workload")
+    parser.add_argument("--iters", type=int, default=1, help="Number of repetitions of the workload")
     parser.add_argument("--threads", type=int, default=1, help="Number of parallel worker processes")
 
     args = parser.parse_args()
 
     bench_raytrace_mp(width=args.width, height=args.height,
-                      iterations=args.iterations,
+                      iters=args.iters,
                       threads=args.threads,
                       filename=None)

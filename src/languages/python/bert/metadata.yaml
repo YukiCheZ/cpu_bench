@@ -8,17 +8,25 @@ domain:
   - deep_learning
 
 workloads:
-  - name: bert_training
+  - name: bert_eval
     description: >
-      Execute BERT CPU training using pre-generated input batches.
-      Measures the performance of forward and backward pass on CPU.
+      Execute BERT CPU evaluation using pre-generated input batches.
+      Measures the performance of forward pass on CPU.
     data:
       command: python3 generate_data.py
       parameters:
-        batch_size: 16
-        seq_len: 1024
-        num_batches: 50
-        output_dir: ./data
+        batch_size:
+          description: Batch size for each batch
+          default: 16
+        seq_len:
+          description: Sequence length for each input
+          default: 1024
+        num_batches:
+          description: Number of batches to generate
+          default: 50
+        output_dir:
+          description: Directory to save generated batches
+          default: ./data
     command: python3 bert_eval.py
     parameters:
       data_dir:

@@ -23,7 +23,7 @@ workloads:
       height:
         description: Image height in pixels
         default: 5000
-      iterations:
+      iters:
         description: Number of outer benchmark repetitions (full scene renders)
         default: 1
       threads:

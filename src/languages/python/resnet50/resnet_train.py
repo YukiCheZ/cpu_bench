@@ -12,13 +12,19 @@ def get_data_files(data_dir):
     file_list = sorted([os.path.join(data_dir, f) for f in os.listdir(data_dir) if f.endswith(".pt")])
     return file_list
 
-def main(data_dir, num_threads, lr, iters):
+def main(data_dir, num_threads, lr, iters, use_compile):
     # Set CPU threads
     torch.set_num_threads(num_threads)
     print(f"[INFO] Using CPU threads: {torch.get_num_threads()}")
 
     # Initialize model
     model = models.resnet50(weights=None).train().to("cpu")
+
+    if use_compile:
+        # Compile model using PyTorch 2.x torch.compile
+        print("[INFO] Compiling ResNet50 model with torch.compile (PyTorch 2.x)...")
+        model = torch.compile(model)
+
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=lr)
 
@@ -61,7 +67,7 @@ def main(data_dir, num_threads, lr, iters):
     print("="*50)
     print("[INFO] ResNet50 CPU Training Benchmark Completed")
     print(f"[INFO] Total iterations: {len(iteration_times)} (Rounds={iters}, Batches={len(file_list)})")
-    print(f"[RESULT] Total time: {total_time:.4f} s")
+    print(f"[RESULT] Total elapsed time: {total_time:.4f} s")
     print("="*50)
 
 if __name__ == "__main__":
@@ -70,6 +76,7 @@ if __name__ == "__main__":
     parser.add_argument("--threads", type=int, default=1, help="Number of CPU threads to use")
     parser.add_argument("--lr", type=float, default=0.001, help="Learning rate")
     parser.add_argument("--iters", type=int, default=20, help="Number of benchmark iterations (each runs all batches)")
+    parser.add_argument("--compile", action="store_true", help="Use torch.compile (PyTorch 2.x only)")
     args = parser.parse_args()
 
-    main(args.data_dir, args.threads, args.lr, args.iters)
+    main(args.data_dir, args.threads, args.lr, args.iters, args.compile)

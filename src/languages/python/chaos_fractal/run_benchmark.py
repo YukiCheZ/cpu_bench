@@ -48,10 +48,8 @@ def main():
         end = time.perf_counter()
         elapsed = end - start
         times.append(elapsed)
-        print(f"[ITER {outer+1}] elapsed time: {elapsed:.6f} s")
 
-    avg = sum(times) / len(times)
-    print(f"\n[RESULT] Average elapsed time over {args.iters} iterations: {avg:.6f} s")
+    print(f"[RESULT] Total elapsed time: {sum(times):.4f} s")
 
 if __name__ == "__main__":
     main()

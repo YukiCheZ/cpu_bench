@@ -10,6 +10,27 @@ domain:
 workloads:
   - name: go-benchmark
     description: Benchmark for measuring Go compiler and toolchain build performance.
+    data:
+      command: python3 generate_data.py
+      parameters:
+        pkgs:
+          description: Number of packages to generate
+          default: 100
+        files:
+          description: Number of files per package
+          default: 5
+        structs:
+          description: Number of structs per file
+          default: 20
+        funcs:
+          description: Number of functions per file
+          default: 50
+        complex:
+          description: Complexity level of generated functions (1-5)
+          default: 200
+        module:
+          description: Module name used in go.mod
+          default: data
     command: python3 run_benchmark.py
     parameters:
       scale: 

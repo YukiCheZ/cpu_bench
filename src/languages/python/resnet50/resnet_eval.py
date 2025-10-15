@@ -10,13 +10,18 @@ def get_data_files(data_dir):
     file_list = sorted([os.path.join(data_dir, f) for f in os.listdir(data_dir) if f.endswith(".pt")])
     return file_list
 
-def main(data_dir, num_threads, iters):
+def main(data_dir, num_threads, iters, use_compile):
     # Set the number of CPU threads
     torch.set_num_threads(num_threads)
     print(f"[INFO] Using CPU threads: {torch.get_num_threads()}")
 
     # Initialize the model (no pretrained weights, CPU mode)
     model = models.resnet50(weights=None).eval().to("cpu")
+
+    if use_compile:
+        # Compile model using PyTorch 2.x torch.compile
+        print("[INFO] Compiling ResNet50 model with torch.compile (PyTorch 2.x)...")
+        model = torch.compile(model)
 
     # Get list of pre-generated data files
     file_list = get_data_files(data_dir)
@@ -48,7 +53,7 @@ def main(data_dir, num_threads, iters):
     print("="*50)
     print("[INFO] ResNet50 CPU Inference Benchmark Completed")
     print(f"[INFO] Total iterations: {len(iteration_times)} (Rounds={iters}, Batches={len(file_list)})")
-    print(f"[RESULT] Total time: {total_time:.4f} seconds")
+    print(f"[RESULT] Total elapsed time: {total_time:.4f} s")
     print("="*50)
 
 if __name__ == "__main__":
@@ -56,6 +61,7 @@ if __name__ == "__main__":
     parser.add_argument("--data_dir", type=str, default="./data", help="Directory containing pre-generated data")
     parser.add_argument("--threads", type=int, default=1, help="Number of CPU threads to use")
     parser.add_argument("--iters", type=int, default=50, help="Number of benchmark iterations (each runs all batches)")
+    parser.add_argument("--compile", action="store_true", help="Use torch.compile (PyTorch 2.x only)")
     args = parser.parse_args()
 
-    main(args.data_dir, args.threads, args.iters)
+    main(args.data_dir, args.threads, args.iters, args.compile)

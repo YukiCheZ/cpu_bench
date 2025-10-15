@@ -16,12 +16,16 @@ workloads:
       command: python3 generate_data.py
       parameters:
         batch_size:
+          description: Number of images per batch
           default: 4
         img_size:
+          description: Size of each image
           default: 512
         num_batches:
+          description: Number of batches to generate
           default: 10
         output_dir:
+          description: Directory to save generated data
           default: "./data"
     command: python3 resnet_eval.py
     parameters:
@@ -34,6 +38,9 @@ workloads:
       iters:
         description: Number of benchmark iterations
         default: 50
+      compile:
+        description: Whether to use TorchDynamo compilation for inference
+        default: false
 
   - name: resnet50_training
     description: >
@@ -43,12 +50,16 @@ workloads:
       command: python3 generate_data.py
       parameters:
         batch_size:
+          description: Number of images per batch
           default: 4
         img_size:
+          description: Size of each image
           default: 512
         num_batches:
+          description: Number of batches to generate
           default: 10
         output_dir:
+          description: Directory to save generated data
           default: "./data"
     command: python3 resnet_train.py
     parameters:
@@ -64,6 +75,9 @@ workloads:
       iters:
         description: Number of benchmark iterations 
         default: 20
+      compile:
+        description: Whether to use TorchDynamo compilation for training
+        default: false
 
 characteristics:
   IO_effects: low

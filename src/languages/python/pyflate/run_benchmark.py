@@ -682,7 +682,5 @@ if __name__ == "__main__":
         end = time.perf_counter()
         elapsed = end - start
         times.append(elapsed)
-        print(f"Iter {it+1}: {elapsed:.6f} sec")
 
-    avg = sum(times) / len(times)
-    print(f"Average: {avg:.6f} sec")
+    print(f"[RESULT] Total elapsed time: {sum(times):.4f} s")

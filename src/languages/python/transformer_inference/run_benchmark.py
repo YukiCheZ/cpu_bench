@@ -21,7 +21,7 @@ def list_batch_files(data_dir: str):
         raise FileNotFoundError(f"[ERROR] No batch_*.pt files found in {data_dir}")
     return files
 
-def main(data_dir, iterations, threads, num_encoder_layers, num_decoder_layers, d_model, nhead, dim_feedforward):
+def main(data_dir, iters, threads, num_encoder_layers, num_decoder_layers, d_model, nhead, dim_feedforward, use_compile):
     torch.set_num_threads(threads)
     device = torch.device("cpu")
     print(f"[INFO] Running Transformer CPU Inference Benchmark with {threads} threads")
@@ -45,6 +45,11 @@ def main(data_dir, iterations, threads, num_encoder_layers, num_decoder_layers, 
     embedding.eval()
     transformer.eval()
 
+    if use_compile:
+        print("[INFO] Compiling model with torch.compile (PyTorch 2.x)...")
+        embedding = torch.compile(embedding)
+        transformer = torch.compile(transformer)
+
     batch_files = list_batch_files(data_dir)
     print(f"[INFO] Found {len(batch_files)} batch files.")
 
@@ -57,7 +62,7 @@ def main(data_dir, iterations, threads, num_encoder_layers, num_decoder_layers, 
 
     # Benchmark: each iteration runs all batches
     start_time = time.time()
-    for it in range(iterations):
+    for it in range(iters):
         for f in batch_files:
             src, tgt = torch.load(f, map_location="cpu")
             with torch.no_grad():
@@ -71,21 +76,22 @@ def main(data_dir, iterations, threads, num_encoder_layers, num_decoder_layers, 
     print("="*50)
     print("[INFO] Transformer CPU Inference Benchmark Completed")
     print(f"[INFO] Encoder layers: {num_encoder_layers}, Decoder layers: {num_decoder_layers}, d_model: {d_model}, nhead: {nhead}, dim_feedforward: {dim_feedforward}")
-    print(f"[INFO] Iterations: {iterations}, Num batches per iteration: {len(batch_files)}, Threads: {threads}")
-    print(f"[RESULT] Total time: {total_time:.4f}s")
+    print(f"[INFO] iters: {iters}, Num batches per iteration: {len(batch_files)}, Threads: {threads}")
+    print(f"[RESULT] Total elapsed time: {total_time:.4f} s")
     print("="*50)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Full Transformer CPU Inference Benchmark (Encoder + Decoder)")
     parser.add_argument("--data_dir", type=str, default="./data", help="Directory with pre-generated batches")
-    parser.add_argument("--iterations", type=int, default=1, help="Number of iterations")
+    parser.add_argument("--iters", type=int, default=1, help="Number of iters")
     parser.add_argument("--threads", type=int, default=1, help="CPU threads")
     parser.add_argument("--num_encoder_layers", type=int, default=24, help="Number of encoder layers")
     parser.add_argument("--num_decoder_layers", type=int, default=24, help="Number of decoder layers")
     parser.add_argument("--d_model", type=int, default=1024, help="Transformer embedding dimension")
     parser.add_argument("--nhead", type=int, default=32, help="Number of attention heads")
     parser.add_argument("--dim_feedforward", type=int, default=4096, help="Feedforward hidden size")
+    parser.add_argument("--compile", action="store_true", help="Use torch.compile (PyTorch 2.x only)")
     args = parser.parse_args()
 
-    main(args.data_dir, args.iterations, args.threads, args.num_encoder_layers,
-         args.num_decoder_layers, args.d_model, args.nhead, args.dim_feedforward)
+    main(args.data_dir, args.iters, args.threads, args.num_encoder_layers,
+         args.num_decoder_layers, args.d_model, args.nhead, args.dim_feedforward, args.compile)

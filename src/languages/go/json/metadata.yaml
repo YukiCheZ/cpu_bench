@@ -29,7 +29,7 @@ workloads:
         default: 1
       iterations:
         description: Number of iterations per thread
-        default: 10
+        default: 1000
 
 characteristics:
   IO_effects: low

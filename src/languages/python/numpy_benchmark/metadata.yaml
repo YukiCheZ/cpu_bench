@@ -34,7 +34,7 @@ workloads:
         description: Matrix dimension (size x size)
         unit: elements
         default: 4096
-      iterations:
+      iters:
         description: Number of measured iterations
         default: 100
       warmup:

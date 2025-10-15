@@ -12,7 +12,7 @@ def expand_target(seed_data, size):
     return (seed_data * repeats)[:size]
 
 def worker(args):
-    repo_path, iterations, warmup_count = args
+    repo_path, iters, warmup_count = args
 
     metadata_files = []
     target_files = []
@@ -40,7 +40,7 @@ def worker(args):
 
     # Benchmark iterations
     start_time = time.perf_counter()
-    for _ in range(iterations):
+    for _ in range(iters):
         for meta in metadata_files:
             Metadata.from_bytes(meta["data"])
         for target in target_files:
@@ -55,28 +55,21 @@ def worker(args):
 def main():
     parser = argparse.ArgumentParser(description="TUF CPU Benchmark (load from data files)")
     parser.add_argument("--copies", type=int, default=1, help="Number of parallel worker processes")
-    parser.add_argument("--iterations", type=int, default=1000, help="Iterations per worker")
+    parser.add_argument("--iters", type=int, default=1000, help="Iterations per worker")
     parser.add_argument("--warmup", type=int, default=3, help="Warmup iterations per worker")
     parser.add_argument("--repo", type=str, default="./data", help="Path to data directory")
     args = parser.parse_args()
 
-    print(f"[INFO] Running {args.copies} copies, {args.iterations} iterations, warmup {args.warmup}, data-dir {args.repo}")
+    print(f"[INFO] Running {args.copies} copies, {args.iters} iterations, warmup {args.warmup}, data-dir {args.repo}")
 
-    worker_args = [(args.repo, args.iterations, args.warmup) for _ in range(args.copies)]
+    worker_args = [(args.repo, args.iters, args.warmup) for _ in range(args.copies)]
 
     start = time.perf_counter()
     with Pool(processes=args.copies) as pool:
         results = pool.map(worker, worker_args)
     total_wall_time = time.perf_counter() - start
 
-    total_elapsed = sum(r["elapsed"] for r in results)
-    total_bytes = sum(r["bytes"] for r in results) * args.iterations
-    total_ops = sum(r["ops"] for r in results) * args.iterations
-
-    avg_time_per_copy = total_elapsed / len(results)
-
-    print(f"[Result] Avg time per copy: {avg_time_per_copy:.6f} sec")
-    print(f"[Result] Wall-clock time: {total_wall_time:.6f} sec")
+    print(f"[RESULT] Total elapsed time: {total_wall_time:.4f} s")
 
 if __name__ == "__main__":
     main()

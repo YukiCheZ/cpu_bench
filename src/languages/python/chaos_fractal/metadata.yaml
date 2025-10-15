@@ -19,7 +19,7 @@ workloads:
       height:
         description: Image height in pixels
         default: 4096
-      iterations:
+      iters:
         description: Number of inner transform iterations (points) each worker performs
         default: 1000000
       thickness:

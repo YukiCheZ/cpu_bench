@@ -21,7 +21,7 @@ workloads:
           default: ./data
         num_batches:
           description: Number of batches to generate
-          default: 200
+          default: 40
         batch_size:
           description: Number of sequences per batch
           default: 4
@@ -36,7 +36,7 @@ workloads:
       data_dir:
         description: Directory containing pre-generated batches and metadata.json
         default: ./data
-      iterations:
+      iters:
         description: Number of iterations to run training
         default: 1
       threads:
@@ -60,6 +60,9 @@ workloads:
       lr:
         description: Learning rate for optimizer
         default: 1e-3
+      compile:
+        description: Whether to use torch.compile for optimization
+        default: false
 
 characteristics:
   IO_effects: low

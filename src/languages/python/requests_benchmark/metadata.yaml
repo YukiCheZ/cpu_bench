@@ -15,7 +15,7 @@ workloads:
       copies:
         description: Number of parallel worker processes
         default: 1
-      iterations:
+      iters:
         description: Iterations per worker process
         default: 1000
       warmup:

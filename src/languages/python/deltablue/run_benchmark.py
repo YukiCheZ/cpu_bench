@@ -662,4 +662,4 @@ if __name__ == "__main__":
         elapsed = end - start
         times.append(elapsed)
 
-    print(f"[RESULT] DeltaBlue elapsed time: {sum(times):.6f} sec")
+    print(f"[RESULT] Total elapsed time: {sum(times):.4f} s")

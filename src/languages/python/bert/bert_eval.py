@@ -8,7 +8,7 @@ def get_data_files(data_dir):
     """Return sorted list of .pt files in data directory"""
     return sorted([os.path.join(data_dir, f) for f in os.listdir(data_dir) if f.endswith(".pt")])
 
-def main(data_dir, num_threads):
+def main(data_dir, num_threads, use_compile):
     # Set CPU threads
     torch.set_num_threads(num_threads)
     print(f"[INFO] Using CPU threads: {torch.get_num_threads()}")
@@ -28,6 +28,11 @@ def main(data_dir, num_threads):
     # Initialize BERT model with matching max_position_embeddings
     config = BertConfig(max_position_embeddings=seq_len)
     model = BertModel(config).eval().to("cpu")
+
+    if use_compile:
+        # Compile model using PyTorch 2.x torch.compile
+        print("[INFO] Compiling BERT model with torch.compile (PyTorch 2.x)...")
+        model = torch.compile(model)
 
     # Warm-up
     with torch.no_grad():
@@ -51,13 +56,14 @@ def main(data_dir, num_threads):
     print("="*50)
     print("[INFO] BERT CPU Inference Benchmark Completed")
     print(f"[INFO] Total batches: {len(file_list)}")
-    print(f"[RESULT] Total time: {total_time:.4f} seconds")
+    print(f"[RESULT] Total elapsed time: {total_time:.4f} s")
     print("="*50)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="BERT CPU inference from pre-generated data")
     parser.add_argument("--data_dir", type=str, default="./data", help="Directory containing pre-generated data")
     parser.add_argument("--threads", type=int, default=1, help="Number of CPU threads to use")
+    parser.add_argument("--compile", action="store_true", help="Use torch.compile (PyTorch 2.x only)")
     args = parser.parse_args()
 
-    main(args.data_dir, args.threads)
+    main(args.data_dir, args.threads, args.compile)

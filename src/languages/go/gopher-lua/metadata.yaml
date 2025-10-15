@@ -16,8 +16,12 @@ workloads:
     data: 
       command: python3 scripts/generate_data.py
       parameters:
-        size: 1000000
-        output: dna_input.fasta
+        size:
+          description: Generate DNA input for gopher-lua knucleotide benchmark
+          default: 1000000
+        output: 
+          description: Output file name (will be placed in data/ directory by default)
+          default: dna_input.fasta
     command: go run src/main.go
     parameters:
       lua:
@@ -27,8 +31,12 @@ workloads:
         description: Path to the input DNA file
         default: ./data/dna_input.fasta
       threads:
-        description: Number of threads to use (GOMAXPROCS)
+        description: Number of threads to use
         default: 1
+      iters:
+        description: Number of iterations per thread
+        default: 100
+      
 
 characteristics:
   IO_effects: low

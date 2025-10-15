@@ -34,11 +34,11 @@ var (
 func main() {
 	flag.StringVar(&inputPath, "input", "./data/input_50MB.json", "path to input JSON file")
 	flag.IntVar(&threads, "threads", 1, "number of threads")
-	flag.IntVar(&iters, "iterations", 10, "number of iterations per thread")
+	flag.IntVar(&iters, "iterations", 1000, "number of iterations per thread")
 	flag.Parse()
 
 	if inputPath == "" {
-		fmt.Fprintln(os.Stderr, "Error: --input is required")
+		fmt.Fprintln(os.Stderr, "[ERROR] --input is required")
 		os.Exit(1)
 	}
 
@@ -53,7 +53,7 @@ func main() {
 	}
 
 	runtime.GOMAXPROCS(threads)
-	fmt.Printf("Starting benchmark: threads=%d, iters=%d\n", threads, iters)
+	fmt.Printf("[INFO] Starting benchmark: threads=%d, iters=%d\n", threads, iters)
 
 	start := time.Now()
 	var wg sync.WaitGroup
@@ -76,5 +76,5 @@ func main() {
 
 	wg.Wait()
 	elapsed := time.Since(start)
-	fmt.Printf("[RESULT] benchmark runtime: %v\n", elapsed)
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", elapsed.Seconds())
 }
