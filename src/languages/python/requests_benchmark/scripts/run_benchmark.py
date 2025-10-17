@@ -9,12 +9,12 @@ def worker(args):
     """Worker process: run benchmark on given file."""
     filepath, iters, warmup_count = args
     bench = RequestsWorkloads(filepath)
-    elapsed = bench.run(iters=iters, warmup_count=warmup_count)
+    elapsed = bench.run(iterations=iters, warmup_count=warmup_count)
     return elapsed
 
 def main():
     parser = argparse.ArgumentParser(description="Requests JSON Parsing CPU Benchmark")
-    parser.add_argument("--copies", type=int, default=1, help="Number of parallel worker processes")
+    parser.add_argument("--threads", type=int, default=1, help="Number of parallel worker processes")
     parser.add_argument("--iters", type=int, default=1000, help="iters per worker")
     parser.add_argument("--warmup", type=int, default=3, help="Warmup iters per worker")
     parser.add_argument("--size", type=int, default=1024*1024, help="Dataset size, affects filename")
@@ -42,12 +42,12 @@ def main():
     with open(filename, "r") as f:
         _ = f.read()
 
-    print(f"[Benchmark] Running {args.copies} copies, {args.iters} iters each, warmup {args.warmup}, file: {filename}")
+    print(f"[Benchmark] Running {args.threads} copies, {args.iters} iters each, warmup {args.warmup}, file: {filename}")
 
-    worker_args = [(filename, args.iters, args.warmup) for _ in range(args.copies)]
+    worker_args = [(filename, args.iters, args.warmup) for _ in range(args.threads)]
 
     start = time.perf_counter()
-    with Pool(processes=args.copies) as pool:
+    with Pool(processes=args.threads) as pool:
         results = pool.map(worker, worker_args)
     total_time = time.perf_counter() - start
 

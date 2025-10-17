@@ -10,9 +10,9 @@ domain:
 workloads:
   - name: requests-json
     description: Benchmark JSON parsing performance using Python requests library on local file datasets
-    command: python3 run_requests_benchmark.py
+    command: python3 -m scripts.run_benchmark
     parameters:
-      copies:
+      threads:
         description: Number of parallel worker processes
         default: 1
       iters:

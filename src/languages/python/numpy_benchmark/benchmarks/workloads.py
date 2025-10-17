@@ -4,11 +4,8 @@ import numpy as np
 
 class NumpyWorkloads:
     @staticmethod
-    def matmul(data, iterations=1, warmup=3):
+    def matmul(data, iterations=1):
         A, B = data['A'], data['B']
-
-        for _ in range(warmup):
-            A @ B
 
         start = time.perf_counter()
         result = None
@@ -19,11 +16,8 @@ class NumpyWorkloads:
         return elapsed, np.linalg.norm(result)
 
     @staticmethod
-    def svd(data, iterations=1, warmup=3):
+    def svd(data, iterations=1):
         M = data['M']
-
-        for _ in range(warmup):
-            np.linalg.svd(M)
 
         start = time.perf_counter()
         U = s = Vh = None
@@ -34,11 +28,8 @@ class NumpyWorkloads:
         return elapsed, np.linalg.norm(s)
 
     @staticmethod
-    def fft(data, iterations=1, warmup=3):
+    def fft(data, iterations=1):
         signal = data['signal']
-
-        for _ in range(warmup):
-            np.fft.fft(signal)
 
         start = time.perf_counter()
         result = None

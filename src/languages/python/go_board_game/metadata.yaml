@@ -13,7 +13,7 @@ workloads:
       Benchmark for a Go board game AI using Monte Carlo Tree Search (MCTS). 
       This workload simulates games on configurable board sizes, with a configurable 
       number of simulation games per move. 
-    command: python3 go_benchmark.py --size {size} --games {games} --iterations {iterations} --threads {threads}
+    command: python3 run_benchmark.py 
     parameters:
       size:
         description: Board size (e.g., 9, 19, 50)

@@ -2,18 +2,10 @@
 deltablue.py
 ============
 
-Ported for the PyPy project.
-Contributed by Daniel Lindsley
-
 This implementation of the DeltaBlue benchmark was directly ported
 from the `V8's source code`_, which was in turn derived
 from the Smalltalk implementation by John Maloney and Mario
 Wolczko. The original Javascript implementation was licensed under the GPL.
-
-It's been updated in places to be more idiomatic to Python (for loops over
-collections, a couple magic methods, ``OrderedCollection`` being a list & things
-altering those collections changed to the builtin methods) but largely retains
-the layout & logic from the original. (Ugh.)
 
 .. _`V8's source code`: (https://github.com/v8/v8/blob/master/benchmarks/deltablue.js)
 """

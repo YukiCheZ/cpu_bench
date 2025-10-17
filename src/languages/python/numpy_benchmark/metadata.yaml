@@ -16,9 +16,9 @@ workloads:
         description: Matrix dimension (size x size)
         unit: elements
         default: 4096
-      iterations:
+      iters:
         description: Number of measured iterations
-        default: 1000
+        default: 300
       warmup:
         description: Number of warmup iterations
         default: 3
@@ -33,7 +33,7 @@ workloads:
       size:
         description: Matrix dimension (size x size)
         unit: elements
-        default: 4096
+        default: 2048
       iters:
         description: Number of measured iterations
         default: 100
@@ -52,9 +52,9 @@ workloads:
         description: Signal length
         unit: elements
         default: 16777216
-      iterations:
+      iters:
         description: Number of measured iterations
-        default: 1000
+        default: 500
       warmup:
         description: Number of warmup iterations
         default: 3

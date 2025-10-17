@@ -54,18 +54,18 @@ def worker(args):
 
 def main():
     parser = argparse.ArgumentParser(description="TUF CPU Benchmark (load from data files)")
-    parser.add_argument("--copies", type=int, default=1, help="Number of parallel worker processes")
+    parser.add_argument("--threads", type=int, default=1, help="Number of parallel worker processes")
     parser.add_argument("--iters", type=int, default=1000, help="Iterations per worker")
     parser.add_argument("--warmup", type=int, default=3, help="Warmup iterations per worker")
     parser.add_argument("--repo", type=str, default="./data", help="Path to data directory")
     args = parser.parse_args()
 
-    print(f"[INFO] Running {args.copies} copies, {args.iters} iterations, warmup {args.warmup}, data-dir {args.repo}")
+    print(f"[INFO] Running {args.threads} copies, {args.iters} iterations, warmup {args.warmup}, data-dir {args.repo}")
 
-    worker_args = [(args.repo, args.iters, args.warmup) for _ in range(args.copies)]
+    worker_args = [(args.repo, args.iters, args.warmup) for _ in range(args.threads)]
 
     start = time.perf_counter()
-    with Pool(processes=args.copies) as pool:
+    with Pool(processes=args.threads) as pool:
         results = pool.map(worker, worker_args)
     total_wall_time = time.perf_counter() - start
 
