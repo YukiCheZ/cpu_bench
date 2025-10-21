@@ -5,6 +5,8 @@ language: Java
 domain:
   - database
   - storage
+setup:
+  command: ./setup.sh
 
 workloads:
   - name: cassandra-stress-read
@@ -13,10 +15,6 @@ workloads:
       read-heavy workloads. It uses the official `cassandra-stress` tool
       executed via Python, supporting configurable total operations, threads,
       CPU core affinity, and multiple iterations.
-
-    setup:
-      command: ./setup.sh
-
     run:
       command: python3 run_benchmark.py
       parameters:

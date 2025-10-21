@@ -10,5 +10,4 @@
 src/languages/go/go_benchmark/go
 **/bin
 **/target
-**/test
 *.csv

@@ -627,9 +627,9 @@ def worker(n):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="DeltaBlue benchmark")
-    parser.add_argument("--n", type=int, default=1000000,
-                        help="problem size (default=100000)")
-    parser.add_argument("--iters", type=int, default=1,
+    parser.add_argument("--n", type=int, default=200000,
+                        help="problem size (default=200000)")
+    parser.add_argument("--iters", type=int, default=20,
                         help="number of benchmark iterations")
     parser.add_argument("--threads", type=int, default=1,
                         help="number of parallel worker processes")

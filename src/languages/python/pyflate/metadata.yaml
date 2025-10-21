@@ -18,7 +18,7 @@ workloads:
       parameters:
         size:
           description: Size of uncompressed random data in bytes
-          default: 100000000
+          default: 10000000
         output:
           description: Output compressed file path
           default: data/interpreter.tar.bz2
@@ -29,7 +29,7 @@ workloads:
         default: data/interpreter.tar.bz2
       iters:
         description: Number of times to run the full decompression workload
-        default: 1
+        default: 10
       threads:
         description: Number of parallel worker processes (each runs a full workload instance)
         default: 1

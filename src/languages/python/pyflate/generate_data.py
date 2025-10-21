@@ -13,12 +13,12 @@ def generate_data(size, output_file):
     with open(output_file, "wb") as f:
         f.write(compressed)
     
-    print(f"Generated {len(compressed)} bytes of compressed data "
+    print(f"[DATA] Generated {len(compressed)} bytes of compressed data "
           f"from {size} bytes input at {output_file}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate input data for pyflate benchmark")
-    parser.add_argument("--size", type=int, default=100000000,
+    parser.add_argument("--size", type=int, default=10000000,
                         help="Size of uncompressed random data in bytes")
     parser.add_argument("--output", type=str, default="data/interpreter.tar.bz2",
                         help="Output compressed file path (default: data/interpreter.tar.bz2)")

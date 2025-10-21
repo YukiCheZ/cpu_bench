@@ -5,7 +5,7 @@ import shutil
 
 def generate_data(batch_size, img_size, num_batches, output_dir):
     if os.path.exists(output_dir):
-        print(f"Removing existing directory: {output_dir}")
+        print(f"[INFO] Removing existing directory: {output_dir}")
         shutil.rmtree(output_dir)
 
     os.makedirs(output_dir, exist_ok=True)
@@ -15,7 +15,8 @@ def generate_data(batch_size, img_size, num_batches, output_dir):
         labels = torch.randint(0, 1000, (batch_size,))
         file_path = os.path.join(output_dir, f"batch_{i}.pt")
         torch.save((inputs, labels), file_path)
-        print(f"Saved {file_path} (uint8)")
+    
+    print(f"[INFO] Data generated done, batches: {num_batches}, batch size: {batch_size}, img size: {img_size}/n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate random data for ResNet50 CPU inference")

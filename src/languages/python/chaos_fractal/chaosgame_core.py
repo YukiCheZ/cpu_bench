@@ -14,13 +14,6 @@ import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Optional, Tuple
 
-DEFAULT_THICKNESS = 0.25
-DEFAULT_WIDTH = 4096
-DEFAULT_HEIGHT = 4096
-DEFAULT_ITERATIONS = 50000000
-DEFAULT_RNG_SEED = 1234
-
-
 class GVector(object):
     def __init__(self, x=0, y=0, z=0):
         self.x = x
@@ -285,17 +278,17 @@ def run_once_mp(width: int, height: int, iterations: int, thickness: float,
 # ---------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(description="Chaos fractal benchmark (multiprocess)")
-    parser.add_argument("--width", type=int, default=DEFAULT_WIDTH,
+    parser.add_argument("--width", type=int, default=4096,
                         help="Image width (pixels)")
-    parser.add_argument("--height", type=int, default=DEFAULT_HEIGHT,
+    parser.add_argument("--height", type=int, default=4096,
                         help="Image height (pixels)")
-    parser.add_argument("--iterations", type=int, default=DEFAULT_ITERATIONS,
+    parser.add_argument("--iterations", type=int, default=50000000,
                         help="Number of inner iterations (points) for the fractal generator)")
-    parser.add_argument("--thickness", type=float, default=DEFAULT_THICKNESS,
+    parser.add_argument("--thickness", type=float, default=0.25,
                         help="Thickness parameter for the chaos algorithm")
-    parser.add_argument("--rng-seed", type=int, default=DEFAULT_RNG_SEED,
+    parser.add_argument("--rng-seed", type=int, default=42,
                         help="Base RNG seed")
-    parser.add_argument("--iters", type=int, default=3,
+    parser.add_argument("--iters", type=int, default=1,
                         help="Number of timed benchmark repetitions (outer)")
     parser.add_argument("--threads", type=int, default=1,
                         help="Number of parallel worker processes")

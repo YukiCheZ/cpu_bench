@@ -42,7 +42,7 @@ func init() {
 	flag.IntVar(&cliCfg.maxOps, "max-ops", 40000, "maximum number of operations to run per thread")
 	flag.IntVar(&cliCfg.warehouses, "warehouses", 1, "number of warehouses for TPCC data per thread (larger -> more data)")
 	flag.IntVar(&cliCfg.concurrency, "concurrency", 200, "Number of concurrent workers (concurrency param passed to tpcc)")
-	flag.IntVar(&cliCfg.procsPerInst, "threads", 0, "number of threads (GOMAXPROCS) for CockroachDB instance")
+	flag.IntVar(&cliCfg.procsPerInst, "threads", 1, "number of threads (GOMAXPROCS) for CockroachDB instance")
 }
 
 type cockroachdbInstance struct {
@@ -123,7 +123,7 @@ func waitForCluster(instances []*cockroachdbInstance) error {
 	select {
 	case <-done:
 	case <-time.After(60 * time.Second):
-		return errors.New("timeout waiting for cluster")
+		return errors.New("[ERROR] timeout waiting for cluster")
 	}
 	return nil
 }
@@ -235,7 +235,7 @@ func runBenchmarkStandalone(cfg *config, instances []*cockroachdbInstance) error
 		return fmt.Errorf("[ERROR] tpcc run failed: %v, stderr: %s", err, runErrBuf.String())
 	}
 	elapsed := time.Since(start)
-	fmt.Printf("[RESULT] total elapsed time: %.4f s\n", elapsed.Seconds())
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", elapsed.Seconds())
 	return nil
 }
 

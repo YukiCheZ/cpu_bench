@@ -87,5 +87,5 @@ func main() {
 		}
 	}
 	elapsed := time.Since(start)
-	fmt.Printf("[RESULT] Benchmark %s finished in %.4f (iters=%d)\n", benchName, elapsed.Seconds(), iters)
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", elapsed.Seconds())
 }

@@ -7,6 +7,9 @@ domain:
   - transformers
   - natural_language_processing
 
+setup:
+  command: python3 setup.py
+
 workloads:
   - name: transformer_train
     description: >

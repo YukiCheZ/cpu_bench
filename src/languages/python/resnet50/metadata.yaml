@@ -7,6 +7,9 @@ domain:
   - computer_vision
   - neural_networks
 
+setup:
+  command: python3 setup.py
+
 workloads:
   - name: resnet50_inference
     description: >

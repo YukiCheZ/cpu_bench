@@ -13,6 +13,9 @@ workloads:
     data:
       command: python3 generate_data.py
       parameters:
+        out:
+          description: Output directory for generated Go source files
+          default: ./data
         pkgs:
           description: Number of packages to generate
           default: 100
@@ -33,9 +36,9 @@ workloads:
           default: data
     command: python3 run_benchmark.py
     parameters:
-      scale: 
-        description: compiler scale <small, std, all>, <small, std> for cmd/compile and standard library, <all> for full compilation
-        default: std
+      data-dir: 
+        description: Directory containing Go source files to compile
+        default: ./data
       iterations:
         description: Number of times to repeat the benchmark
         default: 1
@@ -44,7 +47,6 @@ workloads:
         default: 1
       no_clean:
         description: Skip cleaning build cache before each run
-        type: boolean
         default: false
 
 characteristics:

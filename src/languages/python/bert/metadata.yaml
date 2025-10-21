@@ -7,6 +7,9 @@ domain:
   - transformer_models
   - deep_learning
 
+setup:
+  command: python3 setup.py
+
 workloads:
   - name: bert_eval
     description: >
@@ -38,6 +41,9 @@ workloads:
       lr:
         description: Learning rate for optimizer
         default: 0.001
+      compile:
+        description: Use torch.compile (PyTorch 2.x only)
+        default: false
 
 characteristics:
   IO_effects: low

@@ -39,7 +39,7 @@ func init() {
 	flag.StringVar(&cliCfg.tmpDir, "tmp", "", "path to temporary directory")
 	flag.IntVar(&cliCfg.maxOps, "max-ops", 2000000, "Maximum number of operations to run PER CORE")
 	flag.IntVar(&cliCfg.readPercent, "kv", 50, "KV read percentage to run (0,50,95)")
-	flag.IntVar(&cliCfg.procsPerInst, "threads", 0, "Number of threads (GOMAXPROCS) for CockroachDB instance")
+	flag.IntVar(&cliCfg.procsPerInst, "threads", 1, "Number of threads (GOMAXPROCS) for CockroachDB instance")
 }
 
 type cockroachdbInstance struct {
@@ -120,7 +120,7 @@ func waitForCluster(instances []*cockroachdbInstance) error {
 	select {
 	case <-done:
 	case <-time.After(60 * time.Second):
-		return errors.New("timeout waiting for cluster")
+		return errors.New("[ERROR] timeout waiting for cluster")
 	}
 	return nil
 }
@@ -212,7 +212,7 @@ func runBenchmarkStandalone(cfg *config, instances []*cockroachdbInstance) error
 		return err
 	}
 	elapsed := time.Since(start)
-	fmt.Printf("[RESULT] total elapsed time: %.4f s\n", elapsed.Seconds())
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", elapsed.Seconds())
 	return nil
 }
 

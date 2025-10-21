@@ -6,7 +6,7 @@ import shutil
 
 def main():
     parser = argparse.ArgumentParser(description="Generate data for TUF CPU Benchmark")
-    parser.add_argument("--size", type=int, default=1024*1024*1024,
+    parser.add_argument("--size", type=int, default=536870912,
                         help="Total target data size in bytes")
     parser.add_argument("--meta", type=int, default=10, help="Number of metadata files")
     parser.add_argument("--targets", type=int, default=5, help="Number of target files")

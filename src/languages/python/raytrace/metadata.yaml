@@ -19,10 +19,10 @@ workloads:
     parameters:
       width:
         description: Image width in pixels
-        default: 5000
+        default: 4096
       height:
         description: Image height in pixels
-        default: 5000
+        default: 4096
       iters:
         description: Number of outer benchmark repetitions (full scene renders)
         default: 1

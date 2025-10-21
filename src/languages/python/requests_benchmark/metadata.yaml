@@ -7,6 +7,9 @@ domain:
   - json
   - memory
 
+setup:
+  command: python3 setup.py
+
 workloads:
   - name: requests-json
     description: Benchmark JSON parsing performance using Python requests library on local file datasets
@@ -23,19 +26,18 @@ workloads:
         default: 3
       size:
         description: Dataset size, affects generated JSON file
-        unit: records
-        default: 1048576
+        default: 262144
       force:
         description: Force regenerate dataset even if it exists
         default: false
 
 characteristics:
-  IO_effects: minimal          # File I/O exists but cached in memory after warmup
+  IO_effects: minimal         
   single_machine: true         
-  network_effects: none        # Using local file adapter, no network latency
-  memory_bound: true           # JSON parsing and object materialization is memory-intensive
-  cpu_bound: true              # Parsing large JSON also consumes CPU
-  memory_effects: low         # Large datasets lead to high memory usage
+  network_effects: none       
+  memory_bound: true          
+  cpu_bound: true             
+  memory_effects: low         
 
 tags:
   - cpu

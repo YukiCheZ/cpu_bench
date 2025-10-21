@@ -37,6 +37,6 @@ class DataManager:
         """Load dataset from file and return as a Python dict."""
         filename = self.data_dir / f"data_{size}.json"
         if not filename.exists():
-            raise FileNotFoundError(f"Dataset not found: {filename}")
+            raise FileNotFoundError(f"[ERROR] Dataset not found: {filename}")
         with open(filename, "r") as f:
             return json.load(f)

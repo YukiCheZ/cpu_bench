@@ -7,6 +7,9 @@ domain:
   - linear_algebra
   - signal_processing
 
+setup:
+  command: python3 setup.py
+
 workloads:
   - name: matmul
     description: Dense matrix multiplication benchmark using NumPy's @ operator.
@@ -22,7 +25,7 @@ workloads:
       warmup:
         description: Number of warmup iterations
         default: 3
-      copies:
+      threads:
         description: Number of parallel benchmark copies (multiprocessing)
         default: 1
 
@@ -40,7 +43,7 @@ workloads:
       warmup:
         description: Number of warmup iterations
         default: 3
-      copies:
+      threads:
         description: Number of parallel benchmark copies (multiprocessing)
         default: 1
 
@@ -51,14 +54,14 @@ workloads:
       size:
         description: Signal length
         unit: elements
-        default: 16777216
+        default: 8388608
       iters:
         description: Number of measured iterations
-        default: 500
+        default: 1000
       warmup:
         description: Number of warmup iterations
         default: 3
-      copies:
+      threads:
         description: Number of parallel benchmark copies (multiprocessing)
         default: 1
 

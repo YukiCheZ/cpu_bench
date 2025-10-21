@@ -1,136 +1,136 @@
 benchmarks:
   - name: numpy_benchmark
-    path: src/languages/python/numpy_benchmark/metadata.yaml
+    path: src/languages/python/numpy_benchmark
     num: 3
 
   - name: requests_benchmark
-    path: src/languages/python/requests_benchmark/metadata.yaml
+    path: src/languages/python/requests_benchmark
     num: 1
 
   - name: tuf_benchmark
-    path: src/languages/python/tuf_benchmark/metadata.yaml
+    path: src/languages/python/tuf_benchmark
     num: 1
 
   - name: raytrace
-    path: src/languages/python/raytrace/metadata.yaml
+    path: src/languages/python/raytrace
     num: 1
 
   - name: go_board_game
-    path: src/languages/python/go_board_game/metadata.yaml
+    path: src/languages/python/go_board_game
     num: 1
 
   - name: chaos_fractal
-    path: src/languages/python/chaos_fractal/metadata.yaml
+    path: src/languages/python/chaos_fractal
     num: 1
   
   - name: deltablue
-    path: src/languages/python/deltablue/metadata.yaml
+    path: src/languages/python/deltablue
     num: 1
 
   - name: pyflate
-    path: src/languages/python/pyflate/metadata.yaml
+    path: src/languages/python/pyflate
     num: 1
 
   - name: resnet50_cpu
-    path: src/languages/python/resnet50/metadata.yaml
+    path: src/languages/python/resnet50
     num: 2
 
   - name: bert_cpu
-    path: src/languages/python/bert/metadata.yaml
+    path: src/languages/python/bert
     num: 1
 
   - name: transformer_inference
-    path: src/languages/python/transformer_inference/metadata.yaml
+    path: src/languages/python/transformer_inference
     num: 1
   
   - name: transformer_train
-    path: src/languages/python/transformer_train/metadata.yaml
+    path: src/languages/python/transformer_train
     num: 1
 
   - name: opencv_benchmark
-    path: src/languages/cpp/opencv_benchmark/metadata.yaml
+    path: src/languages/cpp/opencv_benchmark
     num: 11
 
   - name: rocksdb_benchmark
-    path: src/languages/cpp/rocksdb_benchmark/metadata.yaml
+    path: src/languages/cpp/rocksdb_benchmark
     num: 1
 
   - name: guava_benchmark
-    path: src/languages/java/guava_benchmark/metadata.yaml
+    path: src/languages/java/guava_benchmark
     num: 3
 
   - name: kafka_benchmark
-    path: src/languages/java/kafka_benchmark/metadata.yaml
+    path: src/languages/java/kafka_benchmark
     num: 1
 
   - name: cassandra_benchmark
-    path: src/languages/java/cassandra/metadata.yaml
+    path: src/languages/java/cassandra
     num: 1
 
   - name: smile_benchmark
-    path: src/languages/java/smile_benchmark/metadata.yaml
+    path: src/languages/java/smile_benchmark
     num: 1
 
   - name: redis_benchmark
-    path: src/languages/c/redis_benchmark/metadata.yaml
+    path: src/languages/c/redis_benchmark
     num: 1
 
   - name: ffmpeg_benchmark
-    path: src/languages/c/ffmpeg_benchmark/metadata.yaml
+    path: src/languages/c/ffmpeg_benchmark
     num: 1
 
   - name: zstd_benchmark
-    path: src/languages/c/zstd_benchmark/metadata.yaml
+    path: src/languages/c/zstd_benchmark
     num: 1
 
   - name: openssl_benchmark
-    path: src/languages/c/openssl_benchmark/metadata.yaml
+    path: src/languages/c/openssl_benchmark
     num: 1
 
   - name: lapack_benchmark
-    path: src/languages/c/lapack_benchmark/metadata.yaml
+    path: src/languages/c/lapack_benchmark
     num: 3
 
   - name: c_compiler_benchmark
-    path: src/languages/c/c_compiler_benchmark/metadata.yaml
+    path: src/languages/c/c_compiler_benchmark
     num: 2
 
   - name: go_compiler_benchmark
-    path: src/languages/go/go_compiler_benchmark/metadata.yaml
+    path: src/languages/go/go_compiler_benchmark
     num: 1
 
   - name: biogo-benchmark
-    path: src/languages/go/biogo/metadata.yaml
+    path: src/languages/go/biogo
     num: 2
 
   - name: bleve-index
-    path: src/languages/go/bleve-index/metadata.yaml
+    path: src/languages/go/bleve-index
     num: 1
 
   - name: cockroachdb_benchmark
-    path: src/languages/go/cockroachdb/metadata.yaml
+    path: src/languages/go/cockroachdb
     num: 2
 
   - name: esbuild
-    path: src/languages/go/esbuild/metadata.yaml
+    path: src/languages/go/esbuild
     num: 2
   
   - name: garbage
-    path: src/languages/go/garbage/metadata.yaml
+    path: src/languages/go/garbage
     num: 1
 
   - name: gopher-lua
-    path: src/languages/go/gopher-lua/metadata.yaml
+    path: src/languages/go/gopher-lua
     num: 1
 
   - name: json
-    path: src/languages/go/json/metadata.yaml
+    path: src/languages/go/json
     num: 1
 
   - name: markdown
-    path: src/languages/go/markdown/metadata.yaml
+    path: src/languages/go/markdown
     num: 1
   
   - name: tile38-sim
-    path: src/languages/go/tile38-sim/metadata.yaml
+    path: src/languages/go/tile38-sim
     num: 1

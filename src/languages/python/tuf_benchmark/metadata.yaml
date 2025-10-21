@@ -8,27 +8,27 @@ domain:
   - hashing
   - integrity
 
+setup:
+  command: python3 setup.py
+
 workloads:
   - name: tuf-metadata
     description: Benchmark TUF metadata parsing and file hashing (SHA256) performance
-
     data:
       command: python3 generate_data.py
       parameters:
         size:
           description: Total target data size in bytes
-          unit: bytes
-          default: 1073741824   # 1 GiB
+          default: 536870912   # 512 MiB
         meta:
           description: Number of metadata files, 
           default: 10
         targets:
           description: Number of target files
           default: 5
-
     command: python3 run_benchmark.py
     parameters:
-      copies:
+      threads:
         description: Number of parallel worker processes
         default: 1
       iters:

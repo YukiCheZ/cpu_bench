@@ -7,6 +7,9 @@ domain:
   - transformers
   - natural_language_processing
 
+setup:
+  command: python3 setup.py
+
 workloads:
   - name: transformer_inference
     description: >
@@ -21,7 +24,7 @@ workloads:
           default: ./data
         num_batches:
           description: Number of batches to generate
-          default: 100
+          default: 50
         batch_size:
           description: Number of sequences per batch
           default: 8

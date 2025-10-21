@@ -58,7 +58,7 @@ func runMarkdownOnce(contents [][]byte, threads int) time.Duration {
 func runMarkdownBenchmark(mddir string, threads, iterations int) error {
 	files, err := os.ReadDir(mddir)
 	if err != nil {
-		return fmt.Errorf("failed to read directory %q: %w", mddir, err)
+		return fmt.Errorf("[ERROR] failed to read directory %q: %w", mddir, err)
 	}
 
 	contents := make([][]byte, 0, len(files))
@@ -66,14 +66,14 @@ func runMarkdownBenchmark(mddir string, threads, iterations int) error {
 		if !file.IsDir() && filepath.Ext(file.Name()) == ".md" {
 			content, err := os.ReadFile(filepath.Join(mddir, file.Name()))
 			if err != nil {
-				return fmt.Errorf("failed to read file %q: %w", file.Name(), err)
+				return fmt.Errorf("[ERROR] failed to read file %q: %w", file.Name(), err)
 			}
 			contents = append(contents, content)
 		}
 	}
 
 	if len(contents) == 0 {
-		return fmt.Errorf("no markdown files found in %q", mddir)
+		return fmt.Errorf("[ERROR] no markdown files found in %q", mddir)
 	}
 
 	var total time.Duration
@@ -81,11 +81,7 @@ func runMarkdownBenchmark(mddir string, threads, iterations int) error {
 		total += runMarkdownOnce(contents, threads)
 	}
 
-	avg := total / time.Duration(iterations)
-
-	fmt.Printf("[RESULT] Total elapsed time: %v\n", total)
-	fmt.Printf("[RESULT] Average elapsed time: %v (iterations=%d, threads=%d, files=%d)\n",
-		avg, iterations, threads, len(contents))
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", total.Seconds())
 
 	return nil
 }
@@ -101,16 +97,16 @@ func main() {
 	flag.Parse()
 
 	if threads <= 0 {
-		fmt.Fprintf(os.Stderr, "Invalid --threads value: must be > 0\n")
+		fmt.Fprintf(os.Stderr, "[ERROR] Invalid --threads value: must be > 0\n")
 		os.Exit(1)
 	}
 	if iterations <= 0 {
-		fmt.Fprintf(os.Stderr, "Invalid --iterations value: must be > 0\n")
+		fmt.Fprintf(os.Stderr, "[ERROR] Invalid --iterations value: must be > 0\n")
 		os.Exit(1)
 	}
 
 	if err := runMarkdownBenchmark(inputDir, threads, iterations); err != nil {
-		fmt.Fprintf(os.Stderr, "Benchmark error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "[ERROR] Benchmark error: %v\n", err)
 		os.Exit(1)
 	}
 }

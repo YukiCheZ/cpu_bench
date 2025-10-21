@@ -17,10 +17,10 @@ workloads:
     parameters:
       n:
         description: Size of the DeltaBlue problem instance (number of variables/constraints)
-        default: 100000
+        default: 200000
       iters:
         description: Number of times to run the full DeltaBlue workload
-        default: 3
+        default: 20
       threads:
         description: Number of parallel worker processes (each runs a full workload instance)
         default: 1

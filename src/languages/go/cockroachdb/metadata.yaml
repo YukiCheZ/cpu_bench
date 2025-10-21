@@ -35,7 +35,7 @@ workloads:
         default: 50
       threads:
         description: Number of threads (sets GOMAXPROCS for CockroachDB process)
-        default: 0
+        default: 1
 
   - name: cockroachdb_tpcc
     description: >
@@ -65,7 +65,7 @@ workloads:
         default: 200
       threads:
         description: Number of threads (sets GOMAXPROCS for CockroachDB process)
-        default: 0
+        default: 1
 
 characteristics:
   IO_effects: high

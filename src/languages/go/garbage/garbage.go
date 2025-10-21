@@ -73,7 +73,7 @@ func main() {
 	benchmarkN(iterations * threads)
 	elapsed := time.Since(start)
 
-	fmt.Printf("[RESULT] Total run time: %.4f s\n", elapsed.Seconds())
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", elapsed.Seconds())
 }
 
 func benchmarkN(N int) {

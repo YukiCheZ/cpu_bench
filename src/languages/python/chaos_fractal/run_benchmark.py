@@ -32,14 +32,14 @@ def run_once(params, threads, base_seed):
 def main():
     parser = argparse.ArgumentParser(description="Chaosgame benchmark (load pre-generated data)")
     parser.add_argument("--input", type=str, default="data/chaos_input.pkl")
-    parser.add_argument("--iters", type=int, default=3)
+    parser.add_argument("--iters", type=int, default=1)
     parser.add_argument("--threads", type=int, default=1)
     args = parser.parse_args()
 
     with open(args.input, "rb") as f:
         params = pickle.load(f)
 
-    print(f"[LOAD] Loaded chaos input from {args.input}")
+    print(f"[INFO] Loaded chaos input from {args.input}")
 
     times = []
     for outer in range(args.iters):

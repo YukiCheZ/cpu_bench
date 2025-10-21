@@ -17,7 +17,7 @@ def main():
     parser.add_argument("--threads", type=int, default=1, help="Number of parallel worker processes")
     parser.add_argument("--iters", type=int, default=1000, help="iters per worker")
     parser.add_argument("--warmup", type=int, default=3, help="Warmup iters per worker")
-    parser.add_argument("--size", type=int, default=1024*1024, help="Dataset size, affects filename")
+    parser.add_argument("--size", type=int, default=262144, help="Dataset size, affects filename")
     parser.add_argument("--force", action="store_true", help="Force regenerate dataset even if it exists")
     
     args = parser.parse_args()
@@ -27,22 +27,22 @@ def main():
 
     # Generate or load dataset
     if args.force:
-        print(f"[DataManager] Force regenerating dataset: {filename}")
+        print(f"[INFO] Force regenerating dataset: {filename}")
         dm.generate_dataset(args.size)
     else:
         try:
             dm.load_dataset(args.size)
-            print(f"[DataManager] Loaded existing dataset: {filename}")
+            print(f"[INFO] Loaded existing dataset: {filename}")
         except FileNotFoundError:
-            print(f"[DataManager] Dataset not found. Generating: {filename}")
+            print(f"[INFO] Dataset not found. Generating: {filename}")
             dm.generate_dataset(args.size)
 
     # Full memory warm-up
-    print(f"[Warmup] Loading entire dataset into memory: {filename}")
+    print(f"[INFO] Memory Warmup: loading entire dataset into memory: {filename}")
     with open(filename, "r") as f:
         _ = f.read()
 
-    print(f"[Benchmark] Running {args.threads} copies, {args.iters} iters each, warmup {args.warmup}, file: {filename}")
+    print(f"[INFO] Running {args.threads} copies, {args.iters} iters each, warmup {args.warmup}, file: {filename}")
 
     worker_args = [(filename, args.iters, args.warmup) for _ in range(args.threads)]
 

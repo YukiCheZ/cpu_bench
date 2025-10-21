@@ -63,8 +63,7 @@ def main():
         elapsed = run_command(build_cmd, env=env, measure_time=True)
         times.append(elapsed)
 
-    print("========== Benchmark Summary ==========")
-    print(f"[RESULT] workload elapsed_time: {sum(times):.2f} s")
+    print(f"[RESULT] Total elapsed time: {sum(times):.4f} s")
 
 if __name__ == "__main__":
     main()

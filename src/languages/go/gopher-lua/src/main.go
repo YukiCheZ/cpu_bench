@@ -89,5 +89,5 @@ func main() {
 
 	wg.Wait()
 	total := time.Since(startAll)
-	fmt.Printf("[RESULT] All workers finished. Total wall time: %.3f s\n", total.Seconds())
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", total.Seconds())
 }
