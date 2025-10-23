@@ -39,16 +39,15 @@ def run_benchmark(clients, threads, requests, datasize, pipeline, iterations):
     ]
 
     # ---------- warmup ----------
-    print(f"Starting warmup (with fresh Redis).")
+    print(f"[INFO] Starting warmup (with fresh Redis).")
     redis_proc = start_redis()
     subprocess.run(cmd_base, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     stop_redis(redis_proc)
-    print("Warmup done.\n")
+    print("[INFO] Warmup done.\n")
 
     # ---------- timing ----------
     times = []
     for i in range(iterations):
-        print(f"Iteration {i+1}/{iterations} ...")
         redis_proc = start_redis()
         start = time.time()
         subprocess.run(cmd_base, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -56,11 +55,9 @@ def run_benchmark(clients, threads, requests, datasize, pipeline, iterations):
         stop_redis(redis_proc)
         duration = end - start
         times.append(duration)
-        print(f"  Duration: {duration:.3f} seconds")
 
-    avg_time = sum(times) / len(times)
-    print("\nBenchmark complete.")
-    print(f"Average duration over {iterations} iterations: {avg_time:.3f} seconds")
+    print("[INFO] Benchmark complete.")
+    print(f"[RESULT] Total elapsed times: {sum(times):.4f} s")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Redis CPU benchmark wrapper")

@@ -28,7 +28,7 @@ void* thread_func(void* arg) {
     unsigned char *ciphertext = malloc(g_data_size + 16);
     unsigned char *decrypted = malloc(g_data_size + 16);
     if (!plaintext || !ciphertext || !decrypted) {
-        fprintf(stderr, "Thread %d: memory allocation failed\n", targ->thread_id);
+        fprintf(stderr, "[ERROR] Thread %d: memory allocation failed\n", targ->thread_id);
         return NULL;
     }
 
@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
 
     FILE *fp = fopen(data_file, "rb");
     if(!fp){
-        perror("Failed to open data file");
+        perror("[ERROR] Failed to open data file");
         return 1;
     }
     fseek(fp, 0, SEEK_END);
@@ -101,13 +101,13 @@ int main(int argc, char *argv[]) {
 
     g_data = malloc(g_data_size);
     if(!g_data){
-        fprintf(stderr, "Memory allocation for data failed\n");
+        fprintf(stderr, "[ERROR] Memory allocation for data failed\n");
         fclose(fp);
         return 1;
     }
     size_t nread = fread(g_data, 1, g_data_size, fp);
     if (nread != g_data_size) {
-        fprintf(stderr, "Failed to read data file: expected %zu bytes, got %zu bytes\n", g_data_size, nread);
+        fprintf(stderr, "[ERROR] Failed to read data file: expected %zu bytes, got %zu bytes\n", g_data_size, nread);
         fclose(fp);
         free(g_data);
         return 1;
@@ -119,6 +119,9 @@ int main(int argc, char *argv[]) {
 
     pthread_t *threads = malloc(sizeof(pthread_t) * num_threads);
     thread_arg_t *targs = malloc(sizeof(thread_arg_t) * num_threads);
+
+    printf("[INFO] Starting CPU macrobenchmark with %d threads, %d iters, %d warmup, data size %zu bytes\n",
+           num_threads, iters, warmup, g_data_size);
 
     // Warmup
     for(int i=0; i<num_threads; i++){
@@ -145,8 +148,7 @@ int main(int argc, char *argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &end);
     double seconds = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec)/1e9;
 
-    printf("[RESULT] CPU macrobenchmark finished in %.2f seconds (data=%zu bytes, threads=%d, iters=%d, warmup=%d)\n",
-           seconds, g_data_size, num_threads, iters, warmup);
+    printf("[RESULT] Total elapsed time: %.4f s\n", seconds);
 
     free(threads);
     free(targs);

@@ -22,7 +22,7 @@ workloads:
           description: Number of lines per function
           default: 500
     run:
-      command: python3 run_compile_benchmark.py --compiler gcc
+      command: python3 run_benchmark.py --compiler gcc
       parameters:
         opt:
           description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
@@ -47,7 +47,7 @@ workloads:
           description: Number of lines per function
           default: 500
     run:
-      command: python3 run_compile_benchmark.py --compiler clang
+      command: python3 run_benchmark.py --compiler clang
       parameters:
         opt:
           description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)

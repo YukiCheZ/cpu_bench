@@ -9,7 +9,7 @@ def generate_video(output, resolution, duration, framerate, codec, noise, ffmpeg
         ffmpeg_bin = "./bin/bin/ffmpeg"
 
     if not os.path.isfile(ffmpeg_bin):
-        print(f"ERROR: FFmpeg executable not found at {ffmpeg_bin}", file=sys.stderr)
+        print(f"[ERROR] FFmpeg executable not found at {ffmpeg_bin}", file=sys.stderr)
         sys.exit(1)
 
     output_dir = os.path.dirname(output)
@@ -29,18 +29,18 @@ def generate_video(output, resolution, duration, framerate, codec, noise, ffmpeg
         output
     ]
 
-    print("Running command:", " ".join(cmd))
+    print("[INFO] Running command:", " ".join(cmd))
 
     env = os.environ.copy()
     try:
         result = subprocess.run(cmd, env=env)
         if result.returncode != 0:
-            print("ERROR: FFmpeg failed", file=sys.stderr)
+            print("[ERROR] FFmpeg failed", file=sys.stderr)
             sys.exit(1)
         else:
-            print(f"Video successfully generated: {output}")
+            print(f"[DATA] Video successfully generated: {output}")
     except Exception as e:
-        print(f"ERROR: FFmpeg execution failed: {e}", file=sys.stderr)
+        print(f"[ERROR] FFmpeg execution failed: {e}", file=sys.stderr)
         sys.exit(1)
 
 

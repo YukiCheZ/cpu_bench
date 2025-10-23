@@ -6,6 +6,9 @@ domain:
   - compression
   - decompression
 
+setup:
+  command: ./setup.sh
+
 workloads:
   - name: zstd
     description: >
@@ -13,7 +16,9 @@ workloads:
     data:
       command: python3 generate_data.py
       parameters:
-        size: 100
+        size: 
+          description: Size of the data file to generate (in MB)
+          default: 100
     command: python3 run_benchmark.py
     parameters:
       input:

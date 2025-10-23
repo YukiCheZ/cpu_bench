@@ -38,4 +38,5 @@ with ThreadPoolExecutor(max_workers=args.threads) as executor:
         f.result()
 
 end = time.time()
-print(f"[RESULT] Compilation time: {end-start:.6f} sec")
+
+print(f"[RESULT] Total elapsed time: {end-start:.4f} s")

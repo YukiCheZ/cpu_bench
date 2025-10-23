@@ -16,11 +16,11 @@ def cpu_benchmark(input_file, threads, ffmpeg_bin, scale, blur_sigma, fps):
         ffmpeg_bin = "./bin/bin/ffmpeg"
 
     if not os.path.isfile(ffmpeg_bin):
-        print(f"ERROR: FFmpeg executable not found at {ffmpeg_bin}", file=sys.stderr)
+        print(f"[ERROR] FFmpeg executable not found at {ffmpeg_bin}", file=sys.stderr)
         sys.exit(1)
 
     if not os.path.isfile(input_file):
-        print(f"ERROR: Input file not found: {input_file}", file=sys.stderr)
+        print(f"[ERROR] Input file not found: {input_file}", file=sys.stderr)
         sys.exit(1)
 
     output_file = "temp_output.mp4"
@@ -53,7 +53,7 @@ def cpu_benchmark(input_file, threads, ffmpeg_bin, scale, blur_sigma, fps):
             print(result.stderr.decode(), file=sys.stderr)
             sys.exit(1)
         else:
-            print(f"[RESULT] Benchmark completed successfully: {elapsed_time:.2f} seconds")
+            print(f"[RESULT] Total elapsed time: {elapsed_time:.4f} s")
     finally:
         if os.path.exists(output_file):
             os.remove(output_file)

@@ -14,7 +14,6 @@ def generate_data(batch_size, seq_len, num_batches, output_dir):
         attention_mask = torch.ones(batch_size, seq_len)
         file_path = os.path.join(output_dir, f"batch_{i}.pt")
         torch.save((input_ids, attention_mask), file_path)
-        print(f"Saved {file_path}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate random data for BERT CPU inference")

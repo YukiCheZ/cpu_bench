@@ -71,25 +71,25 @@ compile_params = [
 ]
 
 param_sets = {
-    "p3": [],
-    "p23": data_augmentation_params,
-    "p34": compile_params,
-    "p35": all_threads_param,
-    "p234": data_augmentation_params + compile_params,
-    "p235": data_augmentation_params + all_threads_param,
-    "p345": compile_params + all_threads_param,
-    "p2345": data_augmentation_params + compile_params + all_threads_param
+    "p": [],
+    "p2": data_augmentation_params,
+    "p4": compile_params,
+    "p5": all_threads_param,
+    "p24": data_augmentation_params + compile_params,
+    "p25": data_augmentation_params + all_threads_param,
+    "p45": compile_params + all_threads_param,
+    "p245": data_augmentation_params + compile_params + all_threads_param
 }
 
 pairs = [
-    ("python_all", "p3", True),
-    ("python_all", "p23", False),
-    # ("python_ml", "p34", False),
-    ("python_all", "p35", False),
-    ("python_ml", "p234", False),
-    ("python_all", "p235", False),
-    ("python_ml", "p345", False),
-    ("python_ml", "p2345", False)
+    # ("python_all", "p", True),
+    # ("python_all", "p2", False),
+    # ("python_ml", "p4", False),
+    ("python_all", "p5", False),
+    # ("python_ml", "p24", False),
+    ("python_all", "p25", False),
+    ("python_ml", "p45", False),
+    ("python_ml", "p245", False)
 ]
 
 

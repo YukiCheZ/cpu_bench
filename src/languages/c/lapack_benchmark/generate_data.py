@@ -37,7 +37,7 @@ def main():
 
     write_matrix(f"data/svd_A_{n}.bin", n)
 
-    print(f"[INFO] Generated data files for size={n} in ./data")
+    print(f"[DATA] Generated data files for size={n} in ./data")
 
 if __name__ == "__main__":
     main()

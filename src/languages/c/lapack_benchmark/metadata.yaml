@@ -6,19 +6,20 @@ domain:
   - linear_algebra
   - scientific_computing
 
+setup:
+  command: make
+  parameters:
+    CC:
+      description: Compiler to use (gcc or clang)
+      default: gcc
+    OPT:
+      description: Optimization level (O0, O1, O2, O3, Ofast)
+      default: O3
+
 workloads:
   - name: lapack_solve
     description: >
       Benchmark for solving linear systems using LAPACK.
-    setup:
-      command: make
-      parameters:
-        CC:
-          description: Compiler to use (gcc or clang)
-          default: gcc
-        OPT:
-          description: Optimization level (O0, O1, O2, O3, Ofast)
-          default: O3
     data:
       command: python3 generate_data.py
       parameters:
@@ -31,34 +32,24 @@ workloads:
         output_dir:
           description: Path to the output data directory
           default: ./data
-    run:
-      command: ./bin/lapack_benchmark --mode solve
-      parameters:
-        size:
-          description: Size of the matrix (number of rows/columns)
-          default: 2000
-        threads:
-          description: Number of concurrent threads to use
-          default: 1
-        iters:
-          description: Number of iterations to run
-          default: 3
-        warmup:
-          description: Number of warmup iterations
-          default: 1
+    command: ./bin/lapack_benchmark --mode solve
+    parameters:
+      size:
+        description: Size of the matrix (number of rows/columns)
+        default: 2000
+      threads:
+        description: Number of concurrent threads to use
+        default: 1
+      iters:
+        description: Number of iterations to run
+        default: 3
+      warmup:
+        description: Number of warmup iterations
+        default: 1
 
   - name: lapack_eigen
     description: >
       Benchmark for computing eigenvalues and eigenvectors using LAPACK.
-    setup:
-      command: make
-      parameters:
-        CC:
-          description: Compiler to use (gcc or clang)
-          default: gcc
-        OPT:
-          description: Optimization level (O0, O1, O2, O3, Ofast)
-          default: O3
     data:
       command: python3 generate_data.py
       parameters:
@@ -71,34 +62,24 @@ workloads:
         output_dir:
           description: Path to the output data directory
           default: ./data
-    run:
-      command: ./bin/lapack_benchmark --mode eigen
-      parameters:
-        size:
-          description: Size of the matrix (number of rows/columns)
-          default: 2000
-        threads:
-          description: Number of concurrent threads to use
-          default: 1
-        iters:
-          description: Number of iterations to run
-          default: 3
-        warmup:
-          description: Number of warmup iterations
-          default: 1
+    command: ./bin/lapack_benchmark --mode eigen
+    parameters:
+      size:
+        description: Size of the matrix (number of rows/columns)
+        default: 2000
+      threads:
+        description: Number of concurrent threads to use
+        default: 1
+      iters:
+        description: Number of iterations to run
+        default: 3
+      warmup:
+        description: Number of warmup iterations
+        default: 1
 
   - name: lapack_svd
     description: >
       Benchmark for computing singular value decomposition using LAPACK.
-    setup:
-      command: make
-      parameters:
-        CC:
-          description: Compiler to use (gcc or clang)
-          default: gcc
-        OPT:
-          description: Optimization level (O0, O1, O2, O3, Ofast)
-          default: O3
     data:
       command: python3 generate_data.py
       parameters:
@@ -111,21 +92,20 @@ workloads:
         output_dir:
           description: Path to the output data directory
           default: ./data
-    run:
-      command: ./bin/lapack_benchmark --mode svd
-      parameters:
-        size:
-          description: Size of the matrix (number of rows/columns)
-          default: 2000
-        threads:
-          description: Number of concurrent threads to use
-          default: 1
-        iters:
-          description: Number of iterations to run
-          default: 3
-        warmup:
-          description: Number of warmup iterations
-          default: 1
+    command: ./bin/lapack_benchmark --mode svd
+    parameters:
+      size:
+        description: Size of the matrix (number of rows/columns)
+        default: 2000
+      threads:
+        description: Number of concurrent threads to use
+        default: 1
+      iters:
+        description: Number of iterations to run
+        default: 3
+      warmup:
+        description: Number of warmup iterations
+        default: 1
 
 characteristics:
   IO_effects: low

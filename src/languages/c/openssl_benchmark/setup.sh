@@ -31,12 +31,12 @@ done
 mkdir -p "$OUT_DIR"
 OUT="$OUT_DIR/$OUT_NAME"
 
-echo "Compiling $SRC with $COMPILER $OPT_LEVEL ..."
+echo "[INFO] Compiling $SRC with $COMPILER $OPT_LEVEL ..."
 
 $COMPILER $OPT_LEVEL -march=native -o "$OUT" "$SRC" -lcrypto 
 if [ $? -ne 0 ]; then
-    echo "Compilation failed!"
+    echo "[ERROR] Compilation failed!"
     exit 1
 fi
 
-echo "Build finished. Output: $OUT"
+echo "[SETUP] Build finished. Output: $OUT"

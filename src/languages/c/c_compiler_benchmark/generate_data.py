@@ -60,6 +60,8 @@ if __name__ == "__main__":
 
     total_funcs = args.num_files * args.num_funcs
 
+    print(f"[INFO] Generating {args.num_files} C files with {args.num_funcs} functions each (total {total_funcs} functions)...")
+
     generate_common_header(os.path.join(src_dir, "common.h"), total_funcs)
 
     for i in range(args.num_files):
@@ -73,4 +75,6 @@ if __name__ == "__main__":
         )
 
     generate_main(os.path.join(src_dir, "main.c"), args.num_files, args.num_funcs)
+
+    print("[DATA] Generation complete.")
 

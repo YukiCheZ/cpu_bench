@@ -18,10 +18,10 @@ def generate_pseudorandom_file(filename, size_mb=100, seed=42):
             f.write(chunk)
             bytes_written += chunk_size
 
-    print(f"Generated file: {filename} ({size_mb} MB)")
+    print(f"[DATA] Generated file: {filename} ({size_mb} MB)")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate pseudo-random data for zstd CPU benchmark")
+    parser = argparse.ArgumentParser(description="[INFO] Generate pseudo-random data for zstd CPU benchmark")
     parser.add_argument("--size", type=int, default=100, help="Size of the generated file in MB")
     args = parser.parse_args()
 

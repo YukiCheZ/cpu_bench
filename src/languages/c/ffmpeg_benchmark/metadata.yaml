@@ -17,13 +17,27 @@ workloads:
     data:
       command: python3 generate_data.py
       parameters:
-        output_dir: data/test.mp4
-        resolution: 1920x1080
-        duration: 60
-        framerate: 60
-        codec: libx264
-        noise: false
-        ffmpeg_bin: ./bin/bin/ffmpeg
+        output_dir: 
+          description: Directory to store generated video files
+          default: data/test.mp4
+        resolution:
+          description: Resolution of the generated video (width x height)
+          default: 3840x2160
+        duration:
+          description: Duration of the generated video in seconds
+          default: 360
+        framerate:
+          description: Frame rate of the generated video
+          default: 120
+        codec:
+          description: Video codec to use for encoding
+          default: libx264
+        noise:
+          description: Whether to add noise to the video
+          default: false
+        ffmpeg_bin:
+          description: Path to ffmpeg executable (default: ./bin/bin/ffmpeg)
+          default: ./bin/bin/ffmpeg
     run:
       command: python3 run_benchmark.py
       parameters:
@@ -32,7 +46,7 @@ workloads:
           default: data/test.mp4
         threads:
           description: Number of threads used for CPU processing
-          default: 4
+          default: 1
         scale:
           description: Output video resolution (width:height)
           default: 1280:720

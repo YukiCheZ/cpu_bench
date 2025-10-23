@@ -10,7 +10,7 @@ def run_zstd_benchmark(input_file, level, threads, zstd_bin, iters, warmup):
         zstd_bin = "zstd"  # assume in PATH
 
     if not os.path.isfile(input_file):
-        print(f"ERROR: Input file not found: {input_file}", file=sys.stderr)
+        print(f"[ERROR] Input file not found: {input_file}", file=sys.stderr)
         sys.exit(1)
 
     print(f"[INFO] Running zstd CPU benchmark (threads: {threads}, level: {level}, iters: {iters}, warmup: {warmup})")
@@ -60,10 +60,8 @@ def run_zstd_benchmark(input_file, level, threads, zstd_bin, iters, warmup):
             sys.exit(1)
 
     total_time = time.time() - start_time
-    avg_time = total_time / iters
 
-    print(f"[RESULT] Total time for {iters} iterations: {total_time:.2f}s")
-    print(f"[RESULT] Average time per iteration: {avg_time:.2f}s")
+    print(f"[RESULT] Total elapsed time: {total_time:.4f} s")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Zstd CPU Benchmark (in-memory, multi-iteration)")

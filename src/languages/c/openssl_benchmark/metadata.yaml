@@ -5,19 +5,20 @@ language: C
 domain:
   - cryptography
 
+setup:
+  command: ./setup.sh
+  parameters:
+    compiler:
+      description: Compiler to use (gcc or clang)
+      default: gcc
+    opt:
+      description: Optimization level (O0, O1, O2, O3, Ofast)
+      default: O3
+
 workloads:
   - name: openssl
     description: >
       Execute CPU-intensive encryption and hashing operations using OpenSSL.
-    setup:
-      command: ./build.sh
-      parameters:
-        compiler:
-          description: Compiler to use (gcc or clang)
-          default: gcc
-        opt:
-          description: Optimization level (O0, O1, O2, O3, Ofast)
-          default: O3
     data:
       command: python3 generate_data.py
       parameters:
@@ -27,21 +28,20 @@ workloads:
         output:
           description: Path to the output data file
           default: ./data/data.bin
-    run:
-      command: ./bin/openssl_cpu_benchmark
-      parameters:
-        input:
-          description: Path to the pre-generated data file
-          default: ./data/data.bin
-        threads:
-          description: Number of concurrent threads to use
-          default: 1
-        iters:
-          description: Number of iterations to run
-          default: 200
-        warmup:
-          description: Number of warmup iterations
-          default: 1
+    command: ./bin/openssl_cpu_benchmark
+    parameters:
+      input:
+        description: Path to the pre-generated data file
+        default: ./data/data.bin
+      threads:
+        description: Number of concurrent threads to use
+        default: 1
+      iters:
+        description: Number of iterations to run
+        default: 200
+      warmup:
+        description: Number of warmup iterations
+        default: 1
 
 characteristics:
   IO_effects: low

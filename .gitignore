@@ -7,7 +7,6 @@
 **/.env
 **/.idea
 **/.*~
-src/languages/go/go_benchmark/go
 **/bin
 **/target
 *.csv

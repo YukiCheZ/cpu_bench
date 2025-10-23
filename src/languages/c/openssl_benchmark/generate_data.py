@@ -15,13 +15,13 @@ def main():
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    print(f"Generating {args.size} MB of random data into {output_path}...")
+    print(f"[INFO] Generating {args.size} MB of random data into {output_path}...")
     with open(output_path, "wb") as f:
         chunk_size = 1024 * 1024  # 1 MB
         for _ in range(args.size):
             f.write(os.urandom(chunk_size))
 
-    print("Data generation completed.")
+    print("[DATA] Data generation completed.")
 
 if __name__ == "__main__":
     main()
