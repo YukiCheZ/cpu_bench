@@ -3,7 +3,7 @@ import argparse
 import os
 import random
 
-def generate_pseudorandom_file(filename, size_mb=100, seed=42):
+def generate_pseudorandom_file(filename, size_mb=50, seed=42):
     """Generate a reproducible pseudo-random binary file using only standard library."""
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     random.seed(seed)
@@ -22,7 +22,7 @@ def generate_pseudorandom_file(filename, size_mb=100, seed=42):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="[INFO] Generate pseudo-random data for zstd CPU benchmark")
-    parser.add_argument("--size", type=int, default=100, help="Size of the generated file in MB")
+    parser.add_argument("--size", type=int, default=50, help="Size of the generated file in MB")
     args = parser.parse_args()
 
     output_file = "./data/zstd_input.bin"

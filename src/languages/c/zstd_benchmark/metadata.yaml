@@ -8,6 +8,13 @@ domain:
 
 setup:
   command: ./setup.sh
+  parameters:
+    compiler:
+      description: Compiler to use for building the benchmark
+      default: gcc
+    opt:
+      description: Optimization level for compilation
+      default: O3
 
 workloads:
   - name: zstd
@@ -18,7 +25,7 @@ workloads:
       parameters:
         size: 
           description: Size of the data file to generate (in MB)
-          default: 100
+          default: 50
     command: python3 run_benchmark.py
     parameters:
       input:
@@ -35,7 +42,7 @@ workloads:
         default: 1
       iters:
         description: Number of timed iterations
-        default: 3
+        default: 120
       zstd-bin:
         description: Path to zstd executable
         default: ./bin/zstd

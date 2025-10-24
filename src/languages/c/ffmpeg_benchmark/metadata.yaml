@@ -6,14 +6,15 @@ domain:
   - multimedia
   - video_processing
 
+setup:
+  command: ./setup.sh
+
 workloads:
   - name: ffmpeg
     description: >
       Execute a CPU-intensive FFmpeg workload that performs multiple operations
       on an input video: decoding, scaling, Gaussian blur, frame rate conversion,
       and re-encoding to H.265.
-    setup:
-      command: ./setup.sh
     data:
       command: python3 generate_data.py
       parameters:
@@ -38,27 +39,26 @@ workloads:
         ffmpeg_bin:
           description: Path to ffmpeg executable (default: ./bin/bin/ffmpeg)
           default: ./bin/bin/ffmpeg
-    run:
-      command: python3 run_benchmark.py
-      parameters:
-        input:
-          description: Path to the input video file
-          default: data/test.mp4
-        threads:
-          description: Number of threads used for CPU processing
-          default: 1
-        scale:
-          description: Output video resolution (width:height)
-          default: 1280:720
-        blur_sigma:
-          description: Sigma value for Gaussian blur filter
-          default: 5.0
-        fps:
-          description: Output frame rate
-          default: 30
-        ffmpeg_bin:
-          description: Path to ffmpeg executable (default: ./bin/bin/ffmpeg)
-          default: ./bin/bin/ffmpeg
+    command: python3 run_benchmark.py
+    parameters:
+      input:
+        description: Path to the input video file
+        default: data/test.mp4
+      threads:
+        description: Number of threads used for CPU processing
+        default: 1
+      scale:
+        description: Output video resolution (width:height)
+        default: 1280:720
+      blur_sigma:
+        description: Sigma value for Gaussian blur filter
+        default: 5.0
+      fps:
+        description: Output frame rate
+        default: 30
+      ffmpeg_bin:
+        description: Path to ffmpeg executable (default: ./bin/bin/ffmpeg)
+        default: ./bin/bin/ffmpeg
 
 characteristics:
   IO_effects: medium
