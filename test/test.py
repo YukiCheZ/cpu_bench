@@ -21,10 +21,54 @@ bench_sets = {
     ],
     "python_ml": [
         "resnet50_cpu", "bert_cpu", "transformer_inference", "transformer_train"
+    ],
+    "c_all": [
+        "redis_benchmark", "zstd_benchmark", "openssl_benchmark", 
+        "ffmpeg_benchmark", "lapack_benchmark", "c_compiler_benchmark"
     ]
 }
 
-data_augmentation_params = [
+c_compiler_env_params = [
+    "ffmpeg_benchmark._.setup.compiler=clang",
+    "lapack_benchmark._.setup.compiler=clang",
+    "openssl_benchmark._.setup.compiler=clang",
+    "redis_benchmark._.setup.compiler=clang",
+    "zstd_benchmark._.setup.compiler=clang"
+]
+
+c_opt_env_params = [
+    "ffmpeg_benchmark._.setup.opt=-O1",
+    "lapack_benchmark._.setup.opt=-O1",
+    "openssl_benchmark._.setup.opt=-O1",
+    "redis_benchmark._.setup.opt=-O1",
+    "zstd_benchmark._.setup.opt=-O1"
+]
+
+c_data_augmentation_params = [
+    "c_compiler_benchmark.gcc_compile.data.func_size=100",
+    "c_compiler_benchmark.clang_compile.data.func_size=100",
+    "ffmpeg_benchmark.ffmpeg.data.duration=240",
+    "lapack_benchmark.lapack_solve.workload.size=1024",
+    "lapack_benchmark.lapack_eigen.workload.size=1024",
+    "lapack_benchmark.lapack_svd.workload.size=1024",
+    "openssl_benchmark.openssl.data.size=25",
+    "redis_benchmark.redis-benchmark.workload.requests=2000000",
+    "zstd_benchmark.zstd.data.size=25"
+]
+
+c_threads_param = [
+    "c_compiler_benchmark.gcc_compile.workload.threads=28",
+    "c_compiler_benchmark.clang_compile.workload.threads=28",
+    "ffmpeg_benchmark.ffmpeg.workload.threads=28",
+    "lapack_benchmark.lapack_solve.workload.threads=28",
+    "lapack_benchmark.lapack_eigen.workload.threads=28",
+    "lapack_benchmark.lapack_svd.workload.threads=28",
+    "openssl_benchmark.openssl.workload.threads=28",
+    "redis_benchmark.redis-benchmark.workload.threads=28",
+    "zstd_benchmark.zstd.workload.threads=28"
+]
+
+python_data_augmentation_params = [
     "numpy_benchmark.matmul.workload.size=2048",
     "numpy_benchmark.svd.workload.size=1024",
     "numpy_benchmark.fft.workload.size=4194304",
@@ -44,7 +88,7 @@ data_augmentation_params = [
     "transformer_train.transformer_train.data.batch_size=2"
 ]
 
-all_threads_param = [
+python_threads_param = [
     "numpy_benchmark.matmul.workload.threads=28",
     "numpy_benchmark.svd.workload.threads=28",
     "numpy_benchmark.fft.workload.threads=28",
@@ -62,7 +106,7 @@ all_threads_param = [
     "transformer_train.transformer_train.workload.threads=28"
 ]
 
-compile_params = [
+python_opt_params = [
     "resnet50_cpu.resnet50_inference.workload.compile",
     "resnet50_cpu.resnet50_training.workload.compile",
     "bert_cpu.bert_eval.workload.compile",
@@ -71,26 +115,64 @@ compile_params = [
 ]
 
 param_sets = {
-    "p": [],
-    "p2": data_augmentation_params,
-    "p4": compile_params,
-    "p5": all_threads_param,
-    "p24": data_augmentation_params + compile_params,
-    "p25": data_augmentation_params + all_threads_param,
-    "p45": compile_params + all_threads_param,
-    "p245": data_augmentation_params + compile_params + all_threads_param
+    "c_p": [],
+    "c_p2": c_data_augmentation_params,
+    "c_p3": c_compiler_env_params,
+    "c_p4": c_opt_env_params,
+    "c_p5": c_threads_param,
+    "c_p23": c_data_augmentation_params + c_compiler_env_params,
+    "c_p24": c_data_augmentation_params + c_opt_env_params,
+    "c_p25": c_data_augmentation_params + c_threads_param,
+    "c_p34": c_compiler_env_params + c_opt_env_params,
+    "c_p35": c_compiler_env_params + c_threads_param,
+    "c_p45": c_opt_env_params + c_threads_param,
+    "c_p234": c_data_augmentation_params + c_compiler_env_params + c_opt_env_params,
+    "c_p235": c_data_augmentation_params + c_compiler_env_params + c_threads_param,
+    "c_p245": c_data_augmentation_params + c_opt_env_params + c_threads_param,
+    "c_p345": c_compiler_env_params + c_opt_env_params + c_threads_param,
+    "c_p2345": c_data_augmentation_params + c_compiler_env_params + c_opt_env_params + c_threads_param,
 }
 
 pairs = [
-    # ("python_all", "p", True),
-    # ("python_all", "p2", False),
-    # ("python_ml", "p4", False),
-    ("python_all", "p5", False),
-    # ("python_ml", "p24", False),
-    ("python_all", "p25", False),
-    ("python_ml", "p45", False),
-    ("python_ml", "p245", False)
+    # ("c_all", "c_p", True),
+    ("c_all", "c_p2", True),
+    ("c_all", "c_p3", True),
+    ("c_all", "c_p4", True),
+    ("c_all", "c_p5", True),
+    ("c_all", "c_p23", True),
+    ("c_all", "c_p24", True),
+    ("c_all", "c_p25", True),
+    ("c_all", "c_p34", True),
+    ("c_all", "c_p35", True),
+    ("c_all", "c_p45", True),
+    ("c_all", "c_p234", True),
+    ("c_all", "c_p235", True),
+    ("c_all", "c_p245", True),
+    ("c_all", "c_p345", True),
+    ("c_all", "c_p2345", True)
 ]
+
+# param_sets = {
+#     "py_p": [],
+#     "py_p2": python_data_augmentation_params,
+#     "py_p4": python_opt_params,
+#     "py_p5": python_threads_param,
+#     "py_p24": python_data_augmentation_params + python_opt_params,
+#     "py_p25": python_data_augmentation_params + python_threads_param,
+#     "py_p45": python_opt_params + python_threads_param,
+#     "py_p245": python_data_augmentation_params + python_opt_params + python_threads_param
+# }
+
+# pairs = [
+#     ("python_all", "py_p", True),
+#     ("python_all", "py_p2", False),
+#     ("python_ml", "py_p4", False),
+#     ("python_all", "py_p5", False),
+#     ("python_ml", "py_p24", False),
+#     ("python_all", "py_p25", False),
+#     ("python_ml", "py_p45", False),
+#     ("python_ml", "py_p245", False)
+# ]
 
 
 def run_benchmark_set(tag: str, benches: list[str], params: list[str], setup_env: bool = False):

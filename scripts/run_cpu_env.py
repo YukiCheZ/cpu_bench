@@ -71,8 +71,8 @@ def run_command(cmd, cwd, expect_result=True):
 # ============================================================
 # Setup phase
 # ============================================================
-def run_setup_for_benchmark(bench_name: str, bench_path: Path):
-    """Run setup.command if metadata.yaml defines it."""
+def run_setup_for_benchmark(bench_name: str, bench_path: Path, overrides):
+    """Run setup.command if metadata.yaml defines it, with optional parameter overrides."""
     meta_path = bench_path / "metadata.yaml"
     if not meta_path.exists():
         log(f"[WARNING] metadata.yaml not found in {bench_path}")
@@ -85,6 +85,18 @@ def run_setup_for_benchmark(bench_name: str, bench_path: Path):
         return
 
     cmd = setup_info["command"]
+    setup_params_meta = setup_info.get("parameters", {})
+
+    # setup overrides use key (bench_name, "_", "setup")
+    key = (bench_name, "_", "setup")
+    param_str = ""
+    if key in overrides:
+        cmd, param_str = apply_param_overrides(
+            cmd, overrides[key], setup_params_meta, bench_name, "_", "setup"
+        )
+        if param_str:
+            log(f"[INFO] Setup parameters applied: {param_str}")
+
     log(f"[INFO] Running setup for {bench_name}: {cmd}")
     try:
         process = subprocess.Popen(
@@ -117,14 +129,16 @@ def parse_set_param_entries(set_param_list):
       overrides[(bench, workload, target)][param] = value or None
     Supports:
       <benchmark>.<workload>.<target>.<param>=<value>
-      <benchmark>.<workload>.<target>.<param>   # for flags like --compile
+      <benchmark>.<workload>.<target>.<param>
+    Extended to support:
+      <benchmark>._.setup.<param>=<value>  # for setup parameters
     """
     overrides = {}
     if not set_param_list:
         return overrides
 
-    pattern_with_val = re.compile(r"^([^.]+)\.([^.]+)\.(data|workload)\.([A-Za-z0-9_\-]+)=(.+)$")
-    pattern_flag = re.compile(r"^([^.]+)\.([^.]+)\.(data|workload)\.([A-Za-z0-9_\-]+)$")
+    pattern_with_val = re.compile(r"^([^.]+)\.([^.]+|_)\.(data|workload|setup)\.([A-Za-z0-9_\-]+)=(.+)$")
+    pattern_flag = re.compile(r"^([^.]+)\.([^.]+|_)\.(data|workload|setup)\.([A-Za-z0-9_\-]+)$")
 
     for entry in set_param_list:
         if m := pattern_with_val.match(entry):
@@ -293,7 +307,8 @@ def main():
     if args.setup_env:
         log("\n[INFO] Running setup phase for selected benchmarks...")
         for bench in selected:
-            run_setup_for_benchmark(bench["name"], Path(bench["path"]))
+            run_setup_for_benchmark(bench["name"], Path(bench["path"]), overrides)
+
 
     with open(result_file, "w", newline="", encoding="utf-8") as f:
         csv_writer = csv.writer(f)

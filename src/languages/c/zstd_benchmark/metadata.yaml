@@ -14,7 +14,7 @@ setup:
       default: gcc
     opt:
       description: Optimization level for compilation
-      default: O3
+      default: -O3
 
 workloads:
   - name: zstd

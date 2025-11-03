@@ -4,68 +4,74 @@ import subprocess
 import sys
 import os
 import time
+from multiprocessing import Process, cpu_count
 
-def cpu_benchmark(input_file, threads, ffmpeg_bin, scale, blur_sigma, fps):
+def run_ffmpeg_instance(instance_id, cpu_core, input_file, ffmpeg_bin, scale, fps):
     """
-    Run a CPU-intensive FFmpeg benchmark with multiple operations:
-    1. Decode input
-    2. Apply video filters (scale + gaussian blur + fps)
-    3. Re-encode to H.265
+    Run a single FFmpeg process pinned to a specific CPU core with CPU-intensive filter chain
     """
-    if not ffmpeg_bin:
-        ffmpeg_bin = "./bin/bin/ffmpeg"
-
-    if not os.path.isfile(ffmpeg_bin):
-        print(f"[ERROR] FFmpeg executable not found at {ffmpeg_bin}", file=sys.stderr)
-        sys.exit(1)
-
-    if not os.path.isfile(input_file):
-        print(f"[ERROR] Input file not found: {input_file}", file=sys.stderr)
-        sys.exit(1)
-
-    output_file = "temp_output.mp4"
-
-    # Construct filter chain
-    filter_chain = f"scale={scale},gblur=sigma={blur_sigma},fps={fps}"
+    filter_chain = (
+        f"scale={scale},"
+        f"gblur=sigma=5.0,"
+        "split=2[a][b];"
+        "[a]unsharp=5:5:1.0:5:5:0.0[a1];"
+        "[b]gblur=sigma=1[b1];"
+        f"[a1][b1]blend=all_mode='addition',fps={fps}"
+    )
 
     cmd = [
-        "taskset", "-c", ",".join(str(i) for i in range(threads)),
+        "taskset", "-c", str(cpu_core),
         ffmpeg_bin,
         "-y",
         "-i", input_file,
         "-vf", filter_chain,
-        "-c:v", "libx265",
-        "-preset", "ultrafast",
-        "-f", "mp4",
-        output_file
+        "-f", "null", "-"
     ]
 
-    print(f"[INFO] Running benchmark with {threads} threads...")
-    print("[INFO] Command:", " ".join(cmd))
-
-    start_time = time.time()
     try:
         result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-        elapsed_time = time.time() - start_time
-
         if result.returncode != 0:
-            print("[ERROR] FFmpeg benchmark failed", file=sys.stderr)
             print(result.stderr.decode(), file=sys.stderr)
-            sys.exit(1)
-        else:
-            print(f"[RESULT] Total elapsed time: {elapsed_time:.4f} s")
-    finally:
-        if os.path.exists(output_file):
-            os.remove(output_file)
+    except Exception as e:
+        print(f"[ERROR] Instance {instance_id} execution error: {e}", file=sys.stderr)
+
+def cpu_benchmark(input_file, num_instances, ffmpeg_bin, scale, fps):
+    max_cores = cpu_count()
+    if num_instances > max_cores:
+        print(f"[WARN] Requested {num_instances} instances, but only {max_cores} CPU cores available. Limiting to {max_cores}.")
+        num_instances = max_cores
+
+    processes = []
+    print(f"[INFO] Starting {num_instances} FFmpeg copies for CPU benchmark...")
+    print(f"[INFO] input video transport to scale={scale}, fps={fps}")
+    start = time.time()
+    for i in range(num_instances):
+        p = Process(target=run_ffmpeg_instance,
+                    args=(i, i, input_file, ffmpeg_bin, scale, fps))
+        p.start()
+        processes.append(p)
+
+    for p in processes:
+        p.join()
+    elapsed = time.time() - start
+    print(f"[RESULT] Total elapsed time: {elapsed:.4f} s")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="FFmpeg CPU Multi-operation Benchmark")
+    parser = argparse.ArgumentParser(description="FFmpeg CPU Benchmark (1 thread per process, multi-instance)")
     parser.add_argument("--input", type=str, default="data/test.mp4", help="Input video file")
-    parser.add_argument("--threads", type=int, default=1, help="Number of threads to use")
-    parser.add_argument("--scale", type=str, default="1280:720", help="Video scale, e.g., 1280:720")
-    parser.add_argument("--blur-sigma", type=float, default=5.0, help="Gaussian blur sigma")
-    parser.add_argument("--fps", type=int, default=30, help="Output frame rate")
-    parser.add_argument("--ffmpeg-bin", type=str, default=None, help="Path to ffmpeg executable (default: ./bin/bin/ffmpeg)")
+    parser.add_argument("--threads", type=int, default=1, help="Number of FFmpeg instances to run in parallel")
+    parser.add_argument("--scale", type=str, default="1920:1080", help="Video scale, e.g., 1280:720")
+    parser.add_argument("--fps", type=int, default=160, help="Output frame rate")
+    parser.add_argument("--ffmpeg-bin", type=str, default="./bin/ffmpeg_install/bin/ffmpeg", help="Path to ffmpeg executable (default: ./bin/ffmpeg_install/bin/ffmpeg)")
 
     args = parser.parse_args()
-    cpu_benchmark(args.input, args.threads, args.ffmpeg_bin, args.scale, args.blur_sigma, args.fps)
+
+    if not os.path.isfile(args.ffmpeg_bin):
+        print(f"[ERROR] FFmpeg executable not found at {args.ffmpeg_bin}", file=sys.stderr)
+        sys.exit(1)
+
+    if not os.path.isfile(args.input):
+        print(f"[ERROR] Input file not found: {args.input}", file=sys.stderr)
+        sys.exit(1)
+
+    cpu_benchmark(args.input, args.threads, args.ffmpeg_bin, args.scale, args.fps)

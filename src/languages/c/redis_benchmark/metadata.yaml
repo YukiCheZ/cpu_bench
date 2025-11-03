@@ -6,6 +6,16 @@ domain:
   - database
   - memory
 
+setup:
+  command: ./setup.sh
+  parameters:
+    compiler:
+      description: Compiler to use for building Redis
+      default: gcc 
+    opt:
+      description: Optimization level for compiler
+      default: -O3
+
 workloads:
   - name: redis-benchmark
     description: Benchmark Redis performance using redis-benchmark tool
@@ -13,22 +23,19 @@ workloads:
     parameters:
       clients:
         description: Number of concurrent clients sending requests
-        default: 50
+        default: 100
       threads:
         description: Number of threads used by redis-benchmark
-        default: 1
+        default: 2
       requests:
         description: Total number of requests per iteration
-        default: 100000
+        default: 4000000
       datasize:
         description: Size of each value
         unit: bytes
-        default: 3
+        default: 16
       pipeline:
         description: Number of requests to pipeline
-        default: 1
-      iterations:
-        description: Number of timing iterations
         default: 1
 
 characteristics:
@@ -37,10 +44,8 @@ characteristics:
   network_effects: minimal     
 
 tags:
-  - cpu
   - concurrency
   - pipeline
-  - memory
 
 dependencies:
   redis-server: ">=7.0"

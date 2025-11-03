@@ -1,6 +1,6 @@
 # metadata.yaml for FFmpeg CPU Multi-operation Benchmark
 name: ffmpeg_benchmark
-type: macrobenchmark
+type: macrobenchmark:rate
 language: C
 domain:
   - multimedia
@@ -8,6 +8,13 @@ domain:
 
 setup:
   command: ./setup.sh
+  parameters:
+    compiler:
+      description: C compiler to use for building FFmpeg
+      default: gcc
+    opt:
+      description: Optimization level for compiler
+      default: -O3
 
 workloads:
   - name: ffmpeg
@@ -18,27 +25,21 @@ workloads:
     data:
       command: python3 generate_data.py
       parameters:
-        output_dir: 
-          description: Directory to store generated video files
+        output: 
+          description: Path to the output video file
           default: data/test.mp4
         resolution:
           description: Resolution of the generated video (width x height)
-          default: 3840x2160
+          default: 1280x720
         duration:
           description: Duration of the generated video in seconds
-          default: 360
+          default: 480
         framerate:
           description: Frame rate of the generated video
-          default: 120
-        codec:
-          description: Video codec to use for encoding
-          default: libx264
-        noise:
-          description: Whether to add noise to the video
-          default: false
+          default: 10
         ffmpeg_bin:
-          description: Path to ffmpeg executable (default: ./bin/bin/ffmpeg)
-          default: ./bin/bin/ffmpeg
+          description: Path to ffmpeg executable
+          default: ./bin/ffmpeg_install/bin/ffmpeg
     command: python3 run_benchmark.py
     parameters:
       input:
@@ -49,19 +50,16 @@ workloads:
         default: 1
       scale:
         description: Output video resolution (width:height)
-        default: 1280:720
-      blur_sigma:
-        description: Sigma value for Gaussian blur filter
-        default: 5.0
+        default: 1920:1080
       fps:
         description: Output frame rate
-        default: 30
+        default: 160
       ffmpeg_bin:
-        description: Path to ffmpeg executable (default: ./bin/bin/ffmpeg)
-        default: ./bin/bin/ffmpeg
+        description: Path to ffmpeg executable 
+        default: ./bin/ffmpeg_install/bin/ffmpeg
 
 characteristics:
-  IO_effects: medium
+  IO_effects: low
   single_machine: true
   network_effects: none
   cpu_bound: true

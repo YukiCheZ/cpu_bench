@@ -7,105 +7,78 @@ domain:
   - scientific_computing
 
 setup:
-  command: make
+  command: ./setup.sh
   parameters:
-    CC:
+    compiler:
       description: Compiler to use (gcc or clang)
       default: gcc
-    OPT:
-      description: Optimization level (O0, O1, O2, O3, Ofast)
-      default: O3
+    opt:
+      description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
+      default: -O3
 
 workloads:
   - name: lapack_solve
     description: >
       Benchmark for solving linear systems using LAPACK.
-    data:
-      command: python3 generate_data.py
-      parameters:
-        size:
-          description: Size of the matrix (number of rows/columns)
-          default: 2000
-        mode:
-          description: Type of matrix data to generate: solve, eigen, svd
-          default: solve
-        output_dir:
-          description: Path to the output data directory
-          default: ./data
     command: ./bin/lapack_benchmark --mode solve
     parameters:
       size:
         description: Size of the matrix (number of rows/columns)
-        default: 2000
-      threads:
-        description: Number of concurrent threads to use
-        default: 1
+        default: 2048
       iters:
         description: Number of iterations to run
-        default: 3
+        default: 3000
       warmup:
         description: Number of warmup iterations
         default: 1
+      threads:
+        description: Number of concurrent threads to use
+        default: 1
+      seed:
+        description: Seed for random number generation
+        default: 42
 
   - name: lapack_eigen
     description: >
       Benchmark for computing eigenvalues and eigenvectors using LAPACK.
-    data:
-      command: python3 generate_data.py
-      parameters:
-        size:
-          description: Size of the matrix (number of rows/columns)
-          default: 2000
-        mode:
-          description: Type of matrix data to generate: solve, eigen, svd
-          default: solve
-        output_dir:
-          description: Path to the output data directory
-          default: ./data
     command: ./bin/lapack_benchmark --mode eigen
     parameters:
       size:
         description: Size of the matrix (number of rows/columns)
-        default: 2000
-      threads:
-        description: Number of concurrent threads to use
-        default: 1
+        default: 2048
       iters:
         description: Number of iterations to run
-        default: 3
+        default: 30
       warmup:
         description: Number of warmup iterations
         default: 1
+      threads:
+        description: Number of concurrent threads to use
+        default: 1
+      seed:
+        description: Seed for random number generation
+        default: 42
 
   - name: lapack_svd
     description: >
       Benchmark for computing singular value decomposition using LAPACK.
-    data:
-      command: python3 generate_data.py
-      parameters:
-        size:
-          description: Size of the matrix (number of rows/columns)
-          default: 2000
-        mode:
-          description: Type of matrix data to generate: solve, eigen, svd
-          default: solve
-        output_dir:
-          description: Path to the output data directory
-          default: ./data
     command: ./bin/lapack_benchmark --mode svd
     parameters:
       size:
         description: Size of the matrix (number of rows/columns)
-        default: 2000
+        default: 2048
+      iters:
+        description: Number of iterations to run
+        default: 9
+      warmup:
+        description: Number of warmup iterations
+        default: 1 
       threads:
         description: Number of concurrent threads to use
         default: 1
-      iters:
-        description: Number of iterations to run
-        default: 3
-      warmup:
-        description: Number of warmup iterations
-        default: 1
+      seed:
+        description: Seed for random number generation
+        default: 42
 
 characteristics:
   IO_effects: low
@@ -118,10 +91,6 @@ tags:
   - linear_algebra
   - scientific_computing
   - lapack
-  - multithreaded
-  - svd
-  - eigen
-  - solve
 
 dependencies:
   python: ">=3.8"

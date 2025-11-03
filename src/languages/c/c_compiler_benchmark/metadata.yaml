@@ -20,15 +20,21 @@ workloads:
           default: 300
         func_size:
           description: Number of lines per function
-          default: 500
+          default: 200
     command: python3 run_benchmark.py --compiler gcc
     parameters:
       opt:
         description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
         default: -O3
+      src_dir:
+        description: Directory to store generated source files
+        default: ./data/src
       threads:
         description: Number of parallel compilation threads (independent compilations)
         default: 1
+      iters:
+        description: Number of iterations to run the benchmark
+        default: 3
 
   - name: clang_compile
     description: >
@@ -44,15 +50,21 @@ workloads:
           default: 300
         func_size:
           description: Number of lines per function
-          default: 500
+          default: 200
     command: python3 run_benchmark.py --compiler clang
     parameters:
       opt:
         description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
         default: -O3
+      src_dir:
+        description: Directory to store generated source files
+        default: ./data/src
       threads:
         description: Number of parallel compilation threads (independent compilations)
         default: 1
+      iters:
+        description: Number of iterations to run the benchmark
+        default: 3
 
 characteristics:
   IO_effects: low

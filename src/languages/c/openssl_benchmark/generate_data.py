@@ -4,7 +4,7 @@ import argparse
 
 def main():
     parser = argparse.ArgumentParser(description="Generate binary data for CPU benchmark")
-    parser.add_argument('--size', type=int, default=10,
+    parser.add_argument('--size', type=int, default=50,
                         help="Size of data to generate in MB (default: 10)")
     parser.add_argument('--output', type=str, default="./data/data.bin",
                         help="Output file path (default: ./data/data.bin)")

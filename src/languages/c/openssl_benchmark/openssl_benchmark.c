@@ -8,8 +8,8 @@
 
 #define DEFAULT_THREADS 1
 #define DATA_FILE "./data/data.bin"
-#define DEFAULT_ITERS 200
-#define DEFAULT_WARMUP 1
+#define DEFAULT_ITERS 3000
+#define DEFAULT_WARMUP 3
 
 unsigned char g_key[32], g_iv[16];
 unsigned char *g_data = NULL;
@@ -120,10 +120,12 @@ int main(int argc, char *argv[]) {
     pthread_t *threads = malloc(sizeof(pthread_t) * num_threads);
     thread_arg_t *targs = malloc(sizeof(thread_arg_t) * num_threads);
 
-    printf("[INFO] Starting CPU macrobenchmark with %d threads, %d iters, %d warmup, data size %zu bytes\n",
-           num_threads, iters, warmup, g_data_size);
+    printf("[INFO] Starting CPU macrobenchmark with  data size %zu bytes\n",
+           g_data_size);
+    printf("[INFO] Using %d copies\n", num_threads);
 
     // Warmup
+    printf("[INFO] Warmup phase: %d iterations per thread\n", warmup);
     for(int i=0; i<num_threads; i++){
         targs[i].thread_id = i;
         targs[i].iters = warmup;
@@ -133,6 +135,8 @@ int main(int argc, char *argv[]) {
         pthread_join(threads[i], NULL);
     }
 
+    // Benchmark
+    printf("[INFO] Benchmark begins...\n");
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC, &start);
 
