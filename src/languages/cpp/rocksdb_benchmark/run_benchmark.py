@@ -4,72 +4,120 @@ import subprocess
 import sys
 import time
 import statistics
+import shutil
+import os
+import signal
+
+DB_PATH = "/tmp/rocksdb_bench"
+
+CPU_BENCHMARK_SEQ = (
+    # "fillseq,"
+    "fillrandom,"
+    "readrandom,"
+    # "readwhilewriting,"
+    "updaterandom,"
+    "seekrandom,"
+    "xxh3"
+)
+
+
+def clean_rocksdb_data():
+    """Remove RocksDB data directory to avoid persistence effects."""
+    if os.path.exists(DB_PATH):
+        try:
+            shutil.rmtree(DB_PATH)
+            print(f"[CLEANUP] Removed {DB_PATH}")
+        except Exception as e:
+            print(f"[WARNING] Failed to remove {DB_PATH}: {e}")
+
 
 def run_command(cmd):
     start = time.time()
     result = subprocess.run(
         cmd,
         shell=True,
-        stdout=subprocess.DEVNULL,       
-        stderr=subprocess.PIPE,          
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
         text=True
     )
     end = time.time()
 
     if result.returncode != 0:
-            print(f"[ERROR] Benchmark failed with return code {result.returncode}")
-            if result.stderr:
-                print("------- db_bench stderr -------")
-                print(result.stderr.strip())
-                print("-------------------------------")
-            sys.exit(result.returncode)
+        print(f"[ERROR] Benchmark failed with return code {result.returncode}")
+        if result.stderr:
+            print("------- db_bench stderr -------")
+            print(result.stderr.strip())
+            print("-------------------------------")
+        clean_rocksdb_data()
+        sys.exit(result.returncode)
 
+    clean_rocksdb_data()
     return end - start
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Run RocksDB CPU benchmark")
-    parser.add_argument("--num", type=int, default=1000000,
-                        help="Number of key-value pairs to use in benchmark (default: 1000000)")
+    parser = argparse.ArgumentParser(description="Run RocksDB CPU benchmark (composite sequence)")
+    parser.add_argument("--num", type=int, default=2000000,
+                        help="Number of key-value pairs to use in benchmark (default: 3000000)")
     parser.add_argument("--threads", type=int, default=1,
                         help="Number of concurrent threads (default: 1)")
-    parser.add_argument("--benchmarks", type=str, default="fillseq,readrandom",
-                        help="Comma-separated list of benchmarks (default: fillseq,readrandom)")
-    parser.add_argument("--compression", type=str, default="snappy",
-                        help="Compression type (none, snappy, zlib, bzip2, lz4, zstd)")
     parser.add_argument("--warmup", type=int, default=1,
-                        help="Number of warmup runs (default: 1)")
-    parser.add_argument("--iters", type=int, default=3,
-                        help="Number of benchmark iterations (default: 3)")
+                        help="Number of warmup runs")
+    parser.add_argument("--iters", type=int, default=1,
+                        help="Number of benchmark iterations")
     args = parser.parse_args()
 
-    cmd = (
-        f"./bin/db_bench "
-        f"--num={args.num} "
+    warmup_cmd = (
+        f"./bin/rocksdb_install/db_bench "
+        f"--num=100000 "
         f"--threads={args.threads} "
-        f"--benchmarks={args.benchmarks} "
-        f"--compression_type={args.compression} "
-        f"--db=/tmp/rocksdb_bench "
+        f"--benchmarks={CPU_BENCHMARK_SEQ} "
+        f"--compression_type=snappy "
+        f"--db={DB_PATH} "
         f"--disable_auto_compactions=true "
     )
 
-    print(f"[INFO] Running benchmark: num={args.num}, threads={args.threads}, "
-          f"warmup={args.warmup}, iters={args.iters}")
+    cmd = (
+        f"./bin/rocksdb_install/db_bench "
+        f"--num={args.num} "
+        f"--threads={args.threads} "
+        f"--benchmarks={CPU_BENCHMARK_SEQ} "
+        f"--compression_type=snappy "
+        f"--db={DB_PATH} "
+        f"--disable_auto_compactions=true "
+    )
 
-    # Warmup runs
-    for i in range(args.warmup):
-        _ = run_command(cmd)
-        print(f"[WARMUP] Iteration {i+1}/{args.warmup} done")
+    print(f"[INFO] Running RocksDB CPU benchmark sequence:")
+    print(f"       {CPU_BENCHMARK_SEQ}")
+    print(f"[INFO] num={args.num}, threads={args.threads}, warmup={args.warmup}, iters={args.iters}")
 
-    # Measured runs
-    times = []
-    for i in range(args.iters):
-        elapsed = run_command(cmd)
-        times.append(elapsed)
-        print(f"[ITER {i+1}] {elapsed:.3f} sec")
+    try:
+        # Warmup runs
+        for i in range(args.warmup):
+            _ = run_command(warmup_cmd)
+        print(f"[INFO] Warmup runs completed.")
 
-    avg_time = statistics.mean(times)
-    std_time = statistics.pstdev(times) if len(times) > 1 else 0.0
-    print(f"[RESULT] Avg time = {avg_time:.3f} sec, StdDev = {std_time:.3f} sec over {args.iters} runs")
+        print(f"[INFO] Starting measured benchmark runs...")
+        times = []
+        for i in range(args.iters):
+            elapsed = run_command(cmd)
+            times.append(elapsed)
+            print(f"[ITER {i+1}] {elapsed:.3f} sec")
+
+        sum_time = sum(times)
+        print(f"[RESULT] Total elapsed time: {sum_time:.4f} s")
+
+    except KeyboardInterrupt:
+        print("\n[INTERRUPT] Benchmark interrupted by user (Ctrl+C). Cleaning up...")
+        sys.exit(130)  # 128 + SIGINT
+
+    except Exception as e:
+        print(f"[FATAL] Unexpected error: {e}")
+        sys.exit(1)
+
+    finally:
+        clean_rocksdb_data()
+
 
 if __name__ == "__main__":
     main()
