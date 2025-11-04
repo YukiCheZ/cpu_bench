@@ -11,7 +11,7 @@ parser.add_argument("--compiler", default="gcc", choices=["gcc", "clang"])
 parser.add_argument("--opt", default="-O3", choices=["-O0", "-O1", "-O2", "-O3", "-Ofast"])
 parser.add_argument("--src_dir", default="./data/src")
 parser.add_argument("--threads", type=int, default=1)
-parser.add_argument("--iters", type=int, default=3)
+parser.add_argument("--iters", type=int, default=1)
 args = parser.parse_args()
 
 # Collect all .c source files
@@ -49,7 +49,6 @@ try:
         futures = {executor.submit(compile_copy, i, args.iters): i for i in range(args.threads)}
         for f in as_completed(futures):
             t = f.result()
-            print(f"[Thread {futures[f]}] done in {t:.3f}s")
     end = time.time()
     print(f"[RESULT] Total elapsed time: {end - start:.4f}s")
 except KeyboardInterrupt:
