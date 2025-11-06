@@ -31,7 +31,32 @@ bench_sets = {
 }
 
 workloads_sets = {
+    "python_test": [
+        "tuf_benchmark.tuf-metadata", "raytrace.raytrace",
+        "transformer_inference.transformer_inference",
+        "bert_cpu.bert_eval", "resnet50_cpu.resnet50_inference",
+        "resnet50_cpu.resnet50_training", "pyflate.pyflate"
+    ],
+    "c_test": [
+        "redis_benchmark.redis-benchmark", "ffmpeg_benchmark.ffmpeg",
+        "openssl_benchmark.openssl", "c_compiler_benchmark.gcc_compile",
+        "c_compiler_benchmark.clang_compile", "zstd_benchmark.zstd"
+    ],
     "cpp_test" : [
+        "rocksdb_benchmark.rocksdb_cpu", "opencv_benchmark.fft_batch",
+        "opencv_benchmark.conv_heavy", "opencv_benchmark.motion_blur",
+        "opencv_benchmark.background_sub"
+    ],
+    "test": [
+        "tuf_benchmark.tuf-metadata", "raytrace.raytrace",
+        "transformer_inference.transformer_inference",
+        "bert_cpu.bert_eval", "resnet50_cpu.resnet50_inference",
+        "resnet50_cpu.resnet50_training", "pyflate.pyflate",
+
+        "redis_benchmark.redis-benchmark", "ffmpeg_benchmark.ffmpeg",
+        "openssl_benchmark.openssl", "c_compiler_benchmark.gcc_compile",
+        "c_compiler_benchmark.clang_compile", "zstd_benchmark.zstd",
+        
         "rocksdb_benchmark.rocksdb_cpu", "opencv_benchmark.fft_batch",
         "opencv_benchmark.conv_heavy", "opencv_benchmark.motion_blur",
         "opencv_benchmark.background_sub"
@@ -39,13 +64,6 @@ workloads_sets = {
 }
 
 data_params = [
-    # "c_compiler_benchmark.gcc_compile.data.func_size=100",
-    # "c_compiler_benchmark.clang_compile.data.func_size=100",
-    # "ffmpeg_benchmark.ffmpeg.data.duration=240",
-    # "openssl_benchmark.openssl.data.size=25",
-    # "redis_benchmark.redis-benchmark.workload.requests=2000000",
-    # "zstd_benchmark.zstd.data.size=25",
-
     # "tuf_benchmark.tuf-metadata.data.size=268435456",
     # "raytrace.raytrace.workload.width=2048",
     # "raytrace.raytrace.workload.height=2048",
@@ -54,6 +72,14 @@ data_params = [
     # "bert_cpu.bert_eval.data.batch_size=4",
     # "transformer_inference.transformer_inference.data.batch_size=4",
     # "transformer_train.transformer_train.data.batch_size=2",
+    # "pyflate.pyflate.data.size=5000000",
+
+    # "c_compiler_benchmark.gcc_compile.data.func_size=100",
+    # "c_compiler_benchmark.clang_compile.data.func_size=100",
+    # "ffmpeg_benchmark.ffmpeg.data.duration=240",
+    # "openssl_benchmark.openssl.data.size=25",
+    # "redis_benchmark.redis-benchmark.workload.requests=2000000",
+    # "zstd_benchmark.zstd.data.size=25",
 
     "rocksdb_benchmark.rocksdb_cpu.workload.num=2000000",
     "opencv_benchmark.fft_batch.workload.size=512",
@@ -72,6 +98,12 @@ compiler_params = [
 ]
 
 opt_params = [
+    # "resnet50_cpu.resnet50_inference.workload.compile",
+    # "resnet50_cpu.resnet50_training.workload.compile",
+    # "bert_cpu.bert_eval.workload.compile",
+    # "transformer_inference.transformer_inference.workload.compile",
+    # "transformer_train.transformer_train.workload.compile",
+
     # "ffmpeg_benchmark._.setup.opt=-O1",
     # "openssl_benchmark._.setup.opt=-O1",
     # "redis_benchmark._.setup.opt=-O1",
@@ -79,24 +111,11 @@ opt_params = [
     # "c_compiler_benchmark.gcc_compile.workload.opt=-O1",
     # "c_compiler_benchmark.clang_compile.workload.opt=-O1",
 
-    # "resnet50_cpu.resnet50_inference.workload.compile",
-    # "resnet50_cpu.resnet50_training.workload.compile",
-    # "bert_cpu.bert_eval.workload.compile",
-    # "transformer_inference.transformer_inference.workload.compile",
-    # "transformer_train.transformer_train.workload.compile",
-
     "rocksdb_benchmark._.setup.opt=-O1",
     "opencv_benchmark._.setup.opt=-O1"
 ]
 
 threads_param = [
-    # "c_compiler_benchmark.gcc_compile.workload.threads=28",
-    # "c_compiler_benchmark.clang_compile.workload.threads=28",
-    # "ffmpeg_benchmark.ffmpeg.workload.threads=28",
-    # "openssl_benchmark.openssl.workload.threads=28",
-    # "redis_benchmark.redis-benchmark.workload.threads=28",
-    # "zstd_benchmark.zstd.workload.threads=28",
-
     # "tuf_benchmark.tuf-metadata.workload.threads=28",
     # "raytrace.raytrace.workload.threads=28",
     # "resnet50_cpu.resnet50_inference.workload.threads=28",
@@ -104,6 +123,14 @@ threads_param = [
     # "bert_cpu.bert_eval.workload.threads=28",
     # "transformer_inference.transformer_inference.workload.threads=28",
     # "transformer_train.transformer_train.workload.threads=28",
+    # "pyflate.pyflate.workload.threads=28",
+
+    # "c_compiler_benchmark.gcc_compile.workload.threads=28",
+    # "c_compiler_benchmark.clang_compile.workload.threads=28",
+    # "ffmpeg_benchmark.ffmpeg.workload.threads=28",
+    # "openssl_benchmark.openssl.workload.threads=28",
+    # "redis_benchmark.redis-benchmark.workload.threads=28",
+    # "zstd_benchmark.zstd.workload.threads=28",
 
     "rocksdb_benchmark.rocksdb_cpu.workload.threads=28",
     "opencv_benchmark.fft_batch.workload.threads=28",
