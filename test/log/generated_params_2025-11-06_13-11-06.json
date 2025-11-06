@@ -1,0 +1,100 @@
+{
+  "round_1": [
+    "opencv_benchmark._.setup.compiler=clang",
+    "opencv_benchmark._.setup.opt=-O1",
+    "opencv_benchmark.background_sub.workload.size=540",
+    "opencv_benchmark.background_sub.workload.threads=28",
+    "opencv_benchmark.conv_heavy.workload.size=512",
+    "opencv_benchmark.conv_heavy.workload.threads=28",
+    "opencv_benchmark.fft_batch.workload.threads=28",
+    "opencv_benchmark.motion_blur.workload.size=1024",
+    "opencv_benchmark.motion_blur.workload.threads=28",
+    "rocksdb_benchmark._.setup.compiler=clang",
+    "rocksdb_benchmark.rocksdb_cpu.workload.num=2000000",
+    "rocksdb_benchmark.rocksdb_cpu.workload.threads=28"
+  ],
+  "round_2": [
+    "opencv_benchmark._.setup.opt=-O1",
+    "opencv_benchmark.background_sub.workload.size=540",
+    "opencv_benchmark.conv_heavy.workload.size=512",
+    "opencv_benchmark.fft_batch.workload.threads=28",
+    "opencv_benchmark.motion_blur.workload.size=1024",
+    "opencv_benchmark.motion_blur.workload.threads=28",
+    "rocksdb_benchmark._.setup.compiler=clang"
+  ],
+  "round_3": [
+    "opencv_benchmark._.setup.opt=-O1",
+    "opencv_benchmark.background_sub.workload.size=540",
+    "opencv_benchmark.background_sub.workload.threads=28",
+    "opencv_benchmark.conv_heavy.workload.size=512",
+    "opencv_benchmark.fft_batch.workload.threads=28",
+    "opencv_benchmark.motion_blur.workload.size=1024"
+  ],
+  "round_4": [
+    "opencv_benchmark._.setup.compiler=clang",
+    "opencv_benchmark._.setup.opt=-O1",
+    "opencv_benchmark.background_sub.workload.size=540",
+    "opencv_benchmark.conv_heavy.workload.size=512",
+    "opencv_benchmark.fft_batch.workload.size=512",
+    "opencv_benchmark.motion_blur.workload.size=1024",
+    "opencv_benchmark.motion_blur.workload.threads=28",
+    "rocksdb_benchmark._.setup.compiler=clang"
+  ],
+  "round_5": [
+    "opencv_benchmark._.setup.compiler=clang",
+    "opencv_benchmark.conv_heavy.workload.size=512",
+    "opencv_benchmark.conv_heavy.workload.threads=28",
+    "opencv_benchmark.motion_blur.workload.size=1024",
+    "opencv_benchmark.motion_blur.workload.threads=28",
+    "rocksdb_benchmark._.setup.compiler=clang",
+    "rocksdb_benchmark.rocksdb_cpu.workload.num=2000000",
+    "rocksdb_benchmark.rocksdb_cpu.workload.threads=28"
+  ],
+  "round_6": [
+    "opencv_benchmark._.setup.compiler=clang",
+    "opencv_benchmark._.setup.opt=-O1",
+    "opencv_benchmark.background_sub.workload.size=540",
+    "opencv_benchmark.fft_batch.workload.threads=28",
+    "rocksdb_benchmark.rocksdb_cpu.workload.num=2000000",
+    "rocksdb_benchmark.rocksdb_cpu.workload.threads=28"
+  ],
+  "round_7": [
+    "opencv_benchmark._.setup.compiler=clang",
+    "opencv_benchmark.background_sub.workload.size=540",
+    "opencv_benchmark.background_sub.workload.threads=28",
+    "opencv_benchmark.conv_heavy.workload.threads=28",
+    "opencv_benchmark.fft_batch.workload.threads=28",
+    "opencv_benchmark.motion_blur.workload.threads=28",
+    "rocksdb_benchmark._.setup.compiler=clang",
+    "rocksdb_benchmark._.setup.opt=-O1"
+  ],
+  "round_8": [
+    "opencv_benchmark._.setup.compiler=clang",
+    "opencv_benchmark.background_sub.workload.size=540",
+    "opencv_benchmark.background_sub.workload.threads=28",
+    "opencv_benchmark.motion_blur.workload.threads=28",
+    "rocksdb_benchmark._.setup.compiler=clang"
+  ],
+  "round_9": [
+    "opencv_benchmark._.setup.compiler=clang",
+    "opencv_benchmark.background_sub.workload.size=540",
+    "opencv_benchmark.background_sub.workload.threads=28",
+    "opencv_benchmark.fft_batch.workload.size=512",
+    "opencv_benchmark.motion_blur.workload.size=1024",
+    "opencv_benchmark.motion_blur.workload.threads=28",
+    "rocksdb_benchmark._.setup.compiler=clang",
+    "rocksdb_benchmark._.setup.opt=-O1",
+    "rocksdb_benchmark.rocksdb_cpu.workload.threads=28"
+  ],
+  "round_10": [
+    "opencv_benchmark._.setup.compiler=clang",
+    "opencv_benchmark.background_sub.workload.threads=28",
+    "opencv_benchmark.conv_heavy.workload.threads=28",
+    "opencv_benchmark.fft_batch.workload.size=512",
+    "opencv_benchmark.motion_blur.workload.size=1024",
+    "opencv_benchmark.motion_blur.workload.threads=28",
+    "rocksdb_benchmark._.setup.compiler=clang",
+    "rocksdb_benchmark._.setup.opt=-O1",
+    "rocksdb_benchmark.rocksdb_cpu.workload.num=2000000"
+  ]
+}

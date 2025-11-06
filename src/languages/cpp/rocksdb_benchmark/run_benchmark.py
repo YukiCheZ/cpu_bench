@@ -11,10 +11,10 @@ import signal
 DB_PATH = "/tmp/rocksdb_bench"
 
 CPU_BENCHMARK_SEQ = (
-    # "fillseq,"
+    "fillseq,"
     "fillrandom,"
     "readrandom,"
-    # "readwhilewriting,"
+    "readwhilewriting,"
     "updaterandom,"
     "seekrandom,"
     "xxh3"
@@ -57,8 +57,8 @@ def run_command(cmd):
 
 def main():
     parser = argparse.ArgumentParser(description="Run RocksDB CPU benchmark (composite sequence)")
-    parser.add_argument("--num", type=int, default=2000000,
-                        help="Number of key-value pairs to use in benchmark (default: 3000000)")
+    parser.add_argument("--num", type=int, default=4000000,
+                        help="Number of key-value pairs to use in benchmark (default: 5000000)")
     parser.add_argument("--threads", type=int, default=1,
                         help="Number of concurrent threads (default: 1)")
     parser.add_argument("--warmup", type=int, default=1,
@@ -74,7 +74,6 @@ def main():
         f"--benchmarks={CPU_BENCHMARK_SEQ} "
         f"--compression_type=snappy "
         f"--db={DB_PATH} "
-        f"--disable_auto_compactions=true "
     )
 
     cmd = (
@@ -84,7 +83,6 @@ def main():
         f"--benchmarks={CPU_BENCHMARK_SEQ} "
         f"--compression_type=snappy "
         f"--db={DB_PATH} "
-        f"--disable_auto_compactions=true "
     )
 
     print(f"[INFO] Running RocksDB CPU benchmark sequence:")
@@ -102,7 +100,6 @@ def main():
         for i in range(args.iters):
             elapsed = run_command(cmd)
             times.append(elapsed)
-            print(f"[ITER {i+1}] {elapsed:.3f} sec")
 
         sum_time = sum(times)
         print(f"[RESULT] Total elapsed time: {sum_time:.4f} s")

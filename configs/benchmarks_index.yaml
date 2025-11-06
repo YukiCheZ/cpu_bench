@@ -49,7 +49,7 @@ benchmarks:
 
   - name: opencv_benchmark
     path: src/languages/cpp/opencv_benchmark
-    num: 11
+    num: 10
 
   - name: rocksdb_benchmark
     path: src/languages/cpp/rocksdb_benchmark

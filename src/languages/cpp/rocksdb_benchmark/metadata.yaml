@@ -20,24 +20,23 @@ workloads:
   - name: rocksdb_cpu
     description: >
       Execute CPU-bound key-value operations using RocksDB.
-    run:
-      command: python3 run_benchmark.py
-      parameters:
-        num:
-          description: Number of key-value pairs to use in benchmark
-          default: 3000000
-        threads:
-          description: Number of concurrent threads
-          default: 1
-        warmup:
-          description: Number of warmup iterations before timing
-          default: 1
-        iters:
-          description: Number of timed iterations
-          default: 1
+    command: python3 run_benchmark.py
+    parameters:
+      num:
+        description: Number of key-value pairs to use in benchmark
+        default: 4000000
+      threads:
+        description: Number of concurrent threads
+        default: 1
+      warmup:
+        description: Number of warmup iterations before timing
+        default: 1
+      iters:
+        description: Number of timed iterations
+        default: 1
 
 characteristics:
-  IO_effects: low
+  IO_effects: medium
   single_machine: true
   network_effects: none
   cpu_bound: true

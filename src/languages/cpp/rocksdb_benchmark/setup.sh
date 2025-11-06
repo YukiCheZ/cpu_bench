@@ -80,6 +80,9 @@ fi
 SNAPPY_SRC_DIR="${BUILD_DIR}/snappy-${SNAPPY_VERSION}"
 SNAPPY_BUILD_DIR="${SNAPPY_SRC_DIR}/_build"
 
+# Clean previous builds
+rm -rf "${SNAPPY_SRC_DIR}" "${SNAPPY_BUILD_DIR}"
+
 if [[ ! -f "snappy-${SNAPPY_VERSION}.tar.gz" ]]; then
     echo "[INFO] Downloading Snappy ${SNAPPY_VERSION}..."
     curl -L -o "snappy-${SNAPPY_VERSION}.tar.gz" "${SNAPPY_URL}"
@@ -116,6 +119,9 @@ echo
 GFLAGS_SRC_DIR="${BUILD_DIR}/gflags-${GFLAGS_VERSION}"
 GFLAGS_BUILD_DIR="${GFLAGS_SRC_DIR}/_build"
 
+# Clean previous builds
+rm -rf "${GFLAGS_SRC_DIR}" "${GFLAGS_BUILD_DIR}"
+
 if [[ ! -f "gflags-${GFLAGS_VERSION}.tar.gz" ]]; then
     echo "[INFO] Downloading gflags ${GFLAGS_VERSION}..."
     curl -L -o "gflags-${GFLAGS_VERSION}.tar.gz" "${GFLAGS_URL}"
@@ -136,10 +142,8 @@ else
     mv "${GFLAGS_SRC_DIR}/CMakeLists.tmp" "${GFLAGS_SRC_DIR}/CMakeLists.txt"
 fi
 
-if [[ -f "${GFLAGS_BUILD_DIR}" ]]; then
-    echo "[WARN] Removing stale file: ${GFLAGS_BUILD_DIR}"
-    rm -f "${GFLAGS_BUILD_DIR}"
-fi
+# Clean previous builds
+rm -rf "${GFLAGS_BUILD_DIR}"
 mkdir -p "${GFLAGS_BUILD_DIR}"
 cd "${GFLAGS_BUILD_DIR}"
 
@@ -161,6 +165,9 @@ echo
 
 # ===== Step 2: Build RocksDB =====
 ROCKSDB_SRC_DIR="${BUILD_DIR}/rocksdb-${ROCKSDB_VERSION}"
+
+# Clean previous builds
+rm -rf "${ROCKSDB_SRC_DIR}"
 
 if [[ ! -f "rocksdb-${ROCKSDB_VERSION}.tar.gz" ]]; then
     echo "[INFO] Downloading RocksDB ${ROCKSDB_VERSION}..."
@@ -207,5 +214,4 @@ echo "[INFO] RocksDB db_bench installed to ${INSTALL_DIR}/db_bench"
 echo
 echo "[INFO] RocksDB + gflags + Snappy built successfully (no system pollution)!"
 echo "[INFO] Snappy + gflags installed at: ${INSTALL_DIR}"
-echo "[INFO] db_bench binary:     ${INSTALL_DIR}/db_bench"
-echo "[INFO] Build log:           ${LOG_FILE}"
+echo "[INFO]

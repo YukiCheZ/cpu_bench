@@ -71,18 +71,19 @@ def run_command(cmd, cwd, expect_result=True):
 # ============================================================
 # Setup phase
 # ============================================================
-def run_setup_for_benchmark(bench_name: str, bench_path: Path, overrides):
-    """Run setup.command if metadata.yaml defines it, with optional parameter overrides."""
+def run_setup_for_benchmark(bench_name: str, bench_path: Path, overrides) -> bool:
+    """Run setup.command if metadata.yaml defines it, with optional parameter overrides.
+       Return True if setup succeeds, False otherwise."""
     meta_path = bench_path / "metadata.yaml"
     if not meta_path.exists():
         log(f"[WARNING] metadata.yaml not found in {bench_path}")
-        return
+        return False
 
     metadata = load_yaml(meta_path)
     setup_info = metadata.get("setup")
     if not setup_info or "command" not in setup_info:
         log(f"[INFO] No setup command defined for {bench_name}, skipping setup.")
-        return
+        return True  
 
     cmd = setup_info["command"]
     setup_params_meta = setup_info.get("parameters", {})
@@ -114,10 +115,13 @@ def run_setup_for_benchmark(bench_name: str, bench_path: Path, overrides):
         process.wait()
         if process.returncode == 0:
             log(f"[OK] Setup completed successfully for {bench_name}")
+            return True
         else:
-            log(f"[WARNING] Setup failed for {bench_name} (exit {process.returncode})")
+            log(f"[ERROR] Setup failed for {bench_name} (exit {process.returncode})")
+            return False
     except Exception as e:
         log(f"[ERROR] Setup for {bench_name} failed: {e}")
+        return False
 
 
 # ============================================================
@@ -203,12 +207,16 @@ def apply_param_overrides(base_cmd, overrides_dict, param_meta, bench, wl, targe
 # ============================================================
 # Workload execution
 # ============================================================
-def run_workload(benchmark_name, benchmark_path: Path, csv_writer, csv_file, overrides):
+def run_workload(benchmark_name, benchmark_path: Path, csv_writer, csv_file, overrides, target_workloads=None):
     metadata = load_yaml(benchmark_path / "metadata.yaml")
     workloads = metadata.get("workloads", [])
 
     for wl in workloads:
         wl_name = wl["name"]
+
+        if target_workloads is not None and wl_name not in target_workloads:
+            continue
+
         log(f"\n==== Running workload: {benchmark_name} / {wl_name} ====")
         try:
             param_str = ""
@@ -251,10 +259,11 @@ def run_workload(benchmark_name, benchmark_path: Path, csv_writer, csv_file, ove
 def main():
     global log_file, VERBOSE, failed_workloads
     failed_workloads = []
-    missing_benchmarks = []
+    missing_items = []
 
     parser = argparse.ArgumentParser(description="Run CPU benchmark workloads with automatic environment setup.")
-    parser.add_argument("--benches", nargs="+", help="Names of benchmarks to run (default: preset)")
+    parser.add_argument("--workloads", nargs="+", help="Specific workloads to run, format: <benchmark>.<workload>")
+    parser.add_argument("--benches", nargs="+", help="Names of benchmarks to run (compatibility mode).")
     parser.add_argument("--out", help="Output CSV file path (auto timestamp if not set)")
     parser.add_argument("--log", help="Log file path (auto timestamp if not set)")
     parser.add_argument("--set-param", action="append", help=(
@@ -267,71 +276,114 @@ def main():
     args = parser.parse_args()
     VERBOSE = args.verbose
 
-    # timestamped filenames
+    # ======= log init =======
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     result_file = args.out or f"results_{timestamp}.csv"
     log_path = args.log or f"logs_{timestamp}.log"
-
     log_file = open(log_path, "w", encoding="utf-8")
 
-    # default benchmark set
+    # ======= load benchmark definitions =======
     benchmarks_config = load_yaml(Path(BENCHMARKS_FILE))
     bench_map = {b["name"]: b for b in benchmarks_config.get("benchmarks", [])}
+    overrides = parse_set_param_entries(args.set_param or [])
 
-    default_set = []
-    combined_set_param = []
-    if args.set_param:
-        combined_set_param.extend(args.set_param)
+    workload_map = {}  # {bench_name: set(workload_names)}
 
-    if args.benches:
-        selected = []
-        for bname in args.benches:
-            if bname in bench_map:
-                selected.append(bench_map[bname])
-            else:
-                log(f"[WARNING] Benchmark '{bname}' not found in {BENCHMARKS_FILE}")
-                missing_benchmarks.append(bname)
+    # ============================================================
+    # --workloads mode
+    # ============================================================
+    if args.workloads:
+        for wl_full in args.workloads:
+            if "." not in wl_full:
+                log(f"[WARNING] Invalid workload format: {wl_full}, expected <bench>.<workload>")
+                missing_items.append(wl_full)
+                continue
+
+            bench_name, wl_name = wl_full.split(".", 1)
+            if bench_name not in bench_map:
+                log(f"[WARNING] Benchmark '{bench_name}' not found in {BENCHMARKS_FILE}")
+                missing_items.append(wl_full)
+                continue
+            workload_map.setdefault(bench_name, set()).add(wl_name)
+
+        mode = "workload"
+
+    # ============================================================
+    # --benches mode
+    # ============================================================
+    elif args.benches:
+        for bench_name in args.benches:
+            if bench_name not in bench_map:
+                log(f"[WARNING] Benchmark '{bench_name}' not found in {BENCHMARKS_FILE}")
+                missing_items.append(bench_name)
+                continue
+
+            # load all workloads under the specified benchmark
+            meta_path = Path(bench_map[bench_name]["path"]) / "metadata.yaml"
+            if not meta_path.exists():
+                log(f"[WARNING] metadata.yaml missing for {bench_name}")
+                missing_items.append(bench_name)
+                continue
+
+            metadata = load_yaml(meta_path)
+            workloads = metadata.get("workloads", [])
+            if not workloads:
+                log(f"[WARNING] No workloads defined in {meta_path}")
+                missing_items.append(bench_name)
+                continue
+
+            workload_map[bench_name] = set(wl["name"] for wl in workloads)
+        mode = "bench"
+
     else:
-        selected = [bench_map[b] for b in default_set if b in bench_map]
-        for b in default_set:
-            if b not in bench_map:
-                missing_benchmarks.append(b)
-
-    if not selected:
-        log("[WARNING] No valid benchmarks found. Exiting.")
+        log("[ERROR] You must specify either --workloads or --benches.")
         sys.exit(1)
 
-    overrides = parse_set_param_entries(combined_set_param)
-
-    # Setup phase integration
+    # ============================================================
+    # Setup phase
+    # ============================================================
+    failed_setups = set()
     if args.setup_env:
         log("\n[INFO] Running setup phase for selected benchmarks...")
-        for bench in selected:
-            run_setup_for_benchmark(bench["name"], Path(bench["path"]), overrides)
+        for bench_name in workload_map:
+            bench = bench_map[bench_name]
+            ok = run_setup_for_benchmark(bench_name, Path(bench["path"]), overrides)
+            if not ok:
+                failed_setups.add(bench_name)
+                log(f"[WARNING] Skipping workloads for {bench_name} due to setup failure.")
 
-
+    # ============================================================
+    # Run phase
+    # ============================================================
     with open(result_file, "w", newline="", encoding="utf-8") as f:
         csv_writer = csv.writer(f)
         csv_writer.writerow(["benchmark_name", "workload_name", "elapsed_time(s)", "param_overrides"])
         f.flush()
 
-        for bench in selected:
-            name = bench["name"]
-            path = Path(bench["path"])
-            log(f"\n>>> Running benchmark: {name} at {path}")
-            run_workload(name, path, csv_writer, f, overrides)
+        for bench_name, wl_names in workload_map.items():
+            bench = bench_map[bench_name]
+            if bench_name in failed_setups:
+                log(f"[SKIP] {bench_name}: setup failed, skipping workloads.")
+                continue
 
-    if missing_benchmarks:
-        log("\n[WARNING SUMMARY] Missing benchmarks:")
-        for b in missing_benchmarks:
-            log(f"  - {b}")
+            log(f"\n>>> Running workloads for benchmark: {bench_name}")
+            run_workload(bench_name, Path(bench["path"]), csv_writer, f, overrides, target_workloads=wl_names)
+
+    # ============================================================
+    # Summary
+    # ============================================================
+    if missing_items:
+        log("\n[WARNING SUMMARY] Missing or invalid items:")
+        for w in missing_items:
+            log(f"  - {w}")
 
     if failed_workloads:
         log("\n[WARNING SUMMARY] Failed workloads:")
         for w in failed_workloads:
             log(f"  - {w}")
 
-    log(f"\n[INFO] All workloads finished. Results saved to {result_file}")
+    log(f"\n[INFO] All selected {'workloads' if mode == 'workload' else 'benchmarks'} finished.")
+    log(f"[INFO] Results saved to {result_file}")
     log(f"[INFO] Full logs saved to {log_path}")
     log_file.close()
 

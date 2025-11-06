@@ -6,16 +6,16 @@ class Workloads {
 public:
     static void processImage(const cv::Mat& img, const std::string& workload);
 
-private:
+    static void fftBatch(const cv::Mat& img);
+    static void convHeavy(const cv::Mat& img);
+    static void mandelbrot();
+    static void mandelbrot(int size, int maxIter);
+    static void jacobiIter();
+    static void jacobiIter(int n, int iters);
     static void canny(const cv::Mat& img);
-    static void blurLargeKernel(const cv::Mat& img);
-    static void resizeImage(const cv::Mat& img);
-    static void sobelEdges(const cv::Mat& img);
-    static void histEqualization(const cv::Mat& img);
-    static void matrixMultiply(const cv::Mat& img);
-    static void colorSpaceAndHistogram(const cv::Mat& img);
-    static void customConvolution(const cv::Mat& img);
-    static void pyramidProcessing(const cv::Mat& img);
-    static void thresholdAndBitwise(const cv::Mat& img);
-    static void addRandomNoise(const cv::Mat& img);
+    static void opticalFlow(const cv::Mat& img);
+    static void motionBlur(const cv::Mat& img);
+    static void backgroundSub(const cv::Mat& img);
+    static void colorTracking(const cv::Mat& img);
+    static void featureMatch(const cv::Mat& img);
 };

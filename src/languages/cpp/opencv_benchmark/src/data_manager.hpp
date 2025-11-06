@@ -1,12 +1,11 @@
 #pragma once
-#include <opencv2/opencv.hpp>
-#include <vector>
+#include <opencv2/core.hpp>
 #include <string>
+#include <vector>
 
 class DataManager {
 public:
-    DataManager(int seed = 42);
-
+    explicit DataManager(int seed = 42);
     std::vector<cv::Mat> generateDataset(const std::string& workload, int size, int numItems);
 
 private:
