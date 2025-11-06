@@ -17,6 +17,7 @@ OPENSSL_VERSION="3.6.0"
 OPENSSL_URL="https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz"
 PROJECT_ROOT="$(pwd)"
 BUILD_DIR="${PROJECT_ROOT}/bin/openssl"
+SOURCE_DIR="${BUILD_DIR}/openssl-${OPENSSL_VERSION}"
 INSTALL_DIR="${PROJECT_ROOT}/bin/openssl_install"
 LOG_FILE="${BUILD_DIR}/build.log"
 PROGRAM_SRC="${PROJECT_ROOT}/openssl_benchmark.c"
@@ -52,7 +53,6 @@ echo "[INFO] Install path: ${INSTALL_DIR}"
 echo
 
 # ===== Prepare directories =====
-rm -rf "${BUILD_DIR}"
 mkdir -p "${BUILD_DIR}"
 mkdir -p "${INSTALL_DIR}"
 cd "${BUILD_DIR}"
@@ -65,9 +65,15 @@ else
     echo "[INFO] Using cached source tarball."
 fi
 
-# ===== Extract source =====
-tar -xzf "openssl-${OPENSSL_VERSION}.tar.gz"
-cd "openssl-${OPENSSL_VERSION}"
+# ===== Extract source if not already done =====
+if [[ ! -d "${SOURCE_DIR}" ]]; then
+    echo "[INFO] Extracting OpenSSL source..."
+    tar -xzf "openssl-${OPENSSL_VERSION}.tar.gz"
+else
+    echo "[INFO] Using existing source directory."
+fi
+
+cd "${SOURCE_DIR}"
 
 # ===== Detect platform =====
 UNAME_OUT="$(uname -s)"
@@ -88,6 +94,7 @@ echo "[INFO] Configuring OpenSSL for ${TARGET}..."
 export CC="${COMPILER}"
 export CFLAGS="${OPT_LEVEL}"
 
+# Re-run Configure every time to respect new compiler/opt flags
 if ! ./Configure "${TARGET}" \
     --prefix="${INSTALL_DIR}" \
     --openssldir="${INSTALL_DIR}" \
@@ -123,7 +130,7 @@ if [[ -f "${PROGRAM_SRC}" ]]; then
     if ! ${COMPILER} "${PROGRAM_SRC}" -o "${PROGRAM_OUT}" \
         -I"${INSTALL_DIR}/include" \
         -L"${INSTALL_DIR}/lib" \
-        -lssl -lcrypto \
+        -lssl -lcrypto -pthread \
         ${OPT_LEVEL} >"${LOG_FILE}" 2>&1; then
         echo "[ERROR] Program compilation failed. Check ${LOG_FILE}"
         exit 1
