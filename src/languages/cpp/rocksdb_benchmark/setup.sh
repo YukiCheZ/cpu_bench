@@ -214,4 +214,3 @@ echo "[INFO] RocksDB db_bench installed to ${INSTALL_DIR}/db_bench"
 echo
 echo "[INFO] RocksDB + gflags + Snappy built successfully (no system pollution)!"
 echo "[INFO] Snappy + gflags installed at: ${INSTALL_DIR}"
-echo "[INFO]

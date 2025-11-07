@@ -48,7 +48,7 @@ tags:
   - rocksdb
 
 dependencies:
+  gcc: ">=11.0"
+  clang: ">=14.0"
   python: ">=3.8"
   rocksdb: ">=10.0"
-  snappy: "libsnappy-dev"
-  gflags: "libgflags-dev"
