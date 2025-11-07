@@ -128,33 +128,33 @@ opt_params = [
 ]
 
 threads_param = [
-    "tuf_benchmark.tuf-metadata.workload.threads=28",
-    "raytrace.raytrace.workload.threads=28",
-    "resnet50_cpu.resnet50_inference.workload.threads=28",
-    "resnet50_cpu.resnet50_training.workload.threads=28",
-    "bert_cpu.bert_eval.workload.threads=28",
-    "transformer_inference.transformer_inference.workload.threads=28",
-    "transformer_train.transformer_train.workload.threads=28",
-    "pyflate.pyflate.workload.threads=28",
+    "tuf_benchmark.tuf-metadata.workload.threads=64",
+    "raytrace.raytrace.workload.threads=64",
+    "resnet50_cpu.resnet50_inference.workload.threads=64",
+    "resnet50_cpu.resnet50_training.workload.threads=64",
+    "bert_cpu.bert_eval.workload.threads=64",
+    "transformer_inference.transformer_inference.workload.threads=64",
+    "transformer_train.transformer_train.workload.threads=64",
+    "pyflate.pyflate.workload.threads=64",
 
-    "c_compiler_benchmark.gcc_compile.workload.threads=28",
-    "c_compiler_benchmark.clang_compile.workload.threads=28",
-    "ffmpeg_benchmark.ffmpeg.workload.threads=28",
-    "openssl_benchmark.openssl.workload.threads=28",
-    "redis_benchmark.redis-benchmark.workload.threads=28",
-    "zstd_benchmark.zstd.workload.threads=28",
+    "c_compiler_benchmark.gcc_compile.workload.threads=64",
+    "c_compiler_benchmark.clang_compile.workload.threads=64",
+    "ffmpeg_benchmark.ffmpeg.workload.threads=64",
+    "openssl_benchmark.openssl.workload.threads=64",
+    "redis_benchmark.redis-benchmark.workload.threads=64",
+    "zstd_benchmark.zstd.workload.threads=64",
 
-    "rocksdb_benchmark.rocksdb_cpu.workload.threads=28",
-    "opencv_benchmark.fft_batch.workload.threads=28",
-    "opencv_benchmark.conv_heavy.workload.threads=28",
-    "opencv_benchmark.motion_blur.workload.threads=28",
-    "opencv_benchmark.background_sub.workload.threads=28",
+    "rocksdb_benchmark.rocksdb_cpu.workload.threads=64",
+    "opencv_benchmark.fft_batch.workload.threads=64",
+    "opencv_benchmark.conv_heavy.workload.threads=64",
+    "opencv_benchmark.motion_blur.workload.threads=64",
+    "opencv_benchmark.background_sub.workload.threads=64",
 
-    "biogo-benchmark.biogo-igor.workload.threads=28",
-    "bleve_benchmark.bleve-index.workload.threads=28",
+    "biogo-benchmark.biogo-igor.workload.threads=64",
+    "bleve_benchmark.bleve-index.workload.threads=64",
 
-    "cockroachdb_benchmark.kv.workload.threads=28",
-    "cockroachdb_benchmark.tpcc.workload.threads=28",
+    "cockroachdb_benchmark.kv.workload.threads=64",
+    "cockroachdb_benchmark.tpcc.workload.threads=64",
 ]
 
 def random_select_config_by_load(config_list):
@@ -197,16 +197,16 @@ with open(LOG_DIR / f"generated_params_{timestamp}.json", "w") as f:
     json.dump(param_sets, f, indent=2)
 
 pairs = [
-    ("go_test", "round_1", True),
-    ("go_test", "round_2", True),
-    ("go_test", "round_3", True),
-    ("go_test", "round_4", True),
-    ("go_test", "round_5", True),
-    ("go_test", "round_6", True),
-    ("go_test", "round_7", True),
-    ("go_test", "round_8", True),
-    ("go_test", "round_9", True),
-    ("go_test", "round_10", True)
+    ("test", "round_1", True),
+    ("test", "round_2", True),
+    ("test", "round_3", True),
+    ("test", "round_4", True),
+    ("test", "round_5", True),
+    ("test", "round_6", True),
+    ("test", "round_7", True),
+    ("test", "round_8", True),
+    ("test", "round_9", True),
+    ("test", "round_10", True)
 ]
 
 def run_benchmark_set(tag: str, benches: list[str], params: list[str], setup_env: bool = False):

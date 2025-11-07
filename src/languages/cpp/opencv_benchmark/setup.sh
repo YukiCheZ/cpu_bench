@@ -127,6 +127,8 @@ if ! cmake .. \
     -DWITH_V4L=OFF \
     -DWITH_GTK=OFF \
     -DWITH_FFMPEG=OFF \
+    -DENABLE_NEON=OFF \
+    -DWITH_CAROTENE=OFF \
     >"${LOG_FILE}" 2>&1; then
     echo "[ERROR] OpenCV configuration failed. See ${LOG_FILE}"
     exit 1

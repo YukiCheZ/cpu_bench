@@ -75,27 +75,15 @@ fi
 
 cd "${SOURCE_DIR}"
 
-# ===== Detect platform =====
-UNAME_OUT="$(uname -s)"
-case "${UNAME_OUT}" in
-    Linux*)     TARGET="linux-x86_64" ;;
-    Darwin*)
-        ARCH=$(uname -m)
-        if [[ "${ARCH}" == "arm64" ]]; then
-            TARGET="darwin64-arm64-cc"
-        else
-            TARGET="darwin64-x86_64-cc"
-        fi ;;
-    *) echo "[ERROR] Unsupported platform: ${UNAME_OUT}"; exit 1 ;;
-esac
-
-# ===== Configure build =====
-echo "[INFO] Configuring OpenSSL for ${TARGET}..."
+# ===== Configure build (auto-detect platform via ./config) =====
+echo "[INFO] Configuring OpenSSL (auto-detect platform)..."
 export CC="${COMPILER}"
 export CFLAGS="${OPT_LEVEL}"
 
-# Re-run Configure every time to respect new compiler/opt flags
-if ! ./Configure "${TARGET}" \
+# Clean previous config if any
+make clean >/dev/null 2>&1 || true
+
+if ! ./config \
     --prefix="${INSTALL_DIR}" \
     --openssldir="${INSTALL_DIR}" \
     shared >"${LOG_FILE}" 2>&1; then
@@ -107,7 +95,7 @@ fi
 CPU_CORES=1
 if command -v nproc >/dev/null 2>&1; then
     CPU_CORES=$(nproc)
-elif [[ "${UNAME_OUT}" == "Darwin" ]]; then
+elif [[ "$(uname -s)" == "Darwin" ]]; then
     CPU_CORES=$(sysctl -n hw.ncpu)
 fi
 
@@ -137,7 +125,7 @@ if [[ -f "${PROGRAM_SRC}" ]]; then
     fi
     echo "[SETUP] Program compiled successfully!"
 else
-    echo "[WARN] No main.c found in project root. Skipping program compilation."
+    echo "[WARN] No openssl_benchmark.c found in project root. Skipping program compilation."
 fi
 
 # ===== Summary =====
