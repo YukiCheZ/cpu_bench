@@ -98,7 +98,7 @@ def run_setup_for_benchmark(bench_name: str, bench_path: Path, overrides) -> boo
         if param_str:
             log(f"[INFO] Setup parameters applied: {param_str}")
 
-    log(f"[INFO] Running setup for {bench_name}: {cmd}")
+    log(f"=============== Running setup for {bench_name}: {cmd} ===============")
     try:
         process = subprocess.Popen(
             cmd,

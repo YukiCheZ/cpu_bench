@@ -2,15 +2,17 @@
 name: cockroachdb_benchmark
 type: macrobenchmark
 language: Go
-setup: source setup.sh
 domain:
   - database
   - transactions
   - performance
   - distributed_systems
 
+setup: 
+  command: ./setup.sh
+
 workloads:
-  - name: cockroachdb_kv
+  - name: kv
     description: >
       Benchmark for CockroachDB using the built-in "workload kv" runner.
       This workload launches a single-node CockroachDB cluster locally,
@@ -29,7 +31,7 @@ workloads:
         default: ""
       max-ops:
         description: Maximum number of operations to run PER CORE
-        default: 2000000
+        default: 1200000
       kv:
         description: KV read percentage (must be 0, 50, or 95)
         default: 50
@@ -37,7 +39,7 @@ workloads:
         description: Number of threads (sets GOMAXPROCS for CockroachDB process)
         default: 1
 
-  - name: cockroachdb_tpcc
+  - name: tpcc
     description: >
       Benchmark for CockroachDB using the built-in "workload tpcc" runner.
       This workload launches a single-node CockroachDB cluster locally,
@@ -56,7 +58,7 @@ workloads:
         default: ""
       max-ops:
         description: Maximum number of operations to run per thread
-        default: 40000
+        default: 30000
       warehouses:
         description: Number of warehouses for TPCC data per thread (larger -> more data)
         default: 1

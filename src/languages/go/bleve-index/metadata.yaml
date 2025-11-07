@@ -1,5 +1,5 @@
 # metadata.yaml for bleve-index benchmark
-name: bleve_index_benchmark
+name: bleve_benchmark
 type: macrobenchmark
 language: Go
 domain:
@@ -8,23 +8,26 @@ domain:
   - information_retrieval
   - performance
 
+setup:
+  command: ./setup.sh
+
 workloads:
   - name: bleve-index
     description: >
       Benchmark for the Bleve full-text indexing library. This workload generates
       synthetic articles with randomized text using a Zipf distribution, indexes them
       into an in-memory Bleve index in configurable batch sizes.
-    command: go run src/main.go src/word.go
+    command: go run src/main.go src/words.go
     parameters:
       documents:
         description: Number of documents (articles) to generate and index
-        default: 50000
+        default: 4000
       batch-size:
         description: Number of index requests per batch
-        default: 256
+        default: 64
       iterations:
         description: Number of timed benchmark iterations
-        default: 10
+        default: 50
       warmup:
         description: Run one warmup iteration before timing
         type: boolean

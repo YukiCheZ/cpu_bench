@@ -1,4 +1,3 @@
-// igor.go
 package main
 
 import (
@@ -24,9 +23,9 @@ var (
 )
 
 func init() {
-	flag.IntVar(&batchSize, "batch-size", 256, "number of index requests to batch together")
-	flag.IntVar(&documents, "documents", 50000, "number of documents to index")
-	flag.IntVar(&iterations, "iterations", 10, "number of benchmark iterations")
+	flag.IntVar(&batchSize, "batch-size", 64, "number of index requests to batch together")
+	flag.IntVar(&documents, "documents", 4000, "number of documents to index")
+	flag.IntVar(&iterations, "iterations", 50, "number of benchmark iterations")
 	flag.BoolVar(&warmup, "warmup", true, "run one warmup iteration before benchmark")
 	flag.IntVar(&threads, "threads", 1, "number of threads (GOMAXPROCS), 0 = auto")
 }
@@ -99,23 +98,52 @@ func main() {
 
 	zipf = rand.NewZipf(rnd, 1.1, 1, uint64(len(commonWords)-1))
 
-	articles := generateRandomArticles(documents)
+	// Generate a single base set of articles
+	baseArticles := generateRandomArticles(documents)
 
-	// Warmup
+	// Warmup using the base articles
 	if warmup {
-		_ = runIndexBenchmark(articles, batchSize)
+		fmt.Println("[INFO] Running warmup iteration...")
+		_ = runIndexBenchmark(baseArticles, batchSize)
+		fmt.Println("[INFO] Warmup iteration completed.")
 	}
 
-	// Benchmark iterations
+	// Benchmark: start 'threads' goroutines, each runs 'iterations' times
 	var total time.Duration
-	for iter := 1; iter <= iterations; iter++ {
-		start := time.Now()
-		if err := runIndexBenchmark(articles, batchSize); err != nil {
-			panic(fmt.Sprintf("[ERROR] iteration %d index error: %v", iter, err))
-		}
-		elapsed := time.Since(start)
-		total += elapsed
+	errCh := make(chan error, threads)
+	doneCh := make(chan time.Duration, threads)
+
+	startOverall := time.Now()
+
+	for t := 0; t < threads; t++ {
+		go func(threadID int) {
+			threadStart := time.Now()
+			// Make a shallow copy for this thread
+			articlesCopy := make([]blevebench.Article, len(baseArticles))
+			copy(articlesCopy, baseArticles)
+
+			for iter := 1; iter <= iterations; iter++ {
+				if err := runIndexBenchmark(articlesCopy, batchSize); err != nil {
+					errCh <- fmt.Errorf("thread %d iteration %d: %w", threadID, iter, err)
+					return
+				}
+			}
+			elapsed := time.Since(threadStart)
+			doneCh <- elapsed
+		}(t)
 	}
 
-	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", total.Seconds())
+	// Wait for all threads
+	for t := 0; t < threads; t++ {
+		select {
+		case err := <-errCh:
+			panic(fmt.Sprintf("[ERROR] %v", err))
+		case elapsed := <-doneCh:
+			total += elapsed
+		}
+	}
+
+	elapsedOverall := time.Since(startOverall)
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", elapsedOverall.Seconds())
 }
+

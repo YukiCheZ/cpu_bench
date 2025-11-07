@@ -39,7 +39,7 @@ func init() {
 	flag.StringVar(&cliCfg.host, "host", "localhost", "hostname of cockroachdb server")
 	flag.StringVar(&cliCfg.cockroachdbBin, "cockroachdb-bin", "./bin/cockroach", "path to cockroachdb binary")
 	flag.StringVar(&cliCfg.tmpDir, "tmp", "", "path to temporary directory")
-	flag.IntVar(&cliCfg.maxOps, "max-ops", 40000, "maximum number of operations to run per thread")
+	flag.IntVar(&cliCfg.maxOps, "max-ops", 30000, "maximum number of operations to run per thread")
 	flag.IntVar(&cliCfg.warehouses, "warehouses", 1, "number of warehouses for TPCC data per thread (larger -> more data)")
 	flag.IntVar(&cliCfg.concurrency, "concurrency", 200, "Number of concurrent workers (concurrency param passed to tpcc)")
 	flag.IntVar(&cliCfg.procsPerInst, "threads", 1, "number of threads (GOMAXPROCS) for CockroachDB instance")

@@ -103,7 +103,7 @@ benchmarks:
     path: src/languages/go/biogo
     num: 2
 
-  - name: bleve-index
+  - name: bleve_benchmark
     path: src/languages/go/bleve-index
     num: 1
 

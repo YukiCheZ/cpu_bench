@@ -37,7 +37,7 @@ func init() {
 	flag.StringVar(&cliCfg.host, "host", "localhost", "hostname of cockroachdb server")
 	flag.StringVar(&cliCfg.cockroachdbBin, "cockroachdb-bin", "./bin/cockroach", "path to cockroachdb binary")
 	flag.StringVar(&cliCfg.tmpDir, "tmp", "", "path to temporary directory")
-	flag.IntVar(&cliCfg.maxOps, "max-ops", 2000000, "Maximum number of operations to run PER CORE")
+	flag.IntVar(&cliCfg.maxOps, "max-ops", 1200000, "Maximum number of operations to run PER CORE")
 	flag.IntVar(&cliCfg.readPercent, "kv", 50, "KV read percentage to run (0,50,95)")
 	flag.IntVar(&cliCfg.procsPerInst, "threads", 1, "Number of threads (GOMAXPROCS) for CockroachDB instance")
 }
