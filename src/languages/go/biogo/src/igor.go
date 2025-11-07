@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"biogo/biogo-examples/igor/igor"
@@ -25,11 +26,11 @@ var (
 )
 
 func init() {
-	flag.IntVar(&seqCount, "seq", 1000000, "number of sequences (hits) to generate")
+	flag.IntVar(&seqCount, "seq", 100000, "number of sequences (hits) to generate")
 	flag.IntVar(&maxPos, "maxpos", 100000, "maximum sequence position")
 	flag.IntVar(&hitLen, "hitlen", 1000, "hit length")
-	flag.IntVar(&threads, "threads", 1, "number of threads (GOMAXPROCS), 0 = auto")
-	flag.IntVar(&iterations, "iterations", 50, "number of benchmark iterations")
+	flag.IntVar(&threads, "threads", 1, "number of benchmark replicas (each runs in one goroutine)")
+	flag.IntVar(&iterations, "iterations", 120, "number of benchmark iterations per replica")
 	flag.BoolVar(&warmup, "warmup", true, "run one warmup iteration before benchmark")
 }
 
@@ -40,8 +41,8 @@ func generateRandomGFF(n, maxPos, hitLen int) string {
 		if hitLen >= maxPos {
 			hitLen = maxPos / 2
 		}
-		start := 1 + rand.Intn(maxPos-hitLen+1) // 1-based
-		end := start + hitLen - 1               // end >= start
+		start := 1 + rand.Intn(maxPos-hitLen+1)
+		end := start + hitLen - 1
 		targetStart := 1 + rand.Intn(maxPos-hitLen+1)
 		targetEnd := targetStart + hitLen - 1
 
@@ -51,9 +52,41 @@ func generateRandomGFF(n, maxPos, hitLen int) string {
 	return buf.String()
 }
 
+func runBenchmark(replicaID int, gffData string) time.Duration {
+	var total time.Duration
+	for iter := 1; iter <= iterations; iter++ {
+		start := time.Now()
+
+		reader := gff.NewReader(bytes.NewReader([]byte(gffData)))
+		var pf pals.PairFilter
+		piles, err := igor.Piles(reader, 0, pf)
+		if err != nil {
+			panic(fmt.Sprintf("[replica %d][iter %d] piling error: %v", replicaID, iter, err))
+		}
+		_, clusters := igor.Cluster(piles, igor.ClusterConfig{
+			BandWidth:         0.5,
+			RequiredCover:     0.95,
+			OverlapStrictness: 0,
+			OverlapThresh:     0.95,
+			Procs:             1, 
+		})
+		cc := igor.Group(clusters, igor.GroupConfig{
+			PileDiff:  0.05,
+			ImageDiff: 0.05,
+			Classic:   false,
+		})
+
+		var out bytes.Buffer
+		_ = igor.WriteJSON(cc, &out)
+		elapsed := time.Since(start)
+		total += elapsed
+	}
+	return total
+}
+
 func main() {
 	flag.Parse()
-	
+
 	const seed = 42
 	rand.Seed(seed)
 
@@ -62,11 +95,12 @@ func main() {
 	}
 	runtime.GOMAXPROCS(threads)
 
-	// Generate GFF data in memory once
+	// Generate GFF data once (shared)
 	gffData := generateRandomGFF(seqCount, maxPos, hitLen)
 
 	// Warmup
 	if warmup {
+		fmt.Println("[INFO] Running warmup...")
 		reader := gff.NewReader(bytes.NewReader([]byte(gffData)))
 		var pf pals.PairFilter
 		piles, err := igor.Piles(reader, 0, pf)
@@ -78,7 +112,7 @@ func main() {
 			RequiredCover:     0.95,
 			OverlapStrictness: 0,
 			OverlapThresh:     0.95,
-			Procs:             threads,
+			Procs:             1,
 		})
 		_ = igor.Group(clusters, igor.GroupConfig{
 			PileDiff:  0.05,
@@ -87,35 +121,28 @@ func main() {
 		})
 	}
 
-	// Benchmark iterations
-	var totalTime time.Duration
-	for iter := 1; iter <= iterations; iter++ {
-		start := time.Now()
+	// Launch multiple replicas in parallel
+	var wg sync.WaitGroup
+	results := make([]time.Duration, threads)
+	startAll := time.Now()
 
-		reader := gff.NewReader(bytes.NewReader([]byte(gffData)))
-		var pf pals.PairFilter
-		piles, err := igor.Piles(reader, 0, pf)
-		if err != nil {
-			panic(fmt.Sprintf("[INFO] iteration %d piling error: %v", iter, err))
-		}
-		_, clusters := igor.Cluster(piles, igor.ClusterConfig{
-			BandWidth:         0.5,
-			RequiredCover:     0.95,
-			OverlapStrictness: 0,
-			OverlapThresh:     0.95,
-			Procs:             threads,
-		})
-		cc := igor.Group(clusters, igor.GroupConfig{
-			PileDiff:  0.05,
-			ImageDiff: 0.05,
-			Classic:   false,
-		})
-
-		var out bytes.Buffer
-		_ = igor.WriteJSON(cc, &out)
-		elapsed := time.Since(start)
-		totalTime += elapsed
+	for i := 0; i < threads; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			results[id] = runBenchmark(id, gffData)
+		}(i)
 	}
 
-	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", totalTime.Seconds())
+	wg.Wait()
+	totalElapsed := time.Since(startAll)
+
+	// Combine results
+	var total time.Duration
+	for _, t := range results {
+		total += t
+	}
+
+	fmt.Printf("[INFO] %d replicas finished.\n", threads)
+	fmt.Printf("[RESULT] Total elapsed time: %.4f s\n", totalElapsed.Seconds())
 }

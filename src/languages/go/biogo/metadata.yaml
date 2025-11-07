@@ -8,6 +8,9 @@ domain:
   - clustering
   - sequence
 
+setup:
+  command: ./setup.sh
+
 workloads:
   - name: biogo-igor
     description: >
@@ -17,7 +20,7 @@ workloads:
     parameters:
       seq:
         description: Number of sequences (hits) to generate for the benchmark
-        default: 1000000
+        default: 100000
       maxpos:
         description: Maximum sequence position in the generated sequences
         default: 100000
@@ -26,9 +29,9 @@ workloads:
         default: 1000
       iterations:
         description: Number of benchmark iterations
-        default: 50
+        default: 120
       threads:
-        description: Number of parallel threads (sets GOMAXPROCS)
+        description: Number of parallel copies to run (each uses one goroutine)
         default: 1
       warmup:
         description: Whether to run one warmup iteration before benchmark

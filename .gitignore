@@ -10,3 +10,8 @@
 **/bin
 **/target
 *.csv
+
+**/vendor
+**/go.mod
+**/go.sum
+**/.deps_vendored
