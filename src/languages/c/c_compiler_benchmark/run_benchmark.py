@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--compiler", default="gcc", choices=["gcc", "clang"])
-parser.add_argument("--opt", default="-O3", choices=["-O0", "-O1", "-O2", "-O3", "-Ofast"])
+parser.add_argument("--opt", default="O3", choices=["O0", "O1", "O2", "O3", "Ofast"])
 parser.add_argument("--src_dir", default="./data/src")
 parser.add_argument("--threads", type=int, default=1)
 parser.add_argument("--iters", type=int, default=1)
@@ -28,10 +28,10 @@ def compile_copy(copy_id, iters, warmup=1):
     start = time.time()
     try:
         for _ in range(warmup):
-            cmd = [args.compiler, args.opt, "-pthread"] + src_files + ["-o", bin_file, "-lm"]
+            cmd = [args.compiler, f"-{args.opt}", "-pthread"] + src_files + ["-o", bin_file, "-lm"]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         for _ in range(iters):
-            cmd = [args.compiler, args.opt, "-pthread"] + src_files + ["-o", bin_file, "-lm"]
+            cmd = [args.compiler, f"-{args.opt}", "-pthread"] + src_files + ["-o", bin_file, "-lm"]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     finally:
         if os.path.exists(bin_file):
@@ -39,7 +39,7 @@ def compile_copy(copy_id, iters, warmup=1):
     end = time.time()
     return end - start
 
-print(f"[INFO] Compiler: {args.compiler} {args.opt}")
+print(f"[INFO] Compiler: {args.compiler} -{args.opt}")
 print(f"[INFO] Threads: {args.threads}, Iters: {args.iters}, Sources: {len(src_files)}")
 
 print("[INFO] Starting benchmark ...")
