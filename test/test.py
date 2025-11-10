@@ -6,9 +6,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent              
 PROJECT_ROOT = ROOT.parent                          
-RUN_CPU = PROJECT_ROOT / "scripts" / "run_cpu_env.py"
-LOG_DIR = ROOT / "log"
-RES_DIR = ROOT / "res"
+RUN_CPU = PROJECT_ROOT / "scripts" / "run_cpu_perf.py"
+LOG_DIR = ROOT / "log_perf"
+RES_DIR = ROOT / "res_perf"
 
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 RES_DIR.mkdir(parents=True, exist_ok=True)
@@ -57,13 +57,16 @@ workloads_sets = {
         "kafka_benchmark.kafka_producer_perf",
     ],
     "test": [
-        # "tuf_benchmark.tuf-metadata", "raytrace.raytrace",
-        # "transformer_inference.transformer_inference",
+        # "tuf_benchmark.tuf-metadata",
+        "raytrace.raytrace",
+        "transformer_inference.transformer_inference",
         # "bert_cpu.bert_eval", "resnet50_cpu.resnet50_inference",
         # "resnet50_cpu.resnet50_training", "pyflate.pyflate",
 
-        # "redis_benchmark.redis-benchmark", "ffmpeg_benchmark.ffmpeg",
-        # "openssl_benchmark.openssl", "zstd_benchmark.zstd",
+        # "redis_benchmark.redis-benchmark", 
+        "ffmpeg_benchmark.ffmpeg",
+        # "openssl_benchmark.openssl", 
+        "zstd_benchmark.zstd",
         # "c_compiler_benchmark.gcc_compile", "c_compiler_benchmark.clang_compile", 
         
         "rocksdb_benchmark.rocksdb_cpu", 
@@ -109,15 +112,19 @@ c_opt_env_params = [
 
 # 2
 c_data_augmentation_params = [
+    "transformer_inference.transformer_inference.data.batch_size=4",
+    "raytrace.raytrace.workload.width=2048",
+    "raytrace.raytrace.workload.height=2048",
+
     # "c_compiler_benchmark.gcc_compile.data.func_size=100",
     # "c_compiler_benchmark.clang_compile.data.func_size=100",
-    # "ffmpeg_benchmark.ffmpeg.data.duration=240",
+    "ffmpeg_benchmark.ffmpeg.data.duration=240",
     # "lapack_benchmark.lapack_solve.workload.size=1024",
     # "lapack_benchmark.lapack_eigen.workload.size=1024",
     # "lapack_benchmark.lapack_svd.workload.size=1024",
     # "openssl_benchmark.openssl.data.size=25",
     # "redis_benchmark.redis-benchmark.workload.requests=2000000",
-    # "zstd_benchmark.zstd.data.size=25"
+    "zstd_benchmark.zstd.data.size=25",
 
     "rocksdb_benchmark.rocksdb_cpu.workload.num=2000000",
     "opencv_benchmark.background_sub.workload.size=540",
@@ -199,8 +206,8 @@ python_opt_params = [
 ]
 
 param_sets = {
-    "ex_p": [],
-    "ex_p2": c_data_augmentation_params,
+    "p": [],
+    "p2": c_data_augmentation_params,
     "ex_p3": c_compiler_env_params,
     "ex_p4": c_opt_env_params,
     "ex_p5": c_threads_param,
@@ -218,22 +225,22 @@ param_sets = {
 }
 
 pairs = [
-    ("test",        "ex_p", True),
-    ("test",        "ex_p2", True),
-    ("cpp_test",    "ex_p3", True),
-    ("cpp_test",    "ex_p4", True),
-    ("test",        "ex_p5", True),
-    ("cpp_test",    "ex_p23", True),
-    ("cpp_test",    "ex_p24", True),
-    ("test",        "ex_p25", True),
-    ("cpp_test",    "ex_p34", True),
-    ("cpp_test",    "ex_p35", True),
-    ("cpp_test",    "ex_p45", True),
-    ("cpp_test",    "ex_p234", True),
-    ("cpp_test",    "ex_p235", True),
-    ("cpp_test",    "ex_p245", True),
-    ("cpp_test",    "ex_p345", True),
-    ("cpp_test",    "ex_p2345", True)
+    ("test",        "p", True),
+    ("test",        "p2", True),
+    # ("test",        "ex_p3", True),
+    # ("test",        "ex_p4", True),
+    # ("test",        "ex_p5", True),
+    # ("test",        "ex_p23", True),
+    # ("test",        "ex_p24", True),
+    # ("test",        "ex_p25", True),
+    # ("test",        "ex_p34", True),
+    # ("test",        "ex_p35", True),
+    # ("test",        "ex_p45", True),
+    # ("test",        "ex_p234", True),
+    # ("test",        "ex_p235", True),
+    # ("test",        "ex_p245", True),
+    # ("test",        "ex_p345", True),
+    # ("test",        "ex_p2345", True),
 ]
 
 # param_sets = {
@@ -307,6 +314,7 @@ def run_workloads_set(tag: str, workloads: list[str], params: list[str], setup_e
         "--verbose",
         "--out", str(result_file),
         "--log", str(log_file),
+        "--use-perf"
     ]
 
     if setup_env:

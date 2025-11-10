@@ -3,6 +3,7 @@
 **/.vscode
 **/build
 **/*.log
+**/*.out
 **/.DS_Store
 **/.env
 **/.idea
