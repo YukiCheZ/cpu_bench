@@ -27,7 +27,6 @@ public class GuavaCPUBenchmark {
         List<Integer> keys = generator.generateSequentialKeys(dataSize);
 
         Runnable task = () -> {
-            long start = System.nanoTime();
             switch (mode) {
                 case "collection":
                     GuavaWorkloads.runCollectionTask(dataset, iterations);
@@ -41,15 +40,14 @@ public class GuavaCPUBenchmark {
                 default:
                     throw new IllegalArgumentException("Unknown mode: " + mode);
             }
-            long end = System.nanoTime();
-            System.out.printf("[%s] Time: %.2f ms%n",
-                    Thread.currentThread().getName(), (end - start) / 1e6);
         };
 
+        System.out.println("Running Guava CPU Benchmark in mode: " + mode);
         // Warm-up
         task.run();
 
         // Parallel execution
+        long start = System.nanoTime();
         List<Future<?>> futures = new ArrayList<>();
         for (int i = 0; i < copies; i++) {
             futures.add(pool.submit(task));
@@ -57,5 +55,9 @@ public class GuavaCPUBenchmark {
 
         for (Future<?> f : futures) f.get();
         pool.shutdown();
+
+        long end = System.nanoTime();
+        double totalTimeSec = (end - start) / 1_000_000_000.0;
+        System.out.println("[RESULT] Total elapsed time: " + totalTimeSec + " s");
     }
 }

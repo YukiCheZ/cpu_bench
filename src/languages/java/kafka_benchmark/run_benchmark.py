@@ -7,7 +7,9 @@ import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 # ================= Default Configuration =================
-KAFKA_HOME = "./bin/kafka_2.13-3.8.0"
+KAFKA_VERSION = "3.8.0"
+SCALA_VERSION = "2.13"
+KAFKA_HOME = f"./bin/kafka_{SCALA_VERSION}-{KAFKA_VERSION}"
 TOPIC = "perf-test"
 NUM_PARTITIONS = 12
 THROUGHPUT = -1
@@ -20,7 +22,11 @@ KAFKA_LOG_DIR = Path(KAFKA_HOME + "/logs")
 RAMDISK_DIR.mkdir(parents=True, exist_ok=True)
 TMP_DIR.mkdir(parents=True, exist_ok=True)
 
-os.environ["JAVA_OPTS"] = f"-Djava.io.tmpdir={TMP_DIR}"
+os.environ["JAVA_OPTS"] = (
+    f"-Djava.io.tmpdir={TMP_DIR} "
+    f"-XX:ActiveProcessorCount=1 "
+    f"-XX:+UseSerialGC"
+)
 
 # ================= Helper Function =================
 def run_cmd(cmd, ignore_output=True):
@@ -59,6 +65,7 @@ def stop_kafka():
     run_cmd(f"{KAFKA_HOME}/bin/zookeeper-server-stop.sh")
     time.sleep(2)
 
+    print("[INFO] Cleaning up log directories...")
     for d in [RAMDISK_DIR, TMP_DIR, KAFKA_LOG_DIR]:
         for item in d.iterdir():
             if item.is_file():
@@ -81,8 +88,9 @@ def create_topic():
         run_cmd(cmd_create)
         time.sleep(2)
 
-# ================= Single Producer Task =================
-def producer_task(records, record_size):
+# ================= Worker Process Task =================
+def producer_worker(records, record_size, iters, core_id=None):
+
     cmd = (
         f"{KAFKA_HOME}/bin/kafka-producer-perf-test.sh "
         f"--topic {TOPIC} "
@@ -91,15 +99,27 @@ def producer_task(records, record_size):
         f"--throughput {THROUGHPUT} "
         f"--producer-props bootstrap.servers=localhost:9092 acks=0 compression.type=none"
     )
-    return run_cmd(cmd)
 
-# ================= Producer Test with Process Pool =================
-def run_producer_test(num_records, record_size, num_threads):
+    if core_id is not None:
+        cmd = f"taskset -c {core_id} {cmd}"
+
+    for i in range(iters):
+        ret = run_cmd(cmd)
+        if ret != 0:
+            print(f"[ERROR] Producer on core {core_id} failed at iteration {i+1}")
+    return 0
+
+# ================= Producer Test =================
+def run_producer_test(num_records, record_size, num_threads, iters):
     records_per_thread = num_records // num_threads
+    cpu_count = os.cpu_count() or 1
     futures = []
+
     with ProcessPoolExecutor(max_workers=num_threads) as executor:
-        for _ in range(num_threads):
-            futures.append(executor.submit(producer_task, records_per_thread, record_size))
+        for i in range(num_threads):
+            core_id = i % cpu_count
+            futures.append(executor.submit(producer_worker, records_per_thread, record_size, iters, core_id))
+
         for future in as_completed(futures):
             result = future.result()
             if result != 0:
@@ -107,41 +127,42 @@ def run_producer_test(num_records, record_size, num_threads):
 
 # ================= Benchmark Runner =================
 def benchmark(num_records, record_size, num_threads, iters, warmup):
+    print(f"[INFO] Starting benchmark: {num_records} records, {record_size} bytes each, {num_threads} threads, {iters} iterations")
+
     if warmup:
         print("[INFO] Running warmup...")
-        start_time = time.perf_counter()
-        run_producer_test(1000000, record_size, num_threads)
-        end_time = time.perf_counter()
-    total_time = 0
-    for i in range(1, iters + 1):
-        start_time = time.perf_counter()
-        run_producer_test(num_records, record_size, num_threads)
-        end_time = time.perf_counter()
-        total_time += end_time - start_time
-    print(f"[RESULT] Total runtime: {total_time:.3f}s\n")
+        run_producer_test(1000000, record_size, num_threads, 1)
+        print(f"[INFO] Warmup completed")
+
+    print("[INFO] Running main benchmark...")
+    start_time = time.perf_counter()
+    run_producer_test(num_records, record_size, num_threads, iters)
+    end_time = time.perf_counter()
+    elapsed = end_time - start_time
+    print(f"[RESULT] Total elapsed time: {elapsed:.4f} s")
 
 # ================= Main Function =================
 def main():
     parser = argparse.ArgumentParser(description="Kafka CPU Benchmark Script")
-    parser.add_argument("--num-records", type=int, default=4000000000, help="Number of records to produce")
+    parser.add_argument("--num-records", type=int, default=1400000000, help="Number of records to produce")
     parser.add_argument("--record-size", type=int, default=1, help="Size of each record in bytes")
-    parser.add_argument("--threads", type=int, default=1, help="Number of producer threads")
-    parser.add_argument("--iters", type=int, default=1, help="Number of benchmark iterations")
-    parser.add_argument("--warmup", action="store_true", help="Run a warmup iteration before benchmarking")
+    parser.add_argument("--threads", type=int, default=1, help="Number of producer threads (mapped to processes)")
+    parser.add_argument("--iters", type=int, default=1, help="Number of benchmark iterations per thread")
+    parser.add_argument("--warmup", action="store_false", help="Run a warmup iteration before benchmarking")
 
     args = parser.parse_args()
 
-    print("=== Kafka CPU Benchmark Start ===")
+    print("[INFO] Kafka CPU Benchmark Start")
     start_kafka()
     try:
         create_topic()
         benchmark(args.num_records, args.record_size, args.threads, args.iters, args.warmup)
     except Exception as e:
-        print(f"[FATAL] Benchmark aborted due to error: {e}")
-        raise   
+        print(f"[ERROR] Benchmark aborted due to error: {e}")
+        raise
     finally:
         stop_kafka()
-        print("=== Kafka CPU Benchmark Finished ===")
+        print("[INFO] Kafka CPU Benchmark Finished")
 
 if __name__ == "__main__":
     main()

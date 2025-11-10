@@ -65,13 +65,13 @@ GUAVA_JAR="guava-33.4.8-jre.jar"
 
 mkdir -p "$BIN_DIR"
 
-echo "[Build] Compiling Java sources..."
+echo "[INFO] Compiling Java sources..."
 find $SRC_DIR -name "*.java" > sources.txt
 javac -cp "$GUAVA_JAR" -d "$BIN_DIR" @sources.txt
 rm sources.txt
 
-echo "[Run] Starting benchmark"
-echo "Mode: $MODE, Data size: $DATASIZE, Copies: $COPIES, Iterations per copy: $ITERATIONS"
+echo "[INFO] Starting benchmark"
+echo "[INFO] Mode: $MODE, Data size: $DATASIZE, Copies: $COPIES, Iterations per copy: $ITERATIONS"
 
 JVM_MIXED_OPTS="
   -Xms8g -Xmx8g \

@@ -5,7 +5,7 @@ import numpy as np
 
 def main():
     parser = argparse.ArgumentParser(description="Generate data for KMeans benchmark")
-    parser.add_argument("--samples", type=int, default=100000, help="Number of samples")
+    parser.add_argument("--samples", type=int, default=10000, help="Number of samples")
     parser.add_argument("--features", type=int, default=100, help="Number of features")
     parser.add_argument("--output", type=str, default="./data", help="Output directory")
     args = parser.parse_args()

@@ -4,15 +4,15 @@ import csv
 import re
 from collections import defaultdict
 
-INPUT_DIR = "res"
-OUTPUT_FILE = "merged_results.csv"
+INPUT_DIR = "res_c"
+OUTPUT_FILE = "merged_results_c.csv"
 
 def extract_tag(filename):
     """
     Extracts a short tag from filename.
     Example: results_p2_2025-10-22_17-33-26.csv -> 'p2'
     """
-    match = re.search(r"results_([^_]+)_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.csv", filename)
+    match = re.search(r"results_c_([^_]+)_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.csv", filename)
     if match:
         return match.group(1)
     return os.path.splitext(filename)[0]

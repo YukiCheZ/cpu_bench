@@ -6,35 +6,33 @@ domain:
   - messaging
   - streaming
 
+setup:
+  command: ./setup.sh
+
 workloads:
-  - name: kafka-producer-perf
+  - name: kafka_producer_perf
     description: >
       Run Kafka producer performance benchmark to evaluate CPU under
       high-throughput message publishing workloads. It uses the official
       Kafka performance test tool (`kafka-producer-perf-test.sh`) launched
       in parallel via Python process pool.
-
-    setup:
-      command: ./setup.sh
-
-    run:
-      command: python3 run_benchmark.py
-      parameters:
-        num-records:
-          description: Total number of records to produce across all threads
-          default: 4000000000
-        record-size:
-          description: Size of each record in bytes
-          default: 1
-        threads:
-          description: Number of producer threads (parallel producers)
-          default: 1
-        iters:
-          description: Number of benchmark iterations
-          default: 1
-        warmup:
-          description: Run a warmup iteration before benchmarking
-          default: false
+    command: python3 run_benchmark.py
+    parameters:
+      num-records:
+        description: Total number of records to produce across all threads
+        default: 1400000000
+      record-size:
+        description: Size of each record in bytes
+        default: 1
+      threads:
+        description: Number of producer threads (parallel producers)
+        default: 1
+      iters:
+        description: Number of benchmark iterations
+        default: 1
+      warmup:
+        description: Run a warmup iteration before benchmarking
+        default: true
 
 characteristics:
   IO_effects: high

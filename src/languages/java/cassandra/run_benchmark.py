@@ -7,7 +7,9 @@ import re
 import argparse
 import multiprocessing
 
-CASSANDRA_DIR = "./bin/apache-cassandra-4.0.18/"
+
+CASSANDRA_VERSION = "4.0.18"
+CASSANDRA_DIR = f"./bin/apache-cassandra-{CASSANDRA_VERSION}/"
 CASSANDRA_BIN = os.path.join(CASSANDRA_DIR, "bin/cassandra")
 NODETOOL_BIN = os.path.join(CASSANDRA_DIR, "bin/nodetool")
 STRESS_BIN = os.path.join(CASSANDRA_DIR, "tools/bin/cassandra-stress")
@@ -71,17 +73,17 @@ def clean_data_logs():
 def main():
     parser = argparse.ArgumentParser(description="Cassandra CPU Benchmark")
     parser.add_argument("--write-n", type=int, default=2000000, help="Total operations for write test")
-    parser.add_argument("--write-threads", type=int, default=50, help="Number of threads for write test")
+    parser.add_argument("--write-threads", type=int, default=128, help="Number of threads for write test")
     parser.add_argument("--read-n", type=int, default=2000000, help="Total operations for read test")
-    parser.add_argument("--read-threads", type=int, default=50, help="Number of threads for read test")
-    parser.add_argument("--cpu-count", type=int, default=None, help="Limit number of CPU cores to use")
-    parser.add_argument("--iters", type=int, default=100, help="Number of iterations for read test")
+    parser.add_argument("--read-threads", type=int, default=128, help="Number of threads for read test")
+    parser.add_argument("--threads", type=int, default=1, help="Limit number of CPU cores to use by client")
+    parser.add_argument("--iters", type=int, default=25, help="Number of iterations for read test")
     args = parser.parse_args()
 
-    # Automatically select CPU cores if cpu-count is specified
-    if args.cpu_count:
+    # Automatically select CPU cores if threads is specified
+    if args.threads > 0:
         available_cores = list(range(multiprocessing.cpu_count()))
-        selected_cores = ",".join(str(c) for c in available_cores[:args.cpu_count])
+        selected_cores = ",".join(str(c) for c in available_cores[:args.threads])
         taskset_prefix = f"taskset -c {selected_cores} "
     else:
         taskset_prefix = ""
@@ -90,21 +92,22 @@ def main():
         start_cassandra()
 
         # Run write test (not timed, output ignored)
-        print("[INFO] Starting write test...")
+        print(f"[INFO] Starting write {args.write_n} records, preparing data...")
         write_cmd = f"{STRESS_BIN} write n={args.write_n} -rate threads={args.write_threads}"
         run_cassandra_stress(write_cmd, n_ops=args.write_n)
+        print("[INFO] Write completed.")
 
         # Run read test (timed, multiple iterations)
         total_elapsed = 0.0
-        print(f"[INFO] Starting read tests ({args.iters} iterations)...")
+        print(f"[INFO] Starting read tests: {args.read_n} records, {args.iters} iterations...")
         for i in range(args.iters):
             read_cmd = f"{taskset_prefix}{STRESS_BIN} read n={args.read_n} -rate threads={args.read_threads}"
             elapsed = run_cassandra_stress(read_cmd, n_ops=args.read_n)
             total_elapsed += elapsed
-        print(f"[RESULT] Total read test time: {total_elapsed:.2f} seconds")
+        print(f"[RESULT] Total elapsed time: {total_elapsed:.4f} s")
 
     except RuntimeError as e:
-        print(f"[FATAL] Benchmark failed: {e}")
+        print(f"[ERROR] Cassandra-stress benchmark failed: {e}")
         sys.exit(1)
     finally:
         stop_cassandra()
