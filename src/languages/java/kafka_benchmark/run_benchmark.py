@@ -4,6 +4,7 @@ import time
 import os
 from pathlib import Path
 import argparse
+import socket
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 # ================= Default Configuration =================
@@ -40,6 +41,19 @@ def run_cmd(cmd, ignore_output=True):
         return result.returncode
 
 # ================= Kafka Control =================
+def wait_for_kafka_ready(host="localhost", port=9092, timeout=30):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            with socket.create_connection((host, port), timeout=1):
+                print(f"[INFO] Kafka broker is ready at {host}:{port}")
+                return True
+        except OSError:
+            time.sleep(1)
+    print(f"[ERROR] Kafka broker not ready after {timeout} seconds.")
+    return False
+
+
 def start_kafka():
     print("[INFO] Starting Zookeeper...")
     run_cmd(f"{KAFKA_HOME}/bin/zookeeper-server-start.sh -daemon {KAFKA_HOME}/config/zookeeper.properties")
@@ -55,7 +69,10 @@ def start_kafka():
         server_properties.write_text(content)
 
     run_cmd(f"{KAFKA_HOME}/bin/kafka-server-start.sh -daemon {server_properties}")
-    time.sleep(5)
+
+    print("[INFO] Waiting for Kafka to become ready...")
+    if not wait_for_kafka_ready("localhost", 9092, timeout=60):
+        raise RuntimeError("Kafka broker failed to start.")
 
 def stop_kafka():
     print("[INFO] Stopping Kafka Broker...")
