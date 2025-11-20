@@ -20,7 +20,7 @@ workloads:
     parameters:
       num-records:
         description: Total number of records to produce across all threads
-        default: 1400000000
+        default: 1000000000
       record-size:
         description: Size of each record in bytes
         default: 1
@@ -39,7 +39,7 @@ characteristics:
   single_machine: true
   network_effects: loopback_only
   cpu_bound: true
-  memory_intensive: low
+  memory_intensive: medium  
 
 tags:
   - kafka
