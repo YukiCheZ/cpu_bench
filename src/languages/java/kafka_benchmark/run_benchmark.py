@@ -6,6 +6,7 @@ import socket
 import shutil
 from pathlib import Path
 import argparse
+import socket
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 # ================= Default Configuration =================
@@ -55,6 +56,19 @@ def kill_process_by_pattern(pattern):
     subprocess.run(f"pkill -9 -f {pattern}", shell=True, stderr=subprocess.DEVNULL)
 
 # ================= Kafka Control =================
+def wait_for_kafka_ready(host="localhost", port=9092, timeout=30):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            with socket.create_connection((host, port), timeout=1):
+                print(f"[INFO] Kafka broker is ready at {host}:{port}")
+                return True
+        except OSError:
+            time.sleep(1)
+    print(f"[ERROR] Kafka broker not ready after {timeout} seconds.")
+    return False
+
+
 def start_kafka():
     print("[INFO] Configuring & Starting Zookeeper...")
     
