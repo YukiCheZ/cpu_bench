@@ -1,68 +1,134 @@
-# metadata.yaml for Guava CPU Benchmark
 name: guava_benchmark
-type: microbenchmark
+type: macrobenchmark
 language: Java
 domain:
   - software_development
 
-workloads:
-  - name: guava-collection
-    description: Benchmark filtering, hashing, sorting, and frequency counting using Guava collections
-    command: ./scripts/run_benchmark.sh --mode collection
-    parameters:
-      mode:
-        description: Execution mode (collection|immutable|cache)
-        default: collection
-      dataSize:
-        description: Size of dataset (number of integers)
-        default: 200000
-      copies:
-        description: Number of parallel worker threads
-        default: 1
-      iterations:
-        description: Iterations per worker
-        default: 10
+setup:
+  command: ./scripts/setup.sh
 
-  - name: guava-immutable
-    description: Benchmark immutable collections and BiMap inversion lookups
-    command: ./scripts/run_benchmark.sh --mode immutable
+# Updated workloads aligned with new runner (BenchmarkRunner) and script (run_benchmark.sh)
+workloads:
+  - name: guava-event
+    description: Event aggregation (Multimap + Multiset) with top-K frequency extraction and category hashing.
+    command: ./scripts/run_benchmark.sh --workload event
     parameters:
-      mode:
-        description: Execution mode (collection|immutable|cache)
-        default: immutable
+      workload:
+        description: Fixed workload identifier
+        default: event
       dataSize:
-        description: Size of dataset (number of integers)
-        default: 5000000
-      copies:
-        description: Number of parallel worker threads
+        description: Number of events generated (controls window & users)
+        default: 200000   
+      threads:
+        description: Parallel worker threads
         default: 1
       iterations:
-        description: Iterations per worker
-        default: 10
+        description: Per-thread iterations (batches processed)
+        default: 100000
+      warmupIterations:
+        description: Optional warmup iteration count (override heuristic)
+        default: 5
+      noWarmup:
+        description: Disable warmup when present
+        default: false
+
+  - name: guava-graph
+    description: Directed graph traversal (multi-source BFS, topological sort, cycle detection) using Guava Graph.
+    command: ./scripts.run_benchmark.sh --workload graph
+    parameters:
+      workload:
+        description: Fixed workload identifier
+        default: graph
+      dataSize:
+        description: Logical size factor (affects nodeCount ~ dataSize/50)
+        default: 400000  
+      threads:
+        description: Parallel worker threads
+        default: 1
+      iterations:
+        description: Per-thread iterations (full traversal cycles)
+        default: 15000 
+      warmupIterations:
+        description: Optional warmup iteration count
+        default: 5
+      noWarmup:
+        description: Disable warmup when present
+        default: false
+
+  - name: guava-bloom
+    description: Bloom filter insertion/query workload with chained hashing for CPU stress.
+    command: ./scripts/run_benchmark.sh --workload bloom
+    parameters:
+      workload:
+        description: Fixed workload identifier
+        default: bloom
+      dataSize:
+        description: Number of operations per iteration (also drives expected insertions)
+        default: 400000 
+      threads:
+        description: Parallel worker threads
+        default: 1
+      iterations:
+        description: Per-thread iterations
+        default: 2000 
+      warmupIterations:
+        description: Optional warmup iteration count
+        default: 5
+      noWarmup:
+        description: Disable warmup when present
+        default: false
 
   - name: guava-cache
-    description: Benchmark cache-like workload with random lookups and hash computations
-    command: ./scripts/run_benchmark.sh --mode cache
+    description: Custom concurrent cache simulation with hot/cold key distribution and hash-heavy value computation.
+    command: ./scripts/run_benchmark.sh --workload cache
     parameters:
-      mode:
-        description: Execution mode (collection|immutable|cache)
+      workload:
+        description: Fixed workload identifier
         default: cache
       dataSize:
-        description: Size of dataset (number of integers)
-        default: 1000000
-      copies:
-        description: Number of parallel worker threads
+        description: Keys accessed per iteration
+        default: 100000 
+      threads:
+        description: Parallel worker threads
         default: 1
       iterations:
-        description: Iterations per worker
-        default: 10
+        description: Per-thread iterations
+        default: 1000
+      warmupIterations:
+        description: Optional warmup iteration count
+        default: 5
+      noWarmup:
+        description: Disable warmup when present
+        default: false
+
+  - name: guava-immutable
+    description: Immutable snapshot diffs/intersections over large base arrays with hashing reductions.
+    command: ./scripts/run_benchmark.sh --workload immutable
+    parameters:
+      workload:
+        description: Fixed workload identifier
+        default: immutable
+      dataSize:
+        description: Size of base int array
+        default: 400000 
+      threads:
+        description: Parallel worker threads
+        default: 1
+      iterations:
+        description: Per-thread iterations
+        default: 33000
+      warmupIterations:
+        description: Optional warmup iteration count
+        default: 5
+      noWarmup:
+        description: Disable warmup when present
+        default: false
 
 characteristics:
-  IO_effects: false        # Purely in-memory computations
+  IO_effects: low        # Pure in-memory computations
   single_machine: true
   network_effects: false
-  cpu_bound: true            # Filtering, hashing, sorting, cache lookups
-  memory_bound: true         # Large datasets stored in memory for cache and immutable tasks
+  memory_bound: low   # Uses sizable arrays/maps but aims to limit peak footprint
 
 tags:
   - java
@@ -70,7 +136,8 @@ tags:
   - collections
   - hashing
   - cache
-  - microbenchmark
+  - graph
+  - bloomfilter
 
 dependencies:
   java: ">=11"

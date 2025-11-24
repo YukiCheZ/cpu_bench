@@ -57,7 +57,7 @@ benchmarks:
 
   - name: guava_benchmark
     path: src/languages/java/guava_benchmark
-    num: 3
+    num: 5
 
   - name: kafka_benchmark
     path: src/languages/java/kafka_benchmark
