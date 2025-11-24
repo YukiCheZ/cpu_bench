@@ -17,6 +17,6 @@
 **/go.sum
 **/.deps_vendored
 
-./test
+**/test
 **/log
 **/res
