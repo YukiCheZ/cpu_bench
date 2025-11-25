@@ -5,7 +5,17 @@ language: Java
 domain:
   - machine_learning
   - clustering
-  
+
+setup:
+  command: python3 setup.py
+  parameters:
+    maven_goal:
+      description: Maven goal to build the project
+      default: "-q -DskipTests clean package"
+    smile_version:
+      description: Version of the Smile library to use
+      default: "2.6.0"
+
 workloads:
   - name: smile-kmeans
     description: >
@@ -13,9 +23,8 @@ workloads:
       The benchmark generates random data in memory and performs KMeans clustering
       on multiple copies (parallel threads), to evaluate CPU performance under
       compute-intensive machine learning workloads.
-
     data: 
-      command: python3 generate_data.py
+      command: python3 generate_data.py --task kmeans
       parameters:
         samples:
           description: Number of samples to generate
@@ -26,22 +35,23 @@ workloads:
         output:
           description: Output directory for generated data
           default: ./data
-
-    run:
-      command: python3 run_benchmark.py
-      parameters:
-        data:
-          description: Path to input CSV data
-          default: ./data/kmeans.csv
-        clusters:
-          description: Number of clusters for KMeans
-          default: 1000
-        copies:
-          description: Number of copies (threads) to run in parallel
-          default: 1
-        maven_goal:
-          description: Maven goal for compilation
-          default: clean compile
+        seed:
+          description: Random seed for reproducibility
+          default: 42
+    command: python3 run_benchmark.py --workload kmeans
+    parameters:
+      data:
+        description: Path to input CSV data
+        default: ./data/kmeans.csv
+      clusters:
+        description: Number of clusters for KMeans
+        default: 100
+      threads:
+        description: Number of copies (threads) to run in parallel
+        default: 1
+      iters:
+        description: Number of iterations for the benchmark
+        default: 6
 
 characteristics:
   IO_effects: low
@@ -57,7 +67,7 @@ tags:
   - smile
 
 dependencies:
-  java: ">=11"
+  java: ">=17"
   maven: ">=3.6"
   smile: "3.0.1"
   python: ">=3.6"
