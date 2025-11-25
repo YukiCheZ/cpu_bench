@@ -38,35 +38,6 @@ workloads:
         type: boolean
         default: true
     
-  # - name: biogo-krishna
-  #   description: >
-  #     Benchmark for the krishna package in biogo. This workload generates synthetic
-  #     DNA sequences in FASTA format with controlled repeat rates, runs the Krishna
-  #     sequence comparison and clustering pipeline.
-  #   command: go run src/krishna.go
-  #   parameters:
-  #     size:
-  #       description: Length of each generated DNA sequence
-  #       default: 10000
-  #     count:
-  #       description: Number of sequences to generate
-  #       default: 1000
-  #     repeat:
-  #       description: Proportion of sequence bases copied from the first sequence to simulate repeats (0–1)
-  #       default: 0.8
-  #     tmp:
-  #       description: Directory for temporary files (if empty, runs in-memory)
-  #       default: ""
-  #     iterations:
-  #       description: Number of timed benchmark iterations
-  #       default: 5
-  #     warmup:
-  #       description: Number of warmup iterations before timing
-  #       default: 0
-  #     threads:
-  #       description: Number of threads (sets GOMAXPROCS)
-  #       default: 1
-
 characteristics:
   IO_effects: low
   single_machine: true

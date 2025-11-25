@@ -119,9 +119,12 @@ func main() {
 			ImageDiff: 0.05,
 			Classic:   false,
 		})
+		fmt.Println("[INFO] Warmup completed.")
 	}
 
 	// Launch multiple replicas in parallel
+	fmt.Printf("[INFO] Launching %d benchmark copies...\n", threads)
+	fmt.Printf("[INFO] seqCount: %d, maxPos: %d, hitLen: %d\n", seqCount, maxPos, hitLen)
 	var wg sync.WaitGroup
 	results := make([]time.Duration, threads)
 	startAll := time.Now()
