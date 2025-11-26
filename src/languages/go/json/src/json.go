@@ -34,7 +34,7 @@ var (
 func main() {
 	flag.StringVar(&inputPath, "input", "./data/input_50MB.json", "path to input JSON file")
 	flag.IntVar(&threads, "threads", 1, "number of threads")
-	flag.IntVar(&iters, "iterations", 1000, "number of iterations per thread")
+	flag.IntVar(&iters, "iterations", 500, "number of iterations per thread")
 	flag.Parse()
 
 	if inputPath == "" {

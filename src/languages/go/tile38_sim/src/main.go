@@ -8,7 +8,6 @@ import (
 	"math/rand"
 	"runtime"
 	"sort"
-	"sync/atomic"
 	"time"
 
 	"github.com/kyroy/kdtree"
@@ -16,9 +15,9 @@ import (
 
 // Config
 var (
-	threads = flag.Int("threads", runtime.NumCPU(), "number of threads (controls both goroutines and CPU cores)")
-	points  = flag.Int("points", 10000, "number of points in dataset")
-	iters   = flag.Int("iters", 1000, "total number of queries to run")
+	threads = flag.Int("threads", 1, "number of threads (controls both goroutines and CPU cores)")
+	points  = flag.Int("points", 100000, "number of points in dataset")
+	iters   = flag.Int("iters", 22, "number of queries each thread runs")
 	seed    = flag.Int64("seed", 42, "random seed")
 )
 
@@ -91,16 +90,12 @@ func nearby(center Point, k int) []Point {
 
 // Worker
 type worker struct {
-	iterCount *int64
+	iterations int
 	latencies []time.Duration
 }
 
 func (w *worker) Run(ctx context.Context) {
-	for {
-		count := atomic.AddInt64(w.iterCount, -1)
-		if count < 0 {
-			return
-		}
+	for i := 0; i < w.iterations; i++ {
 
 		center := Point{
 			Lat: rand.Float64()*180 - 90,
@@ -133,18 +128,17 @@ func main() {
 
 	runtime.GOMAXPROCS(*threads)
 
-	fmt.Printf("Generating dataset with %d points...\n", *points)
+	fmt.Printf("[INFO] Generating dataset with %d points...\n", *points)
 	dataset = generateDataset(*points)
 
-	fmt.Println("Building KDTree...")
+	fmt.Println("[INFO] Building KDTree...")
 	tree = kdtree.New(dataset)
 
-	var iterCount int64 = int64(*iters)
 	workers := make([]*worker, *threads)
 	for i := range workers {
 		workers[i] = &worker{
-			iterCount: &iterCount,
-			latencies: make([]time.Duration, 0, *iters/(*threads)),
+			iterations: *iters,
+			latencies: make([]time.Duration, 0, *iters),
 		}
 	}
 
@@ -170,7 +164,7 @@ func main() {
 
 
 	fmt.Printf("\n--- Benchmark Results ---\n")
-	fmt.Printf("Threads: %d\n", *threads)
-	fmt.Printf("Total queries: %d\n", len(allLatencies))
-	fmt.Printf("Total time: %v\n", totalElapsed)
+	fmt.Printf("[INFO] Threads: %d\n", *threads)
+	fmt.Printf("[INFO] Total queries: %d\n", len(allLatencies))
+	fmt.Printf("[RESULT] Total elapsed time: %v\n", totalElapsed.Seconds())
 }

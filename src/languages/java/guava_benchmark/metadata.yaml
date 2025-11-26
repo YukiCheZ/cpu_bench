@@ -9,7 +9,7 @@ setup:
 
 # Updated workloads aligned with new runner (BenchmarkRunner) and script (run_benchmark.sh)
 workloads:
-  - name: guava-event
+  - name: guava_event
     description: Event aggregation (Multimap + Multiset) with top-K frequency extraction and category hashing.
     command: ./scripts/run_benchmark.sh --workload event
     parameters:
@@ -32,7 +32,7 @@ workloads:
         description: Disable warmup when present
         default: false
 
-  - name: guava-graph
+  - name: guava_graph
     description: Directed graph traversal (multi-source BFS, topological sort, cycle detection) using Guava Graph.
     command: ./scripts.run_benchmark.sh --workload graph
     parameters:
@@ -55,7 +55,7 @@ workloads:
         description: Disable warmup when present
         default: false
 
-  - name: guava-bloom
+  - name: guava_bloom
     description: Bloom filter insertion/query workload with chained hashing for CPU stress.
     command: ./scripts/run_benchmark.sh --workload bloom
     parameters:
@@ -78,7 +78,7 @@ workloads:
         description: Disable warmup when present
         default: false
 
-  - name: guava-cache
+  - name: guava_cache
     description: Custom concurrent cache simulation with hot/cold key distribution and hash-heavy value computation.
     command: ./scripts/run_benchmark.sh --workload cache
     parameters:
@@ -101,7 +101,7 @@ workloads:
         description: Disable warmup when present
         default: false
 
-  - name: guava-immutable
+  - name: guava_immutable
     description: Immutable snapshot diffs/intersections over large base arrays with hashing reductions.
     command: ./scripts/run_benchmark.sh --workload immutable
     parameters:

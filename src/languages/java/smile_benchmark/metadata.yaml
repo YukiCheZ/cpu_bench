@@ -17,7 +17,7 @@ setup:
       default: "2.6.0"
 
 workloads:
-  - name: smile-kmeans
+  - name: smile_kmeans
     description: >
       Run a KMeans clustering CPU benchmark in Java using the Smile library.
       The benchmark generates random data in memory and performs KMeans clustering

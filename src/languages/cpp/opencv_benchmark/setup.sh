@@ -164,14 +164,14 @@ if [[ -f "${PROGRAM_SRC_DIR}/main.cpp" ]]; then
         echo "[ERROR] Program compilation failed. Check ${LOG_FILE}"
         exit 1
     fi
-    echo "[INFO] ✅ Program compiled successfully: ${PROGRAM_OUT}"
+    echo "[INFO] Program compiled successfully: ${PROGRAM_OUT}"
 else
-    echo "[WARN] ⚠️ No main.cpp found in src/. Skipping program compilation."
+    echo "[WARN] No main.cpp found in src/. Skipping program compilation."
 fi
 
 # ===== Summary =====
 echo
-echo "[INFO] ✅ OpenCV ${OPENCV_VERSION} successfully built and installed!"
+echo "[INFO] OpenCV ${OPENCV_VERSION} successfully built and installed!"
 echo "[INFO] Headers: ${INSTALL_DIR}/include/opencv4"
 echo "[INFO] Libraries: ${INSTALL_DIR}/lib"
 echo

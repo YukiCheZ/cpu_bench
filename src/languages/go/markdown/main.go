@@ -20,7 +20,6 @@ func runMarkdownOnce(contents [][]byte, threads int) time.Duration {
 	start := time.Now()
 
 	var wg sync.WaitGroup
-	tasks := make(chan []byte)
 
 	for i := 0; i < threads; i++ {
 		wg.Add(1)
@@ -37,19 +36,12 @@ func runMarkdownOnce(contents [][]byte, threads int) time.Duration {
 			out := bytes.Buffer{}
 			out.Grow(1024 * 1024)
 
-			for c := range tasks {
+			for _, c := range contents {
 				md.Render(&out, c)
 				out.Reset()
 			}
 		}()
 	}
-
-	go func() {
-		for _, c := range contents {
-			tasks <- c
-		}
-		close(tasks)
-	}()
 
 	wg.Wait()
 	return time.Since(start)
@@ -93,7 +85,7 @@ func main() {
 
 	flag.StringVar(&inputDir, "data", "./data/markdown", "Path to the directory containing Markdown files")
 	flag.IntVar(&threads, "threads", 1, "Number of threads (goroutines + CPU cores)")
-	flag.IntVar(&iterations, "iterations", 1, "Number of iterations for the benchmark")
+	flag.IntVar(&iterations, "iterations", 400, "Number of iterations for the benchmark")
 	flag.Parse()
 
 	if threads <= 0 {

@@ -1,5 +1,5 @@
 # metadata.yaml for LAPACK CPU Benchmark
-name: lapack_cpu_benchmark
+name: lapack_benchmark
 type: microbenchmark
 language: C
 domain:
@@ -27,7 +27,7 @@ workloads:
         default: 2048
       iters:
         description: Number of iterations to run
-        default: 3000
+        default: 1500
       warmup:
         description: Number of warmup iterations
         default: 1
@@ -48,7 +48,7 @@ workloads:
         default: 2048
       iters:
         description: Number of iterations to run
-        default: 30
+        default: 6
       warmup:
         description: Number of warmup iterations
         default: 1
@@ -69,7 +69,7 @@ workloads:
         default: 2048
       iters:
         description: Number of iterations to run
-        default: 9
+        default: 3
       warmup:
         description: Number of warmup iterations
         default: 1 

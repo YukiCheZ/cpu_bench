@@ -95,7 +95,7 @@ benchmarks:
     path: src/languages/c/c_compiler_benchmark
     num: 2
 
-  - name: go_compiler_benchmark
+  - name: go_compiler
     path: src/languages/go/go_compiler_benchmark
     num: 1
 
@@ -111,26 +111,26 @@ benchmarks:
     path: src/languages/go/cockroachdb
     num: 2
 
-  - name: esbuild
+  - name: esbuild_benchmark
     path: src/languages/go/esbuild
     num: 2
   
-  - name: garbage
+  - name: gc_garbage
     path: src/languages/go/garbage
     num: 1
 
-  - name: gopher-lua
-    path: src/languages/go/gopher-lua
+  - name: gopher_lua
+    path: src/languages/go/gopher_lua
     num: 1
 
-  - name: json
+  - name: go_json
     path: src/languages/go/json
     num: 1
 
-  - name: markdown
+  - name: go_markdown
     path: src/languages/go/markdown
     num: 1
   
-  - name: tile38-sim
-    path: src/languages/go/tile38-sim
+  - name: tile38_sim
+    path: src/languages/go/tile38_sim
     num: 1

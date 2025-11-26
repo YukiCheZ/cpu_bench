@@ -1,5 +1,5 @@
 # metadata.yaml for Go Compiler Benchmark
-name: go_compiler_benchmark
+name: go_compiler
 type: macrobenchmark
 language: Go
 domain:
@@ -8,7 +8,7 @@ domain:
   - build_system
 
 workloads:
-  - name: go-benchmark
+  - name: go_compiler
     description: Benchmark for measuring Go compiler and toolchain build performance.
     data:
       command: python3 generate_data.py
@@ -41,7 +41,7 @@ workloads:
         default: ./data
       iterations:
         description: Number of times to repeat the benchmark
-        default: 1
+        default: 5
       threads:
         description: Number of parallel build threads (GOMAXPROCS)
         default: 1

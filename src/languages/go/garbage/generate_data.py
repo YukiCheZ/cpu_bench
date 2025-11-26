@@ -41,7 +41,7 @@ def main():
     with open(args.output, "w") as f:
         f.write(content)
 
-    print(f"Generated {args.output}, approx {len(content)/1024:.2f} KB")
+    print(f"[INFO] Generated {args.output}, approx {len(content)/1024:.2f} KB")
 
 if __name__ == "__main__":
     main()

@@ -29,7 +29,7 @@ func main() {
 	var threads int
 
 	flag.StringVar(&inputPath, "input", "./data/input.go", "path to input Go source file")
-	flag.IntVar(&iterations, "iterations", 1000, "number of parse iterations per thread to run")
+	flag.IntVar(&iterations, "iterations", 600, "number of parse iterations per thread to run")
 	flag.IntVar(&threads, "threads", 1, "number of threads (GOMAXPROCS)")
 	flag.Parse()
 

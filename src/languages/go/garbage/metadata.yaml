@@ -1,5 +1,5 @@
 # metadata.yaml for Garbage Collector Benchmark
-name: go_garbage_benchmark
+name: gc_garbage
 type: macrobenchmark
 language: Go
 domain:
@@ -8,12 +8,12 @@ domain:
   - cpu_performance
 
 workloads:
-  - name: go_garbage
+  - name: gc_garbage
     description: >
       Benchmark that stresses the Go garbage collector by repeatedly parsing Go source files
       in memory. Measures GC efficiency under concurrent parsing workloads.
     data: 
-      command: python3 scripts/generate_data.py 
+      command: python3 generate_data.py 
       parameters:
         size:
           description: Size of the generated Go source file in lines

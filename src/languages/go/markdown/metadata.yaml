@@ -1,34 +1,45 @@
 # metadata.yaml for Markdown Rendering Benchmark
-name: go_markdown_benchmark
+name: go_markdown
 type: macrobenchmark
 language: Go
 domain:
   - text_processing
   - document_rendering
 
+setup:
+  command: ./setup.sh
+
 workloads:
-  - name: markdown-render
+  - name: markdown_render
     description: >
       Benchmark that repeatedly parses and renders Markdown files into HTML using
       the golang-commonmark/markdown library.
     data:
-      command: python3 scripts/generate_data.py
+      command: python3 generate_data.py
       parameters:
-        size: 10000
-        output: ./data/markdown
-        min-size: 10240
-        max-size: 20480
-    command: go run src/main.go
+        size: 
+          description: Total size of generated Markdown data in bytes
+          default: 1000
+        output: 
+          description: Output directory for generated Markdown data
+          default: ./data/markdown
+        min-size: 
+          description: Minimum size of individual Markdown files in bytes
+          default: 20480
+        max-size: 
+          description: Maximum size of individual Markdown files in bytes
+          default: 40960
+    command: go run main.go
     parameters:
       data:
         description: Path to the directory containing Markdown files
         default: ./data/markdown
       threads:
         description: Number of threads (goroutines / GOMAXPROCS)
-        default: 4
+        default: 1
       iterations:
         description: Number of benchmark iterations
-        default: 5
+        default: 400
 
 characteristics:
   IO_effects: low

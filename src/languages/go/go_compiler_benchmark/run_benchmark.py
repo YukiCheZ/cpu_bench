@@ -23,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description="Compile generated Go code benchmark")
     parser.add_argument("--data-dir", type=str, default="data",
                         help="Directory containing previously generated Go code")
-    parser.add_argument("--iterations", type=int, default=1,
+    parser.add_argument("--iterations", type=int, default=5,
                         help="Number of times to repeat the benchmark")
     parser.add_argument("--threads", type=int, default=1,
                         help="Number of parallel Go build threads")

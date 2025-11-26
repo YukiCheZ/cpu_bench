@@ -2,7 +2,6 @@
 name: esbuild_benchmark
 type: macrobenchmark
 language: Go
-setup: source setup.go
 domain:
   - compiler
   - javascript
@@ -10,8 +9,11 @@ domain:
   - web_development
   - rendering
 
+setup:
+  command: ./setup.sh
+
 workloads:
-  - name: esbuild_ThreeJS
+  - name: ThreeJS
     description: >
       Benchmark the performance of Three.js, a 3D graphics library, by
       rendering a complex JavaScript scene. Measures rendering time, 
@@ -49,7 +51,7 @@ workloads:
         description: Number of iterations to run
         default: 30
   
-  - name: esbuild_RomeTS
+  - name: RomeTS
     description: >
       Benchmark RomeTS, a TypeScript/JavaScript bundler and compiler, by
       compiling a full TypeScript project.

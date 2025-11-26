@@ -1,5 +1,5 @@
 # metadata.yaml for Gopher-Lua KNucleotide Benchmark
-name: gopher_lua_knucleotide
+name: gopher_lua
 type: macrobenchmark
 language: Go
 domain:
@@ -7,8 +7,11 @@ domain:
   - interpreter
   - bioinformatics
 
+setup:
+  command: ./setup.sh
+
 workloads:
-  - name: gopher-lua-knucleotide
+  - name: gopher_lua
     description: >
       Benchmark that executes a Lua script using the Gopher-Lua interpreter.
       It loads a DNA sequence input file and runs the `run_knucleotide` function

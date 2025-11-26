@@ -58,12 +58,27 @@ def generate_markdown_file(index, output_dir, min_size, max_size):
 
     return filename, size
 
+def clean_output_dir(output_dir):
+    """Remove previously generated markdown files matching doc_*.md."""
+    removed = 0
+    if os.path.isdir(output_dir):
+        for name in os.listdir(output_dir):
+            if name.startswith("doc_") and name.endswith(".md"):
+                path = os.path.join(output_dir, name)
+                try:
+                    os.remove(path)
+                    removed += 1
+                except OSError:
+                    pass
+    return removed
+
 def main():
     parser = argparse.ArgumentParser(description="Generate random Markdown files for benchmark testing")
-    parser.add_argument("--size", type=int, default=10000, help="Number of markdown files to generate")
+    parser.add_argument("--size", type=int, default=1000, help="Number of markdown files to generate")
     parser.add_argument("--output", type=str, default="./data/markdown", help="Output directory")
-    parser.add_argument("--min-size", type=int, default=10240, help="Minimum file size in bytes")
-    parser.add_argument("--max-size", type=int, default=20480, help="Maximum file size in bytes")
+    parser.add_argument("--min-size", type=int, default=20480, help="Minimum file size in bytes")
+    parser.add_argument("--max-size", type=int, default=40960, help="Maximum file size in bytes")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducible generation")
     args = parser.parse_args()
 
     if args.min_size > args.max_size:
@@ -71,10 +86,20 @@ def main():
 
     os.makedirs(args.output, exist_ok=True)
 
+    # Set random seed for reproducibility
+    random.seed(args.seed)
+
+    # Clean old generated files
+    removed = clean_output_dir(args.output)
+    if removed:
+        print(f"[INFO] Cleaned {removed} old markdown files in {args.output}")
+    else:
+        print(f"[INFO] No previous markdown files to clean in {args.output}")
+
     for i in range(1, args.size + 1):
         filename, size = generate_markdown_file(i, args.output, args.min_size, args.max_size)
 
-    print(f"[INFO] Done. Generated {args.size} markdown files in {args.output}")
+    print(f"[INFO] Done. Generated {args.size} markdown files in {args.output} using seed {args.seed}")
 
 if __name__ == "__main__":
     main()

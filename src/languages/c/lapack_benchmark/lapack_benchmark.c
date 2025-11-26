@@ -214,13 +214,13 @@ int main(int argc, char* argv[]) {
 
     if (!iters_specified) {
         if (strcmp(mode_str, "solve") == 0)
-            iters = 3000;
+            iters = 1500;
         else if (strcmp(mode_str, "eigen") == 0)
-            iters = 30;
+            iters = 6;
         else if (strcmp(mode_str, "svd") == 0)
-            iters = 9;
+            iters = 3;
         else
-            iters = 10;  
+            iters = 1;  
     }
 
     int mode;
