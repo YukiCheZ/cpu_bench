@@ -81,6 +81,9 @@ wget https://go.dev/dl/go1.24.5.linux-amd64.tar.gz -O /tmp/go.tar.gz \
 # perf
 sudo apt-get install -y linux-perf || sudo apt-get install -y perf
 
+# clone 
+git clone https://github.com/YukiCheZ/cpu_bench.git && cd cpu_bench
+
 # Setup and run a pair of workloads with override param
 python3 scripts/run_cpu.py --workloads numpy_benchmark.matmul ffmpeg_benchmark.ffmpeg \
   --setup-env --set-param numpy_benchmark.matmul.workload.size=2048 --verbose
