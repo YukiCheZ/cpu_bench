@@ -7,7 +7,7 @@ import json
 import shutil
 
 ROOT = Path(__file__).resolve().parent              
-PROJECT_ROOT = ROOT.parent                          
+PROJECT_ROOT = ROOT                         
 RUN_CPU = PROJECT_ROOT / "scripts" / "run_cpu.py"
 LOG_DIR = PROJECT_ROOT / "log"
 RES_DIR = PROJECT_ROOT / "res"
@@ -98,7 +98,6 @@ workloads_sets = {
         "resnet50_cpu.resnet50_training",
         "bert_cpu.bert_eval", 
         "transformer_inference.transformer_inference",
-
         "redis_benchmark.redis-benchmark", 
         "openssl_benchmark.openssl", 
         "zstd_benchmark.zstd",
@@ -107,7 +106,6 @@ workloads_sets = {
         "lapack_benchmark.lapack_solve",
         "lapack_benchmark.lapack_eigen", 
         "lapack_benchmark.lapack_svd",
-        
         "opencv_benchmark.fft_batch",
         "opencv_benchmark.conv_heavy", 
         "opencv_benchmark.motion_blur",
@@ -118,7 +116,6 @@ workloads_sets = {
         "opencv_benchmark.optical_flow",
         "opencv_benchmark.color_tracking",
         "opencv_benchmark.feature_match",
-
         "biogo-benchmark.biogo-igor", 
         "bleve_benchmark.bleve-index",
         "cockroachdb_benchmark.kv", 
@@ -130,7 +127,6 @@ workloads_sets = {
         "go_json.json",
         "go_markdown.markdown_render",
         "tile38_sim.kdtree",
-
         "cassandra_benchmark.cassandra_stress_read",
         "guava_benchmark.guava_event",
         "guava_benchmark.guava_cache",
@@ -141,13 +137,9 @@ workloads_sets = {
     ],
     "emerging":[
         "transformer_train.transformer_train",
-
         "ffmpeg_benchmark.ffmpeg",
-
         "rocksdb_benchmark.rocksdb_cpu", 
-
         "cockroachdb_benchmark.tpcc",
-
         "kafka_benchmark.kafka_producer_perf",
     ],
     "all": [
@@ -401,13 +393,13 @@ def collect_system_info():
         "go_version": run_cmd("go version"),
     }
 
-    if shutil.which("dmidecode"):
-        cpu_detail = run_cmd("sudo dmidecode -t processor")
-        mem_detail = run_cmd("sudo dmidecode -t memory")
-        sysinfo["dmidecode"] = {
-            "processor": cpu_detail,
-            "memory": mem_detail
-        }
+    # if shutil.which("dmidecode"):
+    #     cpu_detail = run_cmd("sudo dmidecode -t processor")
+    #     mem_detail = run_cmd("sudo dmidecode -t memory")
+    #     sysinfo["dmidecode"] = {
+    #         "processor": cpu_detail,
+    #         "memory": mem_detail
+    #     }
 
     return sysinfo
 
@@ -471,11 +463,11 @@ def main():
 
     write_system_info_json(SYSTEM_INFO_FILE)
 
-    # for workloads_set_name, param_set_name, setup_env in pairs:
-    #     workloads = workloads_sets[workloads_set_name]
-    #     params = param_sets[param_set_name]
-    #     tag = f"{param_set_name}"
-    #     run_workloads_set(tag, workloads, params, setup_env)
+    for workloads_set_name, param_set_name, setup_env in pairs:
+        workloads = workloads_sets[workloads_set_name]
+        params = param_sets[param_set_name]
+        tag = f"{param_set_name}"
+        run_workloads_set(tag, workloads, params, setup_env)
 
     print("\n[INFO] All tests finished.")
 

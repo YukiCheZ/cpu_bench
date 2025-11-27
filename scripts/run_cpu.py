@@ -20,15 +20,15 @@ log_path = None  # global to access in run_workload()
 # Perf configuration
 # ============================================================
 PERF_CMD_PREFIX = (
-    "time perf stat -r 3 "
-    "-e 'r010E, r00C0, r00C4, r00C5, r0183, r0283, r3F24, r20D1, r81D0, r82D0' "
-    "-e 'r01C7, r02C7, r04C7, r08C7, r10C7, r20C7' "
-    "-e 'L1-dcache-load-misses,L1-dcache-loads,L1-dcache-misses,L1-dcache' "
-    "-e 'LLC' "
-    "-e 'dTLB-load-misses,dTLB-loads,dTLB,dTLB-misses' "
-    "-e 'iTLB-load-misses,iTLB-loads,iTLB,iTLB-misses' "
-    "-e 'branch-load-misses,branch-load,branch-misses,branch-instructions' "
-    "-e 'instructions,cache-misses,cycles'"
+    # "time perf stat -r 3 "
+    # "-e 'r010E, r00C0, r00C4, r00C5, r0183, r0283, r3F24, r20D1, r81D0, r82D0' "
+    # "-e 'r01C7, r02C7, r04C7, r08C7, r10C7, r20C7' "
+    # "-e 'L1-dcache-load-misses,L1-dcache-loads,L1-dcache-misses,L1-dcache' "
+    # "-e 'LLC' "
+    # "-e 'dTLB-load-misses,dTLB-loads,dTLB,dTLB-misses' "
+    # "-e 'iTLB-load-misses,iTLB-loads,iTLB,iTLB-misses' "
+    # "-e 'branch-load-misses,branch-load,branch-misses,branch-instructions' "
+    # "-e 'instructions,cache-misses,cycles'"
 )
 
 
