@@ -71,7 +71,6 @@ workloads_sets = {
         "go_json.json",
         "go_markdown.markdown_render",
         "tile38_sim.kdtree",
-
     ],
     "java": [
         "cassandra_benchmark.cassandra_stress_read",
