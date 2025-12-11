@@ -71,6 +71,12 @@ def main():
         print(f"[ERROR] Java 17+ required, detected: {major}")
         sys.exit(1)
 
+    current_opts = os.environ.get("MAVEN_OPTS", "")
+    required_opt = "--add-opens java.base/java.lang=ALL-UNNAMED"
+    
+    if required_opt not in current_opts:
+        os.environ["MAVEN_OPTS"] = f"{current_opts} {required_opt}".strip()
+        print(f"[INFO] Added compat flags to MAVEN_OPTS: {required_opt}")
     base_cmd = maven_cmd + [f"-Dmaven.repo.local={maven_repo}"]
     if args.offline:
         base_cmd.append("-o")
