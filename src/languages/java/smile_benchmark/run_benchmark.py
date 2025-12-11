@@ -1,8 +1,29 @@
 #!/usr/bin/env python3
 import argparse
+import os
+import shlex
+import shutil
 import subprocess
 import sys
-import os
+
+
+def resolve_maven_cmd(root_dir: str):
+    mvnw_path = os.path.join(root_dir, "mvnw")
+    if os.path.isfile(mvnw_path) and os.access(mvnw_path, os.X_OK):
+        return [mvnw_path]
+    mvn = shutil.which("mvn")
+    if mvn:
+        return [mvn]
+    print("[ERROR] Neither mvnw nor mvn found. Install Maven or include mvnw.")
+    sys.exit(1)
+
+
+def run_step(cmd, label, env=None):
+    print(f"[INFO] {label}: {' '.join(shlex.quote(str(c)) for c in cmd)}")
+    ret = subprocess.run(cmd, env=env)
+    if ret.returncode != 0:
+        print(f"[ERROR] {label} failed")
+        sys.exit(ret.returncode)
 
 
 def main():
@@ -20,7 +41,17 @@ def main():
                         help="Maven goal for compilation")
     parser.add_argument("--smile_version", type=str, default="2.6.0",
                         help="Override Smile version (matches pom property smile.version)")
+    parser.add_argument("--maven_repo", type=str, default=".m2",
+                        help="Local Maven repository directory (relative or absolute)")
+    parser.add_argument("--offline", action="store_true",
+                        help="Use Maven offline mode (assumes dependencies already cached)")
+    parser.add_argument("--skip_compile", action="store_true",
+                        help="Skip Maven compilation step")
     args = parser.parse_args()
+
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+    maven_repo = os.path.abspath(os.path.join(root_dir, args.maven_repo))
+    maven_cmd = resolve_maven_cmd(root_dir)
 
     # Default data paths per workload if not provided
     default_data = {
@@ -28,13 +59,17 @@ def main():
     }
     data_path = args.data or default_data[args.workload]
 
-    if args.maven_goal and args.maven_goal.strip():
-        print(f"[INFO] Compiling Java project with Maven: mvn -Dmaven.repo.local=./.m2 {('-Dsmile.version='+args.smile_version+' ') if args.smile_version else ''}{args.maven_goal}")
-        compile_cmd = ["mvn", "-Dmaven.repo.local=./.m2"] + (([f"-Dsmile.version={args.smile_version}"] if args.smile_version else [])) + args.maven_goal.split()
-        ret = subprocess.run(compile_cmd)
-        if ret.returncode != 0:
-            print("[ERROR] Maven compilation failed")
-            sys.exit(1)
+    if not os.path.exists(data_path):
+        print(f"[ERROR] Data file not found: {data_path}")
+        sys.exit(1)
+
+    base_cmd = maven_cmd + [f"-Dmaven.repo.local={maven_repo}"]
+    if args.offline:
+        base_cmd.append("-o")
+
+    if args.maven_goal and args.maven_goal.strip() and not args.skip_compile:
+        compile_cmd = base_cmd + (([f"-Dsmile.version={args.smile_version}"] if args.smile_version else [])) + args.maven_goal.split()
+        run_step(compile_cmd, "Compiling Java project with Maven")
 
     # Force BLAS/OpenMP-based libs to use a single thread per JVM process
     env = os.environ.copy()
@@ -55,20 +90,14 @@ def main():
         exec_args += ["--clusters", str(args.clusters)]
 
     print("[INFO] Running benchmark:")
-    run_cmd = [
-        "mvn", "-Dmaven.repo.local=./.m2", "exec:java",
-        "-Dexec.mainClass=benchmark.smile.BenchmarkRunner",
+    run_cmd = base_cmd + [
+        f"-Dsmile.version={args.smile_version}",
+        "exec:java",
         f"-Dexec.jvmArgs={jvm_args}",
+        "-Dexec.mainClass=benchmark.smile.BenchmarkRunner",
         "-Dexec.args=" + " ".join(exec_args),
     ]
-    if args.smile_version:
-        run_cmd.insert(1, f"-Dsmile.version={args.smile_version}")
-    print(" ", " ".join(run_cmd))
-
-    ret = subprocess.run(run_cmd, env=env)
-    if ret.returncode != 0:
-        print("[ERROR] Benchmark execution failed")
-        sys.exit(1)
+    run_step(run_cmd, "Executing benchmark", env=env)
 
     print("[INFO] Benchmark finished successfully")
 
