@@ -34,7 +34,7 @@ workloads:
 
   - name: guava_graph
     description: Directed graph traversal (multi-source BFS, topological sort, cycle detection) using Guava Graph.
-    command: ./scripts.run_benchmark.sh --workload graph
+    command: ./scripts/run_benchmark.sh --workload graph
     parameters:
       workload:
         description: Fixed workload identifier
