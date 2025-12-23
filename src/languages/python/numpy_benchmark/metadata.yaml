@@ -12,7 +12,12 @@ setup:
 
 workloads:
   - name: matmul
-    description: Dense matrix multiplication benchmark using NumPy's @ operator.
+    summary: "Dense matrix multiplication benchmark using NumPy"
+    action: "perform dense matrix multiplication with floating-point arithmetic"
+    description: >
+      Initialize two large dense matrices with random floating-point values.
+      Execute matrix multiplication using NumPy's optimized linear algebra routines to compute the product.
+      Measure the computational throughput and latency to evaluate the CPU's floating-point performance and memory bandwidth efficiency.
     command: python3 -m scripts.run_benchmark --dataset matrix
     parameters:
       size:
@@ -30,7 +35,12 @@ workloads:
         default: 1
 
   - name: svd
-    description: Singular Value Decomposition benchmark using NumPy's linalg.svd.
+    summary: "Singular Value Decomposition benchmark using NumPy"
+    action: "compute singular value decomposition of dense matrices"
+    description: >
+      Generate a dense matrix with random values to serve as input for decomposition.
+      Perform Singular Value Decomposition (SVD) using NumPy's linear algebra library to factorize the matrix into unitary and diagonal components.
+      Assess the CPU's capability in handling complex linear algebra operations and numerical stability during intensive matrix factorizations.
     command: python3 -m scripts.run_benchmark --dataset svd
     parameters:
       size:
@@ -48,7 +58,12 @@ workloads:
         default: 1
 
   - name: fft
-    description: Fast Fourier Transform benchmark using NumPy's fft.
+    summary: "Fast Fourier Transform benchmark using NumPy"
+    action: "execute Fast Fourier Transform on signal data"
+    description: >
+      Generate a large 1D array representing a signal with random floating-point data.
+      Compute the discrete Fourier Transform using NumPy's FFT algorithm to analyze the frequency components of the signal.
+      Evaluate the CPU's performance in processing signal data and executing recursive mathematical transformations.
     command: python3 -m scripts.run_benchmark --dataset fft
     parameters:
       size:

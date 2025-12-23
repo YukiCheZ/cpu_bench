@@ -12,10 +12,12 @@ setup:
 
 workloads:
   - name: transformer_inference
+    summary: Full Transformer Encoder-Decoder inference benchmark
+    action: execute sequence-to-sequence inference with Transformer model
     description: >
-      Execute the full Transformer (Encoder + Decoder) CPU inference benchmark. 
-      This workload measures the performance of multi-head self-attention, 
-      feedforward networks, and sequence processing on CPU.
+      Initialize a full Transformer model comprising both Encoder and Decoder stacks with configurable layers and attention heads.
+      Execute the forward pass on pre-generated sequence batches to simulate machine translation or sequence generation tasks.
+      Measure the computational throughput of multi-head self-attention mechanisms and feedforward networks to evaluate CPU performance for NLP workloads.
     data: 
       command: python3 generate_data.py
       parameters:

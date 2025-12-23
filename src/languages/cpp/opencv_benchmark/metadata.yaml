@@ -18,7 +18,11 @@ setup:
 
 workloads:
   - name: fft_batch
-    description: Batch FFT transform (10x DFT passes)
+    summary: Fast Fourier Transform batch processing on images
+    action: execute discrete Fourier transforms on image data
+    description: >
+      Convert input images to floating-point grayscale format and pad them to the optimal size for Discrete Fourier Transform (DFT).
+      Perform multiple forward DFT passes on the image data to measure the CPU's capability in handling frequency domain transformations and complex number arithmetic.
     command: ./bin/opencv_benchmark --workload fft_batch
     parameters:
       size:
@@ -39,7 +43,11 @@ workloads:
       default: 2
 
   - name: conv_heavy
-    description: Deep convolution stack (15 Gaussian layers)
+    summary: intensive image convolution with Gaussian kernels
+    action: apply repeated 2D convolution filters
+    description: >
+      Apply a stack of heavy 2D convolutions to the input image using a large Gaussian kernel.
+      Execute multiple filtering iterations followed by normalization to simulate deep convolutional layers found in computer vision pipelines, stressing the CPU's floating-point multiply-accumulate performance.
     command: ./bin/opencv_benchmark --workload conv_heavy
     parameters:
       size:
@@ -60,7 +68,11 @@ workloads:
       default: 2
   
   - name: mandelbrot
-    description: Mandelbrot fractal computation (float-intensive)
+    summary: floating-point intensive Mandelbrot fractal generation
+    action: compute Mandelbrot set pixel values
+    description: >
+      Generate a Mandelbrot fractal image by iterating complex number equations for each pixel.
+      Perform intensive floating-point arithmetic to determine pixel intensity based on the escape time algorithm, evaluating the CPU's raw scalar floating-point computational throughput.
     command: ./bin/opencv_benchmark --workload mandelbrot
     parameters:
       size:
@@ -81,7 +93,11 @@ workloads:
       default: 2
 
   - name: jacobi
-    description: 2D Jacobi iteration (Poisson PDE simulation)
+    summary: iterative Jacobi method for solving PDEs
+    action: solve Poisson equation using Jacobi iteration
+    description: >
+      Simulate a 2D Poisson Partial Differential Equation (PDE) solver using the Jacobi iterative method.
+      Update a grid of values based on neighboring cells in repeated passes, measuring memory bandwidth and cache efficiency in stencil-based scientific computations.
     command: ./bin/opencv_benchmark --workload jacobi
     parameters:
       size:
@@ -102,7 +118,11 @@ workloads:
       default: 2
 
   - name: canny
-    description: Edge detection baseline (Canny algorithm)
+    summary: Canny edge detection algorithm execution
+    action: detect edges in images using Canny method
+    description: >
+      Apply the Canny edge detection algorithm to input images to identify structural boundaries.
+      Convert images to grayscale and execute multi-stage edge detection, including gradient calculation and hysteresis thresholding, to evaluate performance on standard image processing tasks.
     command: ./bin/opencv_benchmark --workload canny
     parameters:
       size:
@@ -123,7 +143,11 @@ workloads:
       default: 2
 
   - name: optical_flow
-    description: Dense optical flow estimation (Farneback)
+    summary: dense optical flow estimation using Farneback
+    action: calculate dense optical flow between frames
+    description: >
+      Compute dense optical flow between consecutive image frames using the Farneback algorithm.
+      Analyze pixel motion vectors to estimate displacement, testing the CPU's ability to handle complex computer vision algorithms required for video analysis and motion tracking.
     command: ./bin/opencv_benchmark --workload optical_flow
     parameters:
       size:
@@ -144,7 +168,11 @@ workloads:
       default: 2
 
   - name: motion_blur
-    description: Motion blur convolution kernel
+    summary: linear motion blur effect application
+    action: apply motion blur filter to images
+    description: >
+      Simulate a linear motion blur effect by convolving the image with a diagonal kernel.
+      Perform 2D filtering operations to mimic camera shake or object movement, assessing the efficiency of the CPU in processing spatial domain image effects.
     command: ./bin/opencv_benchmark --workload motion_blur
     parameters:
       size:
@@ -165,7 +193,11 @@ workloads:
       default: 2
 
   - name: background_sub
-    description: Background subtraction (MOG2 model)
+    summary: background subtraction using MOG2 algorithm
+    action: extract foreground masks from video frames
+    description: >
+      Apply the Gaussian Mixture-based Background/Foreground Segmentation (MOG2) algorithm to input images.
+      Update the background model and generate a foreground mask for each frame, evaluating performance in surveillance-style video processing workloads.
     command: ./bin/opencv_benchmark --workload background_sub
     parameters:
       size:
@@ -186,7 +218,11 @@ workloads:
       default: 2
   
   - name: color_tracking
-    description: HSV color threshold + morphology
+    summary: object tracking via color thresholding and morphology
+    action: isolate objects using HSV color space
+    description: >
+      Convert images from BGR to HSV color space and apply thresholding to isolate specific color ranges.
+      Perform morphological operations like erosion and dilation to clean up the resulting binary mask, simulating a basic object tracking pipeline.
     command: ./bin/opencv_benchmark --workload color_tracking
     parameters:
       size:
@@ -207,7 +243,11 @@ workloads:
       default: 2
 
   - name: feature_match
-    description: ORB feature detection and matching
+    summary: ORB feature detection and descriptor matching
+    action: detect and match image features
+    description: >
+      Detect keypoints and compute descriptors using the ORB (Oriented FAST and Rotated BRIEF) algorithm.
+      Match features between consecutive frames using a Brute-Force matcher with Hamming distance, measuring performance in feature-based image registration and SLAM tasks.
     command: ./bin/opencv_benchmark --workload feature_match
     parameters:
       size:

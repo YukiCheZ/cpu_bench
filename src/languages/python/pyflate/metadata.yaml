@@ -8,11 +8,12 @@ domain:
 
 workloads:
   - name: pyflate
+    summary: Pure-Python gzip and bzip2 decompression benchmark
+    action: decompress files using pure-Python algorithms
     description: >
-      Execute the Pyflate benchmark, which decompresses a gzip or Bzip2
-      compressed file using a pure-Python implementation. This workload
-      measures CPU performance on Huffman decoding, BWT reversal, move-to-front
-      transformation, and general decompression routines.
+      Execute the Pyflate benchmark to decompress gzip or Bzip2 files using a pure-Python implementation.
+      Perform computationally intensive tasks including Huffman decoding, Burrows-Wheeler Transform (BWT) reversal, and move-to-front transformations.
+      Measure the CPU's integer processing capability and interpreter overhead during complex data decompression routines.
     data: 
       command: python3 generate_data.py
       parameters:

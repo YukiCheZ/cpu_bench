@@ -11,10 +11,12 @@ domain:
 
 workloads:
   - name: raytrace
+    summary: Pure-Python 3D ray tracing rendering benchmark
+    action: render 3D scenes using ray tracing algorithms
     description: >
-      Render a 3D scene using a simple Python raytracer. This workload performs
-      floating-point computations for ray-object intersections, shading, and
-      lighting.
+      Initialize a 3D scene containing geometric objects, light sources, and material properties.
+      Execute the ray tracing algorithm to calculate pixel colors by simulating light paths, ray-object intersections, and shading effects.
+      Perform intensive floating-point arithmetic to render high-resolution images and evaluate the CPU's computational performance.
     command: python3 run_benchmark.py
     parameters:
       width:

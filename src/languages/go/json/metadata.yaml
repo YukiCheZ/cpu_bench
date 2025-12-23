@@ -9,10 +9,12 @@ domain:
 
 workloads:
   - name: json
+    summary: JSON serialization and deserialization of hierarchical data
+    action: marshal and unmarshal complex JSON objects
     description: >
-      Benchmark that repeatedly marshals and unmarshals a JSON object hierarchy in Go.
-      Measures the execution time of JSON serialization and deserialization of a tree-like
-      object structure. 
+      Execute repeated serialization and deserialization of a complex, hierarchical JSON object structure representing a tree.
+      Unmarshal raw JSON data into Go structs and marshal them back to JSON strings to stress the encoding/json standard library.
+      Measure the throughput of data processing to evaluate CPU performance during intensive text-based data interchange tasks. 
     data:
       command: python3 scripts/generate_data.py
       parameters:

@@ -10,7 +10,12 @@ setup:
 # Updated workloads aligned with new runner (BenchmarkRunner) and script (run_benchmark.sh)
 workloads:
   - name: guava_event
-    description: Event aggregation (Multimap + Multiset) with top-K frequency extraction and category hashing.
+    summary: event stream aggregation and frequency analysis
+    action: aggregate events and compute top-k statistics
+    description: >
+      Simulate a high-throughput event stream processing pipeline using Guava collections.
+      Maintain a sliding window of events with LinkedHashMultimap and track user frequency with HashMultiset.
+      Compute category hash signatures and extract top-K hot users to evaluate the performance of hashing and aggregation operations.
     command: ./scripts/run_benchmark.sh --workload event
     parameters:
       workload:
@@ -33,7 +38,11 @@ workloads:
         default: false
 
   - name: guava_graph
-    description: Directed graph traversal (multi-source BFS, topological sort, cycle detection) using Guava Graph.
+    summary: directed graph traversal and topological sorting
+    action: perform BFS, topological sort, and cycle detection
+    description: >
+      Construct a directed graph using Guava's GraphBuilder and populate it with nodes and edges.
+      Execute multiple graph algorithms including Breadth-First Search (BFS), topological sorting via Kahn's algorithm, and Depth-First Search (DFS) based cycle detection to measure graph traversal efficiency.
     command: ./scripts/run_benchmark.sh --workload graph
     parameters:
       workload:
@@ -56,7 +65,11 @@ workloads:
         default: false
 
   - name: guava_bloom
-    description: Bloom filter insertion/query workload with chained hashing for CPU stress.
+    summary: Bloom filter insertion and probabilistic membership testing
+    action: insert and query elements in a Bloom filter
+    description: >
+      Initialize a Guava BloomFilter and simulate a stream of integer insertions and membership queries.
+      Perform additional chained hashing operations using SHA-256 and Murmur3 during processing to stress CPU integer arithmetic and bitwise operations alongside probabilistic data structure manipulation.
     command: ./scripts/run_benchmark.sh --workload bloom
     parameters:
       workload:
@@ -79,7 +92,11 @@ workloads:
         default: false
 
   - name: guava_cache
-    description: Custom concurrent cache simulation with hot/cold key distribution and hash-heavy value computation.
+    summary: concurrent cache simulation with hot-cold access patterns
+    action: simulate concurrent cache access and eviction
+    description: >
+      Simulate a concurrent caching system with a skewed hot/cold key access pattern.
+      Compute complex hash-based values for cache misses using Murmur3 and manage cache size through random eviction, evaluating the performance of concurrent map operations and hash computation under load.
     command: ./scripts/run_benchmark.sh --workload cache
     parameters:
       workload:
@@ -102,7 +119,11 @@ workloads:
         default: false
 
   - name: guava_immutable
-    description: Immutable snapshot diffs/intersections over large base arrays with hashing reductions.
+    summary: immutable collection snapshotting and set operations
+    action: create and manipulate immutable list and set snapshots
+    description: >
+      Generate immutable snapshots of data using Guava's ImmutableList and ImmutableSet.
+      Perform set theoretic operations such as intersection and difference between snapshots, combined with hashing reductions, to measure the overhead of creating and querying immutable collection views.
     command: ./scripts/run_benchmark.sh --workload immutable
     parameters:
       workload:

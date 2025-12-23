@@ -11,11 +11,12 @@ setup:
 
 workloads:
   - name: kafka_producer_perf
+    summary: Kafka message producer throughput benchmark
+    action: publish high-volume message streams to Kafka
     description: >
-      Run Kafka producer performance benchmark to evaluate CPU under
-      high-throughput message publishing workloads. It uses the official
-      Kafka performance test tool (`kafka-producer-perf-test.sh`) launched
-      in parallel via Python process pool.
+      Launch a local Kafka broker and Zookeeper ensemble to establish a messaging cluster.
+      Execute parallel producer threads using the `kafka-producer-perf-test` tool to flood a topic with compressed records.
+      Measure the total time required to publish a fixed volume of messages, evaluating CPU efficiency in serialization, compression, and I/O handling.
     command: python3 run_benchmark.py
     parameters:
       num-records:

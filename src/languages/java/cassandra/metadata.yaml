@@ -11,11 +11,12 @@ setup:
 
 workloads:
   - name: cassandra_stress_read
+    summary: Cassandra NoSQL database read performance benchmark
+    action: execute high-concurrency read operations on Cassandra
     description: >
-      Run Cassandra read performance benchmark to evaluate CPU usage under
-      read-heavy workloads. It uses the official `cassandra-stress` tool
-      executed via Python, supporting configurable total operations, threads,
-      CPU core affinity, and multiple iterations.
+      Launch a local Apache Cassandra database instance and populate it with a large dataset using the `cassandra-stress` tool.
+      Execute a read-heavy benchmark workload with high concurrency, optionally pinning the client to specific CPU cores.
+      Measure the operation rate and latency of read requests to evaluate the CPU's efficiency in handling NoSQL database queries.
     command: python3 run_benchmark.py
     parameters:
       write-n:

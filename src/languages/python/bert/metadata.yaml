@@ -12,9 +12,12 @@ setup:
 
 workloads:
   - name: bert_eval
+    summary: BERT deep learning inference benchmark on CPU
+    action: execute forward pass inference with BERT model
     description: >
-      Execute BERT CPU evaluation using pre-generated input batches.
-      Measures the performance of forward pass on CPU.
+      Load pre-generated input batches and initialize the BERT model in evaluation mode.
+      Execute the forward pass on the CPU to process input sequences without gradient calculation.
+      Measure the inference latency to assess the CPU's performance on Transformer-based NLP workloads.
     data:
       command: python3 generate_data.py
       parameters:

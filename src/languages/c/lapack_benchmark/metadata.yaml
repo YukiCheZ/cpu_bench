@@ -18,8 +18,12 @@ setup:
 
 workloads:
   - name: lapack_solve
+    summary: LAPACK linear system solver benchmark
+    action: solve systems of linear equations using LU factorization
     description: >
-      Benchmark for solving linear systems using LAPACK.
+      Generate a dense, diagonally dominant square matrix and a corresponding right-hand side vector.
+      Execute the LAPACK `dgesv` routine to compute the solution to the system of linear equations using LU factorization.
+      Measure the computational throughput of the solver to evaluate CPU floating-point performance in linear algebra tasks.
     command: ./bin/lapack_benchmark --mode solve
     parameters:
       size:
@@ -39,8 +43,12 @@ workloads:
         default: 42
 
   - name: lapack_eigen
+    summary: LAPACK symmetric eigenvalue decomposition benchmark
+    action: compute eigenvalues and eigenvectors of symmetric matrices
     description: >
-      Benchmark for computing eigenvalues and eigenvectors using LAPACK.
+      Construct a random real symmetric matrix to serve as input for spectral analysis.
+      Perform the LAPACK `dsyev` routine to calculate all eigenvalues and eigenvectors using iterative numerical algorithms.
+      Assess the CPU's capability in handling symmetric matrix decompositions and floating-point intensive spectral computations.
     command: ./bin/lapack_benchmark --mode eigen
     parameters:
       size:
@@ -60,8 +68,12 @@ workloads:
         default: 42
 
   - name: lapack_svd
+    summary: LAPACK singular value decomposition benchmark
+    action: perform singular value decomposition on dense matrices
     description: >
-      Benchmark for computing singular value decomposition using LAPACK.
+      Initialize a general dense matrix with random floating-point values.
+      Execute the LAPACK `dgesvd` routine to factorize the matrix into left and right singular vectors and singular values.
+      Evaluate the performance of computationally intensive matrix factorization algorithms and memory access patterns during SVD computation.
     command: ./bin/lapack_benchmark --mode svd
     parameters:
       size:

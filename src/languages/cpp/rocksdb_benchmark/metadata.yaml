@@ -18,8 +18,12 @@ setup:
 
 workloads:
   - name: rocksdb_cpu
+    summary: RocksDB key-value store operations with Snappy compression
+    action: execute mixed read-write database transactions
     description: >
-      Execute CPU-bound key-value operations using RocksDB.
+      Execute a comprehensive sequence of RocksDB operations including sequential fills, random reads, random writes, and updates.
+      Apply Snappy compression to data blocks to increase CPU utilization during storage and retrieval tasks.
+      Measure the throughput of key-value manipulations and hashing algorithms like XXH3 to evaluate the performance of embedded database workloads.
     command: python3 run_benchmark.py
     parameters:
       num:

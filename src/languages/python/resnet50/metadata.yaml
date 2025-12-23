@@ -12,9 +12,12 @@ setup:
 
 workloads:
   - name: resnet50_inference
+    summary: ResNet50 deep learning inference benchmark on CPU
+    action: execute forward pass inference with ResNet50
     description: >
-      Execute ResNet50 CPU inference using pre-generated input data.
-      Measures the forward pass computation performance on CPU.
+      Load pre-generated input data batches and execute the ResNet50 model in evaluation mode on the CPU.
+      Perform forward pass computations to classify input images without updating model weights.
+      Measure the latency and throughput of the inference process to evaluate CPU performance for deep learning workloads.
     data:
       command: python3 generate_data.py
       parameters:
@@ -46,9 +49,12 @@ workloads:
         default: false
 
   - name: resnet50_training
+    summary: ResNet50 deep learning training benchmark on CPU
+    action: perform model training with forward and backward passes
     description: >
-      Execute ResNet50 CPU training using pre-generated input data.
-      Measures the forward + backward pass and optimization performance on CPU.
+      Load pre-generated training data and execute the ResNet50 model in training mode on the CPU.
+      Compute the forward pass to generate predictions and calculate the loss, followed by the backward pass to compute gradients.
+      Update model parameters using the SGD optimizer to evaluate the CPU's capability in handling full deep learning training cycles.
     data:
       command: python3 generate_data.py
       parameters:

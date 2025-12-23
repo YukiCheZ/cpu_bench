@@ -18,8 +18,12 @@ setup:
 
 workloads:
   - name: zstd
+    summary: Zstandard data compression and decompression benchmark
+    action: perform Zstd compression and decompression cycles
     description: >
-      Execute Zstandard (zstd) compression and decompression in memory.
+      Load a pre-generated binary dataset and execute the Zstandard (zstd) algorithm for data compression and decompression.
+      Perform high-level compression and subsequent decompression using parallel processes to stress test CPU integer performance and memory bandwidth.
+      Measure the latency and throughput of the compression cycles to evaluate the system's efficiency in handling intensive data processing tasks.
     data:
       command: python3 generate_data.py
       parameters:
