@@ -18,10 +18,12 @@ setup:
 
 workloads:
   - name: ffmpeg
+    summary: FFmpeg video processing and filtering benchmark
+    action: apply complex video filters and transformations
     description: >
-      Execute a CPU-intensive FFmpeg workload that performs multiple operations
-      on an input video: decoding, scaling, Gaussian blur, frame rate conversion,
-      and re-encoding to H.265.
+      Execute a CPU-intensive video processing pipeline using FFmpeg to transform input video streams.
+      Apply a complex filter chain including scaling, Gaussian blur, unsharp masking, and frame blending to stress test CPU multimedia extensions.
+      Process video frames in parallel instances pinned to specific CPU cores to evaluate multi-core scaling and floating-point performance.
     data:
       command: python3 generate_data.py
       parameters:

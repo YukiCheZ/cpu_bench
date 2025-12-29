@@ -9,9 +9,12 @@ domain:
 
 workloads:
   - name: gc_garbage
+    summary: Go garbage collector stress test via parsing
+    action: repeatedly parse Go source files to generate garbage
     description: >
-      Benchmark that stresses the Go garbage collector by repeatedly parsing Go source files
-      in memory. Measures GC efficiency under concurrent parsing workloads.
+      Stress the Go runtime's garbage collector by repeatedly parsing large Go source files in memory.
+      Generate high rates of short-lived object allocations and discard parse trees to trigger frequent GC cycles.
+      Measure the efficiency and latency of the garbage collection process under concurrent memory pressure.
     data: 
       command: python3 generate_data.py 
       parameters:

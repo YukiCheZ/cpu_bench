@@ -3,19 +3,21 @@ name: transformer_train
 type: macrobenchmark
 language: Python
 domain:
-  - deep_learning
+  - deep learning
   - transformers
-  - natural_language_processing
+  - natural language processing
 
 setup:
   command: python3 setup.py
 
 workloads:
   - name: transformer_train
+    summary: Full Transformer Encoder-Decoder training benchmark
+    action: train Transformer model with forward and backward passes
     description: >
-      Execute the full Transformer (Encoder + Decoder) CPU training benchmark. 
-      This workload measures the performance of multi-head self-attention, 
-      feedforward networks, and sequence processing on CPU.
+      Initialize a full Transformer model with Encoder and Decoder layers, embeddings, and an Adam optimizer.
+      Execute the training loop on pre-generated data batches by computing the forward pass, calculating CrossEntropy loss, and performing backpropagation.
+      Update model parameters to evaluate the CPU's performance in handling complex deep learning training tasks involving attention mechanisms and gradient computation.
     data: 
       command: python3 generate_data.py
       parameters:
@@ -23,7 +25,7 @@ workloads:
           description: Directory to save generated batches
           default: ./data
         num_batches:
-          description: Number of batches to generate
+          description: Number of batches
           default: 40
         batch_size:
           description: Number of sequences per batch
@@ -37,7 +39,7 @@ workloads:
     command: python3 run_benchmark.py
     parameters:
       data_dir:
-        description: Directory containing pre-generated batches and metadata.json
+        description: Directory containing pre-generated batches 
         default: ./data
       iters:
         description: Number of iterations to run training

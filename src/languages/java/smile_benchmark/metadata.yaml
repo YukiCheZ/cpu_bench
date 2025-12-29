@@ -18,11 +18,12 @@ setup:
 
 workloads:
   - name: smile_kmeans
+    summary: K-Means clustering on dense vector data
+    action: execute unsupervised data partitioning algorithm
     description: >
-      Run a KMeans clustering CPU benchmark in Java using the Smile library.
-      The benchmark generates random data in memory and performs KMeans clustering
-      on multiple copies (parallel threads), to evaluate CPU performance under
-      compute-intensive machine learning workloads.
+      Load a dense matrix of feature vectors from a CSV file into memory.
+      Execute the K-Means clustering algorithm using the Smile library to iteratively partition data points into centroids.
+      Perform concurrent clustering operations across multiple threads to measure the CPU's floating-point arithmetic performance and scalability in machine learning tasks.
     data: 
       command: python3 generate_data.py --task kmeans
       parameters:

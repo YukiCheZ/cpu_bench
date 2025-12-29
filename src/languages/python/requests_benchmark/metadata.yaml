@@ -12,7 +12,12 @@ setup:
 
 workloads:
   - name: requests-json
-    description: Benchmark JSON parsing performance using Python requests library on local file datasets
+    summary: JSON parsing benchmark using Python requests library
+    action: parse JSON data from local file responses
+    description: >
+      Initialize a requests session with a local file adapter to simulate HTTP responses from memory-cached files.
+      Execute repeated GET requests to retrieve JSON payloads and parse them into Python dictionaries.
+      Measure the CPU time required for data serialization and object creation to evaluate JSON processing performance.
     command: python3 -m scripts.run_benchmark
     parameters:
       threads:

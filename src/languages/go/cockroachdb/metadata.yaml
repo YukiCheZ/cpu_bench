@@ -13,11 +13,12 @@ setup:
 
 workloads:
   - name: kv
+    summary: CockroachDB key-value transactional performance benchmark
+    action: execute concurrent key-value read and write transactions
     description: >
-      Benchmark for CockroachDB using the built-in "workload kv" runner.
-      This workload launches a single-node CockroachDB cluster locally,
-      initializes the key-value dataset, and runs transactional read/write
-      operations with configurable read percentages and concurrency.
+      Launch a local single-node CockroachDB cluster and initialize a key-value dataset.
+      Execute a high-concurrency workload of transactional read and write operations with configurable read/write ratios.
+      Measure the throughput and latency of database operations to evaluate the CPU's ability to handle distributed database transaction processing.
     command: go run src/kv.go
     parameters:
       cockroachdb-bin:
@@ -40,11 +41,12 @@ workloads:
         default: 1
 
   - name: tpcc
+    summary: TPC-C On-Line Transaction Processing benchmark
+    action: simulate complex supply chain database transactions
     description: >
-      Benchmark for CockroachDB using the built-in "workload tpcc" runner.
-      This workload launches a single-node CockroachDB cluster locally,
-      initializes the TPCC dataset, and runs transactional read/write
-      operations with configurable parameters.
+      Deploy a local CockroachDB instance and populate it with a TPC-C compliant dataset scaled by warehouse count.
+      Simulate a complex OLTP workload involving order processing, payment recording, and delivery tracking.
+      Evaluate the system's transactional throughput and consistency handling under heavy concurrency to assess database performance.
     command: go run src/tpcc.go
     parameters:
       cockroachdb-bin:

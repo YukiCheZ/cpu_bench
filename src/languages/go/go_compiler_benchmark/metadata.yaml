@@ -9,7 +9,12 @@ domain:
 
 workloads:
   - name: go_compiler
-    description: Benchmark for measuring Go compiler and toolchain build performance.
+    summary: Go toolchain compilation performance benchmark
+    action: compile generated Go source packages
+    description: >
+      Execute the Go compiler to build a large set of synthetic Go packages containing complex functions and structures.
+      Perform a full rebuild by forcing package recompilation and optionally clearing the build cache to simulate a clean build environment.
+      Measure the compilation time to evaluate the multi-threaded performance of the Go toolchain and CPU under heavy build workloads.
     data:
       command: python3 generate_data.py
       parameters:

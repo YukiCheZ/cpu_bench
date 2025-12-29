@@ -13,9 +13,12 @@ setup:
 
 workloads:
   - name: biogo-igor
+    summary: genomic sequence alignment clustering and grouping
+    action: perform piling, clustering, and grouping of sequence hits
     description: >
-      Benchmark for the igor package in biogo. This workload simulates genomic sequence
-      alignment hits in GFF format, performs piling, clustering, and grouping using igor.
+      Generate synthetic genomic sequence alignment hits in GFF format.
+      Execute the igor pipeline to process these hits by performing piling, clustering, and grouping operations.
+      Serialize the resulting groups to JSON format to evaluate the CPU performance of bioinformatics data processing algorithms.
     command: go run src/igor.go
     parameters:
       seq:

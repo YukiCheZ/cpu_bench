@@ -12,10 +12,12 @@ setup:
 
 workloads:
   - name: gopher_lua
+    summary: Gopher-Lua interpreter execution of k-nucleotide analysis
+    action: execute Lua script for DNA k-mer frequency counting
     description: >
-      Benchmark that executes a Lua script using the Gopher-Lua interpreter.
-      It loads a DNA sequence input file and runs the `run_knucleotide` function
-      defined in the Lua script.
+      Invoke the Gopher-Lua interpreter to execute the k-nucleotide bioinformatics benchmark.
+      Load a DNA sequence into the Lua virtual machine and perform intensive string processing to calculate k-mer frequencies and count specific nucleotide fragments.
+      Measure the execution time to evaluate the performance of the Go-based Lua implementation in handling hash table operations and string manipulation.
     data: 
       command: python3 scripts/generate_data.py
       parameters:

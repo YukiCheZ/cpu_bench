@@ -13,10 +13,12 @@ setup:
 
 workloads:
   - name: bleve-index
+    summary: in-memory full-text indexing using Bleve library
+    action: perform batch indexing of synthetic text documents
     description: >
-      Benchmark for the Bleve full-text indexing library. This workload generates
-      synthetic articles with randomized text using a Zipf distribution, indexes them
-      into an in-memory Bleve index in configurable batch sizes.
+      Generate synthetic articles containing randomized text derived from a Zipf distribution to mimic natural language word frequency.
+      Initialize an in-memory Bleve index and execute batch indexing operations to populate the search structure.
+      Measure the computational efficiency of text analysis and index construction to assess CPU performance for information retrieval tasks.
     command: go run src/main.go src/words.go
     parameters:
       documents:

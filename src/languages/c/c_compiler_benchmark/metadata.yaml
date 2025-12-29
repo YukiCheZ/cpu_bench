@@ -7,8 +7,12 @@ domain:
 
 workloads:
   - name: gcc_compile
+    summary: "GCC C compiler performance benchmark"
+    action: "compile generated C source code using GCC"
     description: >
-      Execute CPU-intensive compilation of generated C source files using gcc.
+      Execute the GCC compiler to build a large set of synthetic C source files containing computationally intensive functions.
+      Perform full compilation, optimization, and linking processes to generate an executable binary.
+      Measure the compilation time to evaluate the CPU's performance on complex software build workloads.
     data:
       command: python3 generate_data.py
       parameters:
@@ -37,8 +41,12 @@ workloads:
         default: 3
 
   - name: clang_compile
+    summary: "Clang C compiler performance benchmark"
+    action: "compile generated C source code using Clang"
     description: >
-      Execute CPU-intensive compilation of generated C source files using clang.
+      Execute the Clang compiler to build a large set of synthetic C source files containing computationally intensive functions.
+      Perform full compilation, optimization, and linking processes to generate an executable binary.
+      Measure the compilation time to evaluate the CPU's performance on complex software build workloads.
     data:
       command: python3 generate_data.py
       parameters:

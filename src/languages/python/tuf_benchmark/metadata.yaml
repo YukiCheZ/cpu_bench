@@ -13,7 +13,12 @@ setup:
 
 workloads:
   - name: tuf-metadata
-    description: Benchmark TUF metadata parsing and file hashing (SHA256) performance
+    summary: TUF metadata parsing and SHA256 hashing benchmark
+    action: parse TUF metadata and compute SHA256 hashes
+    description: >
+      Load repository metadata and target files into memory to simulate a secure software update process.
+      Parse the metadata using The Update Framework (TUF) API to validate security information.
+      Compute SHA256 hashes of the target files to verify data integrity and measure the CPU's cryptographic and parsing performance.
     data:
       command: python3 generate_data.py
       parameters:

@@ -9,10 +9,12 @@ domain:
 
 workloads:
   - name: deltablue
+    summary: "DeltaBlue incremental constraint solver benchmark for Python"
+    action: "solve constraint satisfaction problems using incremental propagation"
     description: >
-      Execute the DeltaBlue constraint solver benchmark. This workload
-      measures the performance of incremental constraint satisfaction,
-      variable dependency maintenance, and propagation algorithms.
+      Execute the DeltaBlue algorithm to solve constraint satisfaction problems by maintaining a hierarchy of constraints.
+      Construct a graph of variables and constraints, then perform incremental updates to satisfy required and preferred constraints.
+      Measure the performance of the solver in planning, propagating changes, and maintaining consistency across the constraint network.
     command: python3 run_benchmark.py
     parameters:
       n:

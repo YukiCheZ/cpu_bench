@@ -12,11 +12,12 @@ setup:
 
 workloads:
   - name: kdtree
+    summary: geospatial query simulation using KD-Tree indexing
+    action: execute spatial search and range queries
     description: >
-      A benchmark that simulates geospatial queries using a KD-Tree dataset.
-      It generates a random set of latitude/longitude points, builds a KDTree
-      index, and executes a mix of spatial queries including within-circle,
-      intersects-circle, and nearby-KNN lookups. 
+      Generate a synthetic dataset of geospatial coordinates (latitude/longitude) and construct an in-memory KD-Tree index.
+      Execute a mix of spatial operations including K-Nearest Neighbors (KNN) search, within-circle range queries, and intersection checks.
+      Measure the query latency and throughput to evaluate CPU performance on geometric calculations and tree traversal algorithms. 
     command: go run src/main.go
     parameters:
       threads:

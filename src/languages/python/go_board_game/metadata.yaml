@@ -9,10 +9,12 @@ domain:
 
 workloads:
   - name: go-board-game
+    summary: "Monte Carlo Tree Search AI benchmark for Go"
+    action: "execute MCTS simulations to determine optimal moves"
     description: >
-      Benchmark for a Go board game AI using Monte Carlo Tree Search (MCTS). 
-      This workload simulates games on configurable board sizes, with a configurable 
-      number of simulation games per move. 
+      Initialize the Go board environment and configure the Monte Carlo Tree Search (MCTS) algorithm.
+      Execute multiple simulation games per move using the Upper Confidence Bound for Trees (UCT) strategy to explore potential game states.
+      Perform random playouts and backpropagate results to update tree node statistics, evaluating the CPU's integer processing and branching performance.
     command: python3 run_benchmark.py 
     parameters:
       size:

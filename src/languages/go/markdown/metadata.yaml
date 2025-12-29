@@ -11,9 +11,12 @@ setup:
 
 workloads:
   - name: markdown_render
+    summary: Markdown to HTML conversion and rendering
+    action: parse and render Markdown text to HTML
     description: >
-      Benchmark that repeatedly parses and renders Markdown files into HTML using
-      the golang-commonmark/markdown library.
+      Parse a collection of Markdown files and render them into HTML using the golang-commonmark library.
+      Process complex Markdown features including tables, typography, and auto-linking to stress text processing capabilities.
+      Measure the rendering throughput to evaluate the CPU's performance in string manipulation and document conversion tasks.
     data:
       command: python3 generate_data.py
       parameters:

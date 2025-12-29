@@ -8,9 +8,12 @@ domain:
 
 workloads:
   - name: chaos-fractal
+    summary: "Chaos Game fractal generation benchmark using B-splines"
+    action: "perform iterative point transformations for fractal generation"
     description: >
-      Generate chaosgame-like fractal images using B-splines/NURBS. This workload 
-      performs many floating-point operations and random transforms.
+      Load pre-generated spline definitions and simulation parameters to initialize the Chaos Game environment.
+      Execute the fractal generation algorithm by iteratively transforming points using B-spline based geometric operations and random selections.
+      Perform intensive floating-point calculations to simulate fractal growth and measure the CPU's computational throughput for mathematical modeling.
     data:
       command: python3 generate_data.py
       parameters:

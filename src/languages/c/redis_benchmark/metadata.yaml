@@ -18,7 +18,12 @@ setup:
 
 workloads:
   - name: redis-benchmark
-    description: Benchmark Redis performance using redis-benchmark tool
+    summary: Redis in-memory database performance benchmark
+    action: execute concurrent requests against Redis instances
+    description: >
+      Launch multiple independent Redis server instances to fully utilize available CPU cores.
+      Execute the `redis-benchmark` tool to generate high-throughput traffic with concurrent clients and pipelined requests.
+      Measure the request processing throughput and latency to evaluate the CPU's integer performance and memory subsystem efficiency.
     command: python3 run_benchmark.py
     parameters:
       clients:

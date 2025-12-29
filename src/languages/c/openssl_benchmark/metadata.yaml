@@ -17,8 +17,12 @@ setup:
 
 workloads:
   - name: openssl
+    summary: OpenSSL encryption and hashing performance benchmark
+    action: perform AES encryption and SHA hashing operations
     description: >
-      Execute CPU-intensive encryption and hashing operations using OpenSSL.
+      Load a pre-generated data file into memory to serve as the payload.
+      Execute a continuous loop of AES-256-CBC encryption followed by SHA-256 hashing of the ciphertext.
+      Perform AES-256-CBC decryption and SHA-512 hashing of the result to verify data integrity and measure CPU cryptographic throughput.
     data:
       command: python3 generate_data.py
       parameters:

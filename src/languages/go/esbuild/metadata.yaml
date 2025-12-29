@@ -14,10 +14,12 @@ setup:
 
 workloads:
   - name: ThreeJS
+    summary: JavaScript library bundling and minification
+    action: bundle and minify a large JavaScript codebase
     description: >
-      Benchmark the performance of Three.js, a 3D graphics library, by
-      rendering a complex JavaScript scene. Measures rendering time, 
-      and efficiency of the graphics pipeline.
+      Execute the esbuild bundler on a synthetic JavaScript project modeled after the Three.js library structure.
+      Perform full bundling, minification, and source map generation to produce a single optimized output file.
+      Measure the compilation speed and resource usage to evaluate the CPU's performance on web development build toolchains.
     data: 
       command: python3 generate_data.py --lang js
       parameters:
@@ -52,9 +54,12 @@ workloads:
         default: 30
   
   - name: RomeTS
+    summary: TypeScript project compilation and bundling
+    action: compile and bundle a TypeScript application
     description: >
-      Benchmark RomeTS, a TypeScript/JavaScript bundler and compiler, by
-      compiling a full TypeScript project.
+      Invoke the esbuild compiler to process a synthetic TypeScript project simulating the Rome toolchain.
+      Transpile TypeScript code to JavaScript, bundle modules, minify the output, and generate source maps for a Node.js target.
+      Assess the system's compilation throughput and latency during intensive string processing and syntax tree manipulation tasks.
     data: 
       command: python3 generate_data.py --lang ts
       parameters:
