@@ -4,20 +4,21 @@ import argparse
 
 def main():
     parser = argparse.ArgumentParser(description="Generate binary data for CPU benchmark")
-    parser.add_argument('--size', type=int, default=50,
-                        help="Size of data to generate in MB (default: 10)")
+    parser.add_argument('--size', type=int, default=50000,
+                        help="Size of data to generate in KB")
     parser.add_argument('--output', type=str, default="./data/data.bin",
                         help="Output file path (default: ./data/data.bin)")
     args = parser.parse_args()
 
-    size_bytes = args.size * 1024 * 1024
+    size_bytes = args.size * 1024
     output_path = args.output
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    print(f"[INFO] Generating {args.size} MB of random data into {output_path}...")
+    print(f"[INFO] Generating {args.size} KB of random data into {output_path}...")
+    
     with open(output_path, "wb") as f:
-        chunk_size = 1024 * 1024  # 1 MB
+        chunk_size = 1024  # 1 KB
         for _ in range(args.size):
             f.write(os.urandom(chunk_size))
 

@@ -24,8 +24,8 @@ workloads:
       command: python3 generate_data.py
       parameters:
         size: 
-          description: Size of the data file to generate (in MB)
-          default: 50
+          description: Size of the data file to generate (in KB)
+          default: 50000
     command: python3 run_benchmark.py
     parameters:
       input:

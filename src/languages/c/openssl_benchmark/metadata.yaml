@@ -23,8 +23,8 @@ workloads:
       command: python3 generate_data.py
       parameters:
         size:
-          description: Size of the data file to generate (in MB)
-          default: 50
+          description: Size of the data file to generate (in KB)
+          default: 50000
         output:
           description: Path to the output data file
           default: ./data/data.bin

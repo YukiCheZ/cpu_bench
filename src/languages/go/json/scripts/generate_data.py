@@ -26,15 +26,15 @@ def make_child_template(rnd):
 
 def main():
     p = argparse.ArgumentParser(description="Generate JSON input file (tree with many kids)")
-    p.add_argument("--size", type=float, default=50, help="target size in MB (approximate, e.g. 10)")
+    p.add_argument("--size", type=float, default=50000, help="target size in KB")
     p.add_argument("--seed", type=int, default=42, help="random seed")
-    p.add_argument("--out", type=str, default=None, help="output file path (default ./data/input_<size>MB.json)")
+    p.add_argument("--out", type=str, default=None, help="output file path (default ./data/input.json)")
     args = p.parse_args()
 
-    target_bytes = int(args.size * 1024 * 1024)
+    target_bytes = int(args.size * 1024)
     rnd = random.Random(args.seed)
     os.makedirs("data", exist_ok=True)
-    out_path = args.out if args.out else f"./data/input_{int(args.size)}MB.json"
+    out_path = args.out if args.out else f"./data/input.json"
 
     root_name = "root"
     root_start = '{"username":"user","tree":{"name":"' + root_name + '","kids":['
@@ -66,7 +66,7 @@ def main():
         f.write(final)
 
     actual_size = os.path.getsize(out_path)
-    print(f"Generated {out_path}: requested {args.size} MB, actual {(actual_size/1024/1024):.4f} MB, nodes={kids_count}")
+    print(f"Generated {out_path}: requested {args.size} KB, actual {(actual_size/1024/1024):.4f} KB, nodes={kids_count}")
 
 if __name__ == "__main__":
     main()

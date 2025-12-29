@@ -2,7 +2,7 @@ name: guava_benchmark
 type: macrobenchmark
 language: Java
 domain:
-  - software_development
+  - software development
 
 setup:
   command: ./scripts/setup.sh
