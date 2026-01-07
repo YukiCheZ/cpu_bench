@@ -31,7 +31,7 @@ workloads:
         size:
           full_name: data size
           description: Size of the data file to generate
-          default: 50
+          default: 50000
         output:
           full_name: output file
           description: Path to the output data file

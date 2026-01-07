@@ -32,7 +32,7 @@ workloads:
         size: 
           full_name: data size
           description: Size of the data file to generate
-          default: 50
+          default: 50000
     command: python3 run_benchmark.py
     parameters:
       input:
