@@ -22,50 +22,65 @@ workloads:
       command: python3 generate_data.py
       parameters:
         output_dir:
+          full_name: output directory
           description: Directory to save generated batches
           default: ./data
         num_batches:
+          full_name: number of batches
           description: Number of batches
           default: 40
         batch_size:
+          full_name: batch size
           description: Number of sequences per batch
           default: 4
         seq_len:
+          full_name: sequence length
           description: Sequence length
           default: 128
         vocab_size:
+          full_name: vocabulary size
           description: Vocabulary size for input tokens
           default: 10000
     command: python3 run_benchmark.py
     parameters:
       data_dir:
+        full_name: data directory
         description: Directory containing pre-generated batches 
         default: ./data
       iters:
+        full_name: iterations
         description: Number of iterations to run training
         default: 1
       threads:
+        full_name: threads
         description: Number of CPU threads to use
         default: 1
       num_encoder_layers:
+        full_name: number of encoder layers
         description: Number of encoder layers in Transformer
         default: 12
       num_decoder_layers:
+        full_name: number of decoder layers
         description: Number of decoder layers in Transformer
         default: 12
       d_model:
+        full_name: embedding dimension
         description: Transformer embedding dimension
         default: 512
       nhead:
+        full_name: number of attention heads
         description: Number of attention heads
         default: 16
       dim_feedforward:
+        full_name: feedforward dimension
         description: Feedforward hidden size in each Transformer layer
         default: 4096
       lr:
+        full_name: learning rate
         description: Learning rate for optimizer
         default: 1e-3
       compile:
+        full_name: compile
         description: Whether to use torch.compile for optimization
         default: false
 

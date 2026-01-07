@@ -24,32 +24,41 @@ workloads:
       command: python3 generate_data.py --lang js
       parameters:
         size:
+          full_name: number of files
           description: Number of files to generate
           default: 500
         complexity:
+          full_name: file complexity
           description: Complexity of each file
           default: 2000
         out:
+          full_name: output directory
           description: Output directory for generated files
           default: ./data/demo_js
         repeat-imports:
+          full_name: repeat imports
           description: Number of times to repeat imports in each file
           default: 10
         heavy-factor:
+          full_name: heavy factor
           description: Additional heavy factor per file
           default: 50
     command: go run main.go --bench ThreeJS 
     parameters:
       bin:
-        description: Path to esbuild binary (or set ESBUILD_BIN env var)
+        full_name: esbuild binary path
+        description: Path to esbuild binary
         default: ./bin/esbuild
       src:
+        full_name: source directory
         description: Path to JavaScript/TypeScript source to bundle
         default: ./data/demo_js
       threads:
-        description: Number of threads to use (sets GOMAXPROCS for esbuild process)
+        full_name: threads
+        description: Number of threads to use 
         default: 1
       iters:
+        full_name: iterations
         description: Number of iterations to run
         default: 30
   
@@ -64,32 +73,41 @@ workloads:
       command: python3 generate_data.py --lang ts
       parameters:
         size:
+          full_name: number of files
           description: Number of files to generate
           default: 500
         complexity:
+          full_name: file complexity
           description: Complexity of each file
           default: 2000
         out:
+          full_name: output directory
           description: Output directory for generated files
           default: ./data/demo_js
         repeat-imports:
+          full_name: repeat imports
           description: Number of times to repeat imports in each file
           default: 10
         heavy-factor:
+          full_name: heavy factor
           description: Additional heavy factor per file
           default: 50
     command: go run main.go --bench RomeTS
     parameters:
       bin:
-        description: Path to esbuild binary (or set ESBUILD_BIN env var)
+        full_name: esbuild binary path
+        description: Path to esbuild binary
         default: ./bin/esbuild
       src:
+        full_name: source directory
         description: Path to JavaScript/TypeScript source to bundle
         default: ./data/demo_js
       threads:
-        description: Number of threads to use (sets GOMAXPROCS for esbuild process)
+        full_name: threads
+        description: Number of threads to use
         default: 1
       iters:  
+        full_name: iterations
         description: Number of iterations to run
         default: 30
     

@@ -21,17 +21,21 @@ workloads:
     command: python3 -m scripts.run_benchmark --dataset matrix
     parameters:
       size:
-        description: Matrix dimension (size x size)
+        full_name: matrix size
+        description: Matrix dimension 
         unit: elements
         default: 4096
       iters:
+        full_name: iterations
         description: Number of measured iterations
         default: 300
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations
         default: 3
       threads:
-        description: Number of parallel benchmark copies (multiprocessing)
+        full_name: threads
+        description: Number of parallel benchmark copies
         default: 1
 
   - name: svd
@@ -44,17 +48,21 @@ workloads:
     command: python3 -m scripts.run_benchmark --dataset svd
     parameters:
       size:
-        description: Matrix dimension (size x size)
+        full_name: matrix size
+        description: Matrix dimension
         unit: elements
         default: 2048
       iters:
+        full_name: iterations
         description: Number of measured iterations
         default: 100
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations
         default: 3
       threads:
-        description: Number of parallel benchmark copies (multiprocessing)
+        full_name: threads
+        description: Number of parallel benchmark copies
         default: 1
 
   - name: fft
@@ -67,17 +75,21 @@ workloads:
     command: python3 -m scripts.run_benchmark --dataset fft
     parameters:
       size:
+        full_name: signal length
         description: Signal length
         unit: elements
         default: 8388608
       iters:
+        full_name: iterations
         description: Number of measured iterations
         default: 1000
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations
         default: 3
       threads:
-        description: Number of parallel benchmark copies (multiprocessing)
+        full_name: threads
+        description: Number of parallel benchmark copies
         default: 1
 
 # Benchmark characteristics

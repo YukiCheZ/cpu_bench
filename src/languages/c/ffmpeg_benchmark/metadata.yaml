@@ -10,9 +10,11 @@ setup:
   command: ./setup.sh
   parameters:
     compiler:
+      full_name: compiler
       description: C compiler to use for building FFmpeg
       default: gcc
     opt:
+      full_name: optimization level
       description: Optimization level for compiler
       default: -O3
 
@@ -28,35 +30,45 @@ workloads:
       command: python3 generate_data.py
       parameters:
         output: 
+          full_name: output file
           description: Path to the output video file
           default: data/test.mp4
         resolution:
-          description: Resolution of the generated video (width x height)
+          full_name: resolution
+          description: Resolution of the generated video
           default: 1280x720
         duration:
+          full_name: duration
           description: Duration of the generated video in seconds
           default: 480
         framerate:
+          full_name: frame rate
           description: Frame rate of the generated video
           default: 10
         ffmpeg_bin:
+          full_name: ffmpeg binary path
           description: Path to ffmpeg executable
           default: ./bin/ffmpeg_install/bin/ffmpeg
     command: python3 run_benchmark.py
     parameters:
       input:
+        full_name: input file
         description: Path to the input video file
         default: data/test.mp4
       threads:
+        full_name: threads
         description: Number of threads used for CPU processing
         default: 1
       scale:
-        description: Output video resolution (width:height)
+        full_name: scale resolution
+        description: Output video resolution
         default: 1920:1080
       fps:
+        full_name: output frame rate
         description: Output frame rate
         default: 160
       ffmpeg_bin:
+        full_name: ffmpeg binary path
         description: Path to ffmpeg executable 
         default: ./bin/ffmpeg_install/bin/ffmpeg
 

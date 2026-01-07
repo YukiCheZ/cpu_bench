@@ -10,9 +10,11 @@ setup:
   command: ./setup.sh
   parameters:
     compiler:
+      full_name: compiler
       description: Compiler to use for building the benchmark
       default: gcc
     opt:
+      full_name: optimization level
       description: Optimization level for compilation
       default: -O3
 
@@ -28,26 +30,33 @@ workloads:
       command: python3 generate_data.py
       parameters:
         size: 
-          description: Size of the data file to generate (in KB)
-          default: 50000
+          full_name: data size
+          description: Size of the data file to generate
+          default: 50
     command: python3 run_benchmark.py
     parameters:
       input:
+        full_name: input file
         description: Input file for benchmark
         default: ./data/zstd_input.bin
       level:
-        description: Compression level (1-19)
+        full_name: compression level
+        description: Compression level
         default: 19
       threads:
+        full_name: threads
         description: Number of threads to use
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations before timing
         default: 1
       iters:
+        full_name: iterations
         description: Number of timed iterations
         default: 120
       zstd-bin:
+        full_name: zstd binary path
         description: Path to zstd executable
         default: ./bin/zstd
 

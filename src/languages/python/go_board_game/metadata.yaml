@@ -18,18 +18,23 @@ workloads:
     command: python3 run_benchmark.py 
     parameters:
       size:
-        description: Board size (e.g., 9, 19, 50)
+        full_name: board size
+        description: Board size 
         default: 200
       games:
+        full_name: games per move
         description: Number of simulation games per move
         default: 20
       iters:
+        full_name: iterations
         description: Number of timed benchmark iterations
         default: 20
       threads:
-        description: Number of parallel threads/processes
+        full_name: threads
+        description: Number of parallel processes
         default: 1
       warmup:
+        full_name: warmup
         description: Run one warmup iteration before timing
         type: boolean
         default: true

@@ -10,9 +10,11 @@ setup:
   command: python3 setup.py
   parameters:
     maven_goal:
+      full_name: maven build goal
       description: Maven goal to build the project
       default: "-q -DskipTests clean package"
     smile_version:
+      full_name: smile library version
       description: Version of the Smile library to use
       default: "2.6.0"
 
@@ -28,29 +30,37 @@ workloads:
       command: python3 generate_data.py --task kmeans
       parameters:
         samples:
+          full_name: number of samples
           description: Number of samples to generate
           default: 100000
         features:
+          full_name: number of features
           description: Number of features per sample
           default: 100
         output:
+          full_name: output directory
           description: Output directory for generated data
           default: ./data
         seed:
+          full_name: random seed
           description: Random seed for reproducibility
           default: 42
     command: python3 run_benchmark.py --workload kmeans
     parameters:
       data:
+        full_name: input data path
         description: Path to input CSV data
         default: ./data/kmeans.csv
       clusters:
+        full_name: number of clusters
         description: Number of clusters for KMeans
         default: 100
       threads:
-        description: Number of copies (threads) to run in parallel
+        full_name: number of threads
+        description: Number of copies to run in parallel
         default: 1
       iters:
+        full_name: number of iterations
         description: Number of iterations for the benchmark
         default: 6
 

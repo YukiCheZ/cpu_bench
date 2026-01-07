@@ -10,9 +10,11 @@ setup:
   command: ./setup.sh
   parameters:
     compiler:
+      full_name: compiler
       description: Compiler to use (gcc or clang)
       default: gcc
     opt:
+      full_name: optimization level
       description: Optimization level (O0, O1, O2, O3)
       default: -O3
 
@@ -27,15 +29,19 @@ workloads:
     command: python3 run_benchmark.py
     parameters:
       num:
-        description: Number of key-value pairs to use in benchmark
+        full_name: number of keys
+        description: Number of key-value pairs
         default: 4000000
       threads:
+        full_name: threads
         description: Number of concurrent threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations before timing
         default: 1
       iters:
+        full_name: iterations
         description: Number of timed iterations
         default: 1
 

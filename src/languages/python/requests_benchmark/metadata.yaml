@@ -21,18 +21,23 @@ workloads:
     command: python3 -m scripts.run_benchmark
     parameters:
       threads:
+        full_name: threads
         description: Number of parallel worker processes
         default: 1
       iters:
+        full_name: iterations
         description: Iterations per worker process
         default: 1000
       warmup:
+        full_name: warmup iterations
         description: Warmup iterations per worker
         default: 3
       size:
+        full_name: dataset size
         description: Dataset size, affects generated JSON file
         default: 262144
       force:
+        full_name: force regenerate
         description: Force regenerate dataset even if it exists
         default: false
 

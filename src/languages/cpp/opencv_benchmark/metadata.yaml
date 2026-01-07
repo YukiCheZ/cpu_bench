@@ -10,10 +10,12 @@ setup:
   command: ./setup.sh
   parameters:
     compiler:
-      description: Compiler to use (gcc or clang)
+      full_name: compiler
+      description: Compiler to use
       default: gcc
     opt:
-      description: Optimization level (O0, O1, O2, O3)
+      full_name: optimization level
+      description: Optimization level
       default: -O3
 
 workloads:
@@ -26,21 +28,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload fft_batch
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 1024
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 50
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 50
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
 
   - name: conv_heavy
     summary: intensive image convolution with Gaussian kernels
@@ -51,21 +58,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload conv_heavy
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 1024
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 50
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 25
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
   
   - name: mandelbrot
     summary: floating-point intensive Mandelbrot fractal generation
@@ -76,21 +88,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload mandelbrot
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 1024
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 50
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 40
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
 
   - name: jacobi
     summary: iterative Jacobi method for solving PDEs
@@ -101,21 +118,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload jacobi
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 2048
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 50
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 400
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
 
   - name: canny
     summary: Canny edge detection algorithm execution
@@ -126,21 +148,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload canny
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 2048
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 50
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 150
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
 
   - name: optical_flow
     summary: dense optical flow estimation using Farneback
@@ -151,21 +178,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload optical_flow
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 1024
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 50
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 50
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
 
   - name: motion_blur
     summary: linear motion blur effect application
@@ -176,21 +208,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload motion_blur
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 2048
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 50
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 40
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
 
   - name: background_sub
     summary: background subtraction using MOG2 algorithm
@@ -201,21 +238,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload background_sub
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 1080
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 100
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 50
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
   
   - name: color_tracking
     summary: object tracking via color thresholding and morphology
@@ -226,21 +268,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload color_tracking
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 2160
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 100
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 200
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
 
   - name: feature_match
     summary: ORB feature detection and descriptor matching
@@ -251,21 +298,26 @@ workloads:
     command: ./bin/opencv_benchmark --workload feature_match
     parameters:
       size:
+        full_name: image size
         description: Width/Height of square images
         unit: pixels
         default: 1024
       images:
+        full_name: number of images
         description: Number of images to process per iteration
         default: 100
       iters:
+        full_name: iterations
         description: Number of timing iterations
         default: 120
       threads:
+        full_name: threads
         description: Number of parallel threads
         default: 1
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations to run before timing
-      default: 2
+        default: 2
   
 
 characteristics:

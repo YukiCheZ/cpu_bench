@@ -18,21 +18,26 @@ workloads:
       command: python3 generate_data.py
       parameters:
         size:
+          full_name: uncompressed size
           description: Size of uncompressed random data in bytes
           default: 10000000
         output:
+          full_name: output file
           description: Output compressed file path
           default: data/interpreter.tar.bz2
     command: python3 run_benchmark.py
     parameters:
       file:
-        description: Path to the input compressed file (gzip or Bzip2)
+        full_name: input file
+        description: Path to the input compressed file
         default: data/interpreter.tar.bz2
       iters:
+        full_name: iterations
         description: Number of times to run the full decompression workload
         default: 10
       threads:
-        description: Number of parallel worker processes (each runs a full workload instance)
+        full_name: threads
+        description: Number of parallel worker processes
         default: 1
 
 characteristics:

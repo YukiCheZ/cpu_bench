@@ -19,21 +19,27 @@ workloads:
     command: ./scripts/run_benchmark.sh --workload event
     parameters:
       workload:
+        full_name: workload identifier
         description: Fixed workload identifier
         default: event
       dataSize:
-        description: Number of events generated (controls window & users)
+        full_name: number of events
+        description: Number of events generated
         default: 200000   
       threads:
+        full_name: number of threads
         description: Parallel worker threads
         default: 1
       iterations:
-        description: Per-thread iterations (batches processed)
+        full_name: number of iterations
+        description: Per-thread iterations
         default: 100000
       warmupIterations:
-        description: Optional warmup iteration count (override heuristic)
+        full_name: warmup iterations
+        description: Optional warmup iteration count
         default: 5
       noWarmup:
+        full_name: disable warmup
         description: Disable warmup when present
         default: false
 
@@ -46,21 +52,26 @@ workloads:
     command: ./scripts/run_benchmark.sh --workload graph
     parameters:
       workload:
+        full_name: workload identifier
         description: Fixed workload identifier
         default: graph
       dataSize:
-        description: Logical size factor (affects nodeCount ~ dataSize/50)
-        default: 400000  
+        full_name: graph size factor
+        description: Logical size factor
       threads:
+        full_name: number of threads
         description: Parallel worker threads
         default: 1
       iterations:
-        description: Per-thread iterations (full traversal cycles)
+        full_name: number of iterations
+        description: Per-thread iterations
         default: 15000 
       warmupIterations:
+        full_name: warmup iterations
         description: Optional warmup iteration count
         default: 5
       noWarmup:
+        full_name: disable warmup
         description: Disable warmup when present
         default: false
 
@@ -73,21 +84,27 @@ workloads:
     command: ./scripts/run_benchmark.sh --workload bloom
     parameters:
       workload:
+        full_name: workload identifier
         description: Fixed workload identifier
         default: bloom
       dataSize:
-        description: Number of operations per iteration (also drives expected insertions)
+        full_name: number of operations
+        description: Number of operations per iteration
         default: 400000 
       threads:
+        full_name: number of threads
         description: Parallel worker threads
         default: 1
       iterations:
+        full_name: number of iterations
         description: Per-thread iterations
         default: 2000 
       warmupIterations:
+        full_name: warmup iterations
         description: Optional warmup iteration count
         default: 5
       noWarmup:
+        full_name: disable warmup
         description: Disable warmup when present
         default: false
 
@@ -100,21 +117,27 @@ workloads:
     command: ./scripts/run_benchmark.sh --workload cache
     parameters:
       workload:
+        full_name: workload identifier
         description: Fixed workload identifier
         default: cache
       dataSize:
+        full_name: number of keys
         description: Keys accessed per iteration
         default: 100000 
       threads:
+        full_name: number of threads
         description: Parallel worker threads
         default: 1
       iterations:
+        full_name: number of iterations
         description: Per-thread iterations
         default: 1000
       warmupIterations:
+        full_name: warmup iterations
         description: Optional warmup iteration count
         default: 5
       noWarmup:
+        full_name: disable warmup
         description: Disable warmup when present
         default: false
 
@@ -127,15 +150,27 @@ workloads:
     command: ./scripts/run_benchmark.sh --workload immutable
     parameters:
       workload:
+        full_name: workload identifier
         description: Fixed workload identifier
         default: immutable
       dataSize:
+        full_name: array size
         description: Size of base int array
         default: 400000 
       threads:
+        full_name: number of threads
         description: Parallel worker threads
         default: 1
       iterations:
+        full_name: number of iterations
+        description: Per-thread iterations
+        default: 33000
+      warmupIterations:
+        full_name: warmup iterations
+        description: Optional warmup iteration count
+        default: 5
+      noWarmup:
+        full_name: disable warmups
         description: Per-thread iterations
         default: 33000
       warmupIterations:

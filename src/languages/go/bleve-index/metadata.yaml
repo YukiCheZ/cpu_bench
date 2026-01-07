@@ -22,19 +22,24 @@ workloads:
     command: go run src/main.go src/words.go
     parameters:
       documents:
-        description: Number of documents (articles) to generate and index
+        full_name: number of documents
+        description: Number of articles to generate and index
         default: 4000
       batch-size:
+        full_name: batch size
         description: Number of index requests per batch
         default: 64
       iterations:
+        full_name: iterations
         description: Number of timed benchmark iterations
         default: 50
       warmup:
+        full_name: warmup
         description: Run one warmup iteration before timing
         type: boolean
         default: true
       threads:
+        full_name: threads
         description: Number of threads
         default: 1
 

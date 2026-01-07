@@ -18,13 +18,16 @@ workloads:
     command: python3 run_benchmark.py
     parameters:
       n:
-        description: Size of the DeltaBlue problem instance (number of variables/constraints)
+        full_name: problem size
+        description: Size of the DeltaBlue problem instance
         default: 200000
       iters:
+        full_name: iterations
         description: Number of times to run the full DeltaBlue workload
         default: 20
       threads:
-        description: Number of parallel worker processes (each runs a full workload instance)
+        full_name: threads
+        description: Number of parallel worker processes
         default: 1
 
 characteristics:

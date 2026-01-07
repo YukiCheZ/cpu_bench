@@ -20,16 +20,20 @@ workloads:
     command: python3 run_benchmark.py
     parameters:
       width:
+        full_name: image width
         description: Image width in pixels
         default: 4096
       height:
+        full_name: image height
         description: Image height in pixels
         default: 4096
       iters:
-        description: Number of outer benchmark repetitions (full scene renders)
+        full_name: iterations
+        description: Number of outer benchmark repetitions
         default: 1
       threads:
-        description: Number of parallel worker processes (each runs a full workload)
+        full_name: threads
+        description: Number of parallel worker processes
         default: 1
 
 characteristics:

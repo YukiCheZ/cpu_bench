@@ -17,26 +17,33 @@ workloads:
       command: python3 generate_data.py
       parameters:
         num_files:
+          full_name: number of files
           description: Number of .c files to generate
           default: 30
         num_funcs:
+          full_name: number of functions
           description: Number of functions per file
           default: 300
         func_size:
+          full_name: function size
           description: Number of lines per function
           default: 200
     command: python3 run_benchmark.py --compiler gcc
     parameters:
       opt:
-        description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
+        full_name: optimization level
+        description: Optimization level
         default: -O3
       src_dir:
+        full_name: source directory
         description: Directory to store generated source files
         default: ./data/src
       threads:
+        full_name: threads
         description: Number of parallel compilation threads (independent compilations)
         default: 1
       iters:
+        full_name: iterations
         description: Number of iterations to run the benchmark
         default: 3
 
@@ -51,26 +58,33 @@ workloads:
       command: python3 generate_data.py
       parameters:
         num_files:
+          full_name: number of files
           description: Number of .c files to generate
           default: 30
         num_funcs:
+          full_name: number of functions
           description: Number of functions per file
           default: 300
         func_size:
+          full_name: function size
           description: Number of lines per function
           default: 200
     command: python3 run_benchmark.py --compiler clang
     parameters:
       opt:
-        description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
+        full_name: optimization level
+        description: Optimization level
         default: -O3
       src_dir:
+        full_name: source directory
         description: Directory to store generated source files
         default: ./data/src
       threads:
+        full_name: threads
         description: Number of parallel compilation threads (independent compilations)
         default: 1
       iters:
+        full_name: iterations
         description: Number of iterations to run the benchmark
         default: 3
 

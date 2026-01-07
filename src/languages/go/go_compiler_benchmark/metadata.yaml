@@ -19,38 +19,49 @@ workloads:
       command: python3 generate_data.py
       parameters:
         out:
+          full_name: output directory
           description: Output directory for generated Go source files
           default: ./data
         pkgs:
+          full_name: number of packages
           description: Number of packages to generate
           default: 100
         files:
+          full_name: files per package
           description: Number of files per package
           default: 5
         structs:
+          full_name: structs per file
           description: Number of structs per file
           default: 20
         funcs:
+          full_name: functions per file
           description: Number of functions per file
           default: 50
         complex:
-          description: Complexity level of generated functions (1-5)
+          full_name: complexity level
+          description: Complexity level of generated functions
           default: 200
         module:
+          full_name: module name
           description: Module name used in go.mod
           default: data
     command: python3 run_benchmark.py
     parameters:
       data-dir: 
+        full_name: data directory
         description: Directory containing Go source files to compile
         default: ./data
       iterations:
+        full_name: iterations
         description: Number of times to repeat the benchmark
         default: 5
       threads:
-        description: Number of parallel build threads (GOMAXPROCS)
+        full_name: threads
+        description: Number of parallel build threads
         default: 1
       no_clean:
+        full_name: skip clean
         description: Skip cleaning build cache before each run
         default: false
 

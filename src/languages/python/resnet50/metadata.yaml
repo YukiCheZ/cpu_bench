@@ -22,29 +22,37 @@ workloads:
       command: python3 generate_data.py
       parameters:
         batch_size:
+          full_name: batch size
           description: Number of images per batch
           default: 4
         img_size:
+          full_name: image size
           description: Size of each image
           default: 512
         num_batches:
+          full_name: number of batches
           description: Number of batches to generate
           default: 10
         output_dir:
+          full_name: output directory
           description: Directory to save generated data
           default: "./data"
     command: python3 resnet_eval.py
     parameters:
       data_dir:
+        full_name: data directory
         description: Directory containing pre-generated input data batches
         default: "./data"
       threads:
+        full_name: threads
         description: Number of CPU threads to use for inference
         default: 1
       iters:
+        full_name: iterations
         description: Number of benchmark iterations
         default: 50
       compile:
+        full_name: compile
         description: Whether to use TorchDynamo compilation for inference
         default: false
 
@@ -59,32 +67,41 @@ workloads:
       command: python3 generate_data.py
       parameters:
         batch_size:
+          full_name: batch size
           description: Number of images per batch
           default: 4
         img_size:
+          full_name: image size
           description: Size of each image
           default: 512
         num_batches:
+          full_name: number of batches
           description: Number of batches to generate
           default: 10
         output_dir:
+          full_name: output directory
           description: Directory to save generated data
           default: "./data"
     command: python3 resnet_train.py
     parameters:
       data_dir:
+        full_name: data directory
         description: Directory containing pre-generated training data batches
         default: "./data"
       threads:
+        full_name: threads
         description: Number of CPU threads to use for training
         default: 1
       lr:
+        full_name: learning rate
         description: Learning rate for SGD optimizer
         default: 0.001
       iters:
+        full_name: iterations
         description: Number of benchmark iterations 
         default: 20
       compile:
+        full_name: compile
         description: Whether to use TorchDynamo compilation for training
         default: false
 

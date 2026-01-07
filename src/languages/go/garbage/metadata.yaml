@@ -19,21 +19,26 @@ workloads:
       command: python3 generate_data.py 
       parameters:
         size:
+          full_name: source file size
           description: Size of the generated Go source file in lines
           default: 100000
         output: 
+          full_name: output file
           description: Path to the output Go source file
           default: ./data/input.go
     command: go run garbage.go
     parameters:
       input:
+        full_name: input file
         description: Path to the Go source file to parse
         default: ./data/input.go
       iterations:
+        full_name: iterations
         description: Number of parse iterations to run
         default: 1000
       threads:
-        description: Number of threads (sets GOMAXPROCS)
+        full_name: threads
+        description: Number of threads
         default: 1
 
 characteristics:

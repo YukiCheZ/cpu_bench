@@ -20,18 +20,23 @@ workloads:
     command: python3 run_benchmark.py
     parameters:
       num-records:
+        full_name: number of records
         description: Total number of records to produce across all threads
         default: 1000000000
       record-size:
+        full_name: record size
         description: Size of each record in bytes
         default: 1
       threads:
-        description: Number of producer threads (parallel producers)
+        full_name: number of producer threads
+        description: Number of parallel producers
         default: 1
       iters:
+        full_name: number of iterations
         description: Number of benchmark iterations
         default: 1
       warmup:
+        full_name: enable warmup
         description: Run a warmup iteration before benchmarking
         default: true
 

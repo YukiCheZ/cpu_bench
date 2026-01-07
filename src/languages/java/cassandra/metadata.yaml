@@ -20,21 +20,27 @@ workloads:
     command: python3 run_benchmark.py
     parameters:
       write-n:
+        full_name: write operations count
         description: Total number of write operations for pre-loading data
         default: 2000000
       write-threads:
+        full_name: write threads count
         description: Number of threads for write pre-load
         default: 128
       read-n:
+        full_name: read operations count
         description: Total number of read operations per iteration
         default: 2000000
       read-threads:
+        full_name: read threads count
         description: Number of threads for read operations
         default: 128
       threads:
+        full_name: number of cpu cores
         description: Limit the number of CPU cores to use
         default: 1
       iters:
+        full_name: number of iterations
         description: Number of iterations to run the read benchmark
         default: 25
 

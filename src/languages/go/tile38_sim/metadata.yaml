@@ -21,15 +21,18 @@ workloads:
     command: go run src/main.go
     parameters:
       threads:
-        description: Number of worker threads (goroutines / GOMAXPROCS)
-        default: 1
+        full_name: threads
+        description: Number of worker threads
       points:
+        full_name: number of points
         description: Number of points in the randomly generated dataset
         default: 100000
       iters:
+        full_name: iterations
         description: Number of query iterations to run across all workers
         default: 22
       seed:
+        full_name: random seed
         description: Random seed for dataset generation
         default: 42
 

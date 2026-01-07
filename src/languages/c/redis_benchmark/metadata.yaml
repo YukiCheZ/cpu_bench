@@ -10,9 +10,11 @@ setup:
   command: ./setup.sh
   parameters:
     compiler:
+      full_name: compiler
       description: Compiler to use for building Redis
       default: gcc 
     opt:
+      full_name: optimization level
       description: Optimization level for compiler
       default: -O3
 
@@ -27,19 +29,24 @@ workloads:
     command: python3 run_benchmark.py
     parameters:
       clients:
+        full_name: concurrent clients
         description: Number of concurrent clients sending requests
         default: 100
       threads:
+        full_name: threads
         description: Number of threads used by redis-benchmark
         default: 2
       requests:
+        full_name: total requests
         description: Total number of requests per iteration
         default: 4000000
       datasize:
+        full_name: data size
         description: Size of each value
         unit: bytes
         default: 16
       pipeline:
+        full_name: pipeline size
         description: Number of requests to pipeline
         default: 1
 

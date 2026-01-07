@@ -10,10 +10,12 @@ setup:
   command: ./setup.sh
   parameters:
     compiler:
-      description: Compiler to use (gcc or clang)
+      full_name: compiler
+      description: Compiler to use
       default: gcc
     opt:
-      description: Optimization level (-O0, -O1, -O2, -O3, -Ofast)
+      full_name: optimization level
+      description: Optimization level
       default: -O3
 
 workloads:
@@ -27,18 +29,23 @@ workloads:
     command: ./bin/lapack_benchmark --mode solve
     parameters:
       size:
-        description: Size of the matrix (number of rows/columns)
+        full_name: matrix size
+        description: Size of the matrix
         default: 2048
       iters:
+        full_name: iterations
         description: Number of iterations to run
         default: 1500
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations
         default: 1
       threads:
+        full_name: threads
         description: Number of concurrent threads to use
         default: 1
       seed:
+        full_name: random seed
         description: Seed for random number generation
         default: 42
 
@@ -52,18 +59,23 @@ workloads:
     command: ./bin/lapack_benchmark --mode eigen
     parameters:
       size:
-        description: Size of the matrix (number of rows/columns)
+        full_name: matrix size
+        description: Size of the matrix
         default: 2048
       iters:
+        full_name: iterations
         description: Number of iterations to run
         default: 6
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations
         default: 1
       threads:
+        full_name: threads
         description: Number of concurrent threads to use
         default: 1
       seed:
+        full_name: random seed
         description: Seed for random number generation
         default: 42
 
@@ -77,18 +89,23 @@ workloads:
     command: ./bin/lapack_benchmark --mode svd
     parameters:
       size:
-        description: Size of the matrix (number of rows/columns)
+        full_name: matrix size
+        description: Size of the matrix
         default: 2048
       iters:
+        full_name: iterations
         description: Number of iterations to run
         default: 3
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations
         default: 1 
       threads:
+        full_name: threads
         description: Number of concurrent threads to use
         default: 1
       seed:
+        full_name: random seed
         description: Seed for random number generation
         default: 42
 

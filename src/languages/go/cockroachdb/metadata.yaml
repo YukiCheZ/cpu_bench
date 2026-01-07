@@ -22,22 +22,28 @@ workloads:
     command: go run src/kv.go
     parameters:
       cockroachdb-bin:
-        description: Path to CockroachDB binary (or set COCKROACH_BIN env var)
+        full_name: CockroachDB binary path
+        description: Path to CockroachDB binary
         default: ./bin/cockroach
       host:
+        full_name: host
         description: Hostname of the CockroachDB server
         default: localhost
       tmp:
+        full_name: temporary directory
         description: Temporary directory for cluster data
         default: ""
       max-ops:
+        full_name: maximum operations
         description: Maximum number of operations to run PER CORE
         default: 1200000
       kv:
-        description: KV read percentage (must be 0, 50, or 95)
+        full_name: read percentage
+        description: KV read percentage
         default: 50
       threads:
-        description: Number of threads (sets GOMAXPROCS for CockroachDB process)
+        full_name: threads
+        description: Number of threads
         default: 1
 
   - name: tpcc
@@ -50,25 +56,31 @@ workloads:
     command: go run src/tpcc.go
     parameters:
       cockroachdb-bin:
-        description: Path to CockroachDB binary (or set COCKROACH_BIN env var)
-        default: ./bin/cockroach
+        full_name: CockroachDB binary path
+        description: Path to CockroachDB binary
       host:
+        full_name: host
         description: Hostname of the CockroachDB server
         default: localhost
       tmp:
+        full_name: temporary directory
         description: Temporary directory for cluster data
         default: ""
       max-ops:
+        full_name: maximum operations
         description: Maximum number of operations to run per thread
         default: 30000
       warehouses:
-        description: Number of warehouses for TPCC data per thread (larger -> more data)
+        full_name: number of warehouses
+        description: Number of warehouses for TPCC data per thread
         default: 1
       concurrency:
-        description: Number of concurrent workers (concurrency param passed to tpcc)
+        full_name: concurrency
+        description: Number of concurrent workers
         default: 200
       threads:
-        description: Number of threads (sets GOMAXPROCS for CockroachDB process)
+        full_name: threads
+        description: Number of threads
         default: 1
 
 characteristics:

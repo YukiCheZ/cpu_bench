@@ -9,10 +9,12 @@ setup:
   command: ./setup.sh
   parameters:
     compiler:
-      description: Compiler to use (gcc or clang)
+      full_name: compiler
+      description: Compiler to use
       default: gcc
     opt:
-      description: Optimization level (O0, O1, O2, O3, Ofast)
+      full_name: optimization level
+      description: Optimization level
       default: -O3
 
 workloads:
@@ -27,23 +29,29 @@ workloads:
       command: python3 generate_data.py
       parameters:
         size:
-          description: Size of the data file to generate (in KB)
-          default: 50000
+          full_name: data size
+          description: Size of the data file to generate
+          default: 50
         output:
+          full_name: output file
           description: Path to the output data file
           default: ./data/data.bin
     command: ./bin/openssl_benchmark
     parameters:
       input:
+        full_name: input file
         description: Path to the pre-generated data file
         default: ./data/data.bin
       threads:
+        full_name: threads
         description: Number of concurrent threads to use
         default: 1
       iters:
+        full_name: iterations
         description: Number of iterations to run
         default: 3000
       warmup:
+        full_name: warmup iterations
         description: Number of warmup iterations
         default: 3
 
