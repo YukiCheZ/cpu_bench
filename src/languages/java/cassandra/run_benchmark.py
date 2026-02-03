@@ -8,7 +8,7 @@ import argparse
 import multiprocessing
 
 
-CASSANDRA_VERSION = "4.0.18"
+CASSANDRA_VERSION = "5.0.2"
 CASSANDRA_DIR = f"./bin/apache-cassandra-{CASSANDRA_VERSION}/"
 CASSANDRA_BIN = os.path.join(CASSANDRA_DIR, "bin/cassandra")
 NODETOOL_BIN = os.path.join(CASSANDRA_DIR, "bin/nodetool")

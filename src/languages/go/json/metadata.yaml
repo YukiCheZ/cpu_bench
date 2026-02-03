@@ -21,7 +21,7 @@ workloads:
         size: 
           full_name: data size
           description: Size of the JSON data in MB
-          default: 50
+          default: 50000
         seed: 
           full_name: random seed
           description: Random seed for data generation

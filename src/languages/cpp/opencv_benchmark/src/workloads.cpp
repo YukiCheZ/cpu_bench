@@ -138,11 +138,16 @@ void Workloads::canny(const cv::Mat& img) {
 // Optical Flow (Farneback Dense)
 // ===========================================================
 void Workloads::opticalFlow(const cv::Mat& img) {
-    static cv::Mat prevGray;
+    thread_local cv::Mat prevGray;
+    
     cv::Mat gray;
-    cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+    if (img.channels() == 3) {
+        cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+    } else {
+        gray = img;
+    }
 
-    if (prevGray.empty()) {
+    if (prevGray.empty() || prevGray.size() != gray.size()) {
         prevGray = gray.clone();
         return;
     }
@@ -150,7 +155,8 @@ void Workloads::opticalFlow(const cv::Mat& img) {
     cv::Mat flow;
     cv::calcOpticalFlowFarneback(prevGray, gray, flow,
                                  0.5, 3, 15, 3, 5, 1.2, 0);
-    prevGray = gray.clone();
+    
+    gray.copyTo(prevGray); 
 }
 
 // ===========================================================

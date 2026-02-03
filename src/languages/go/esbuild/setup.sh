@@ -1,31 +1,34 @@
 #!/bin/bash
 set -e
 
+VERSION="0.25.7"
 INSTALL_DIR="./bin"
-
-if [ -n "$ESBUILD_BIN" ]; then
-    if [ ! -x "$ESBUILD_BIN" ]; then
-        echo "Error: ESBUILD_BIN is set but not executable: $ESBUILD_BIN"
-        return 1 2>/dev/null || true
-    fi
-    echo "Using user-provided esbuild binary: $ESBUILD_BIN"
-    return 0 2>/dev/null || true
-fi
+TARGET="$INSTALL_DIR/esbuild"
 
 mkdir -p "$INSTALL_DIR"
 
-if [ -x "$INSTALL_DIR/esbuild" ]; then
-    echo "esbuild binary already exists at $INSTALL_DIR/esbuild"
-    export ESBUILD_BIN="$(pwd)/bin/esbuild"
-    echo "ESBUILD_BIN has been set for this shell session."
-    return 0 2>/dev/null || true
+if [ -x "$TARGET" ]; then
+    echo "esbuild already exists."
+    exit 0
 fi
 
-echo "Downloading esbuild..."
-curl -fsSL https://esbuild.github.io/dl/v0.25.7 | sh
+if ! command -v go &> /dev/null; then
+    echo "Error: Building from GitHub source requires Go. Please install Go or use Scheme B."
+    exit 1
+fi
 
-mv esbuild "$INSTALL_DIR/esbuild"
+echo "Downloading source from GitHub..."
+curl -L "https://github.com/evanw/esbuild/archive/refs/tags/v$VERSION.tar.gz" -o esbuild-src.tar.gz
 
-export ESBUILD_BIN="$(pwd)/bin/esbuild"
-echo "esbuild installed at $ESBUILD_BIN"
-echo "ESBUILD_BIN has been set for this shell session."
+tar -xzf esbuild-src.tar.gz
+cd "esbuild-$VERSION"
+
+echo "Building esbuild from source..."
+go build -ldflags "-s -w" ./cmd/esbuild
+
+mv esbuild "../$TARGET"
+cd ..
+
+rm -rf "esbuild-$VERSION" esbuild-src.tar.gz
+
+echo "Successfully built from GitHub: $($TARGET --version)"

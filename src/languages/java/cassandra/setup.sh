@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-CASSANDRA_VERSION="4.0.18"
+CASSANDRA_VERSION="5.0.2"
 CASSANDRA_DIR="./bin/apache-cassandra-$CASSANDRA_VERSION"
 TAR_FILE="apache-cassandra-$CASSANDRA_VERSION-bin.tar.gz"
 
