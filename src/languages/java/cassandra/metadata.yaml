@@ -58,5 +58,5 @@ tags:
 
 dependencies:
   python: ">=3.8"
-  java: ">=11"
+  java: ">=17"
   cassandra: "5.0.2"

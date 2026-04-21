@@ -20,9 +20,11 @@ log_path = None  # global to access in run_workload()
 # Perf configuration
 # ============================================================
 PERF_CMD_PREFIX = (
-    "time perf stat -r 3 "
-    "-e 'r010E, r00C0, r00C4, r00C5, r0183, r0283, r3F24, r20D1, r81D0, r82D0' "
-    "-e 'r01C7, r02C7, r04C7, r08C7, r10C7, r20C7' "
+    "time perf stat -r 2 "
+    "-e 'inst_retired, br_retired, br_mis_pred_retired, l1i_cache_refill, l1i_cache, l2d_cache_refill, ll_cache_miss' "
+    "-e 'r75, r74, r06, r07' "
+    "-e 'r70,r71,r21,r73,r8' "
+    "-e 'r4,r14,r16,r37,r25,r26' "
     "-e 'L1-dcache-load-misses,L1-dcache-loads,L1-dcache-misses,L1-dcache' "
     "-e 'LLC' "
     "-e 'dTLB-load-misses,dTLB-loads,dTLB,dTLB-misses' "
